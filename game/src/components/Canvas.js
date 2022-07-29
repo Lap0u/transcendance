@@ -7,16 +7,30 @@ const Canvas = () => {
 
 
   useEffect(() => {
-    //Our first draw
+    //draw every time the cursor move
 	const canvas = canvasRef.current
 	canvas.width = 250;
 	canvas.height = 250;
 	canvas.style.width = "90vw";
 	canvas.style.height = "90vh";
 	const context = canvas.getContext('2d')
-    drawBackground(context)
+	drawBackground(context)
 	drawDashedLine(context)
 	drawPlayBar(context, playBarPosY)
+  }, [ playBarPosY])
+
+
+  useEffect(() => {
+    //draw every time the cursor move
+	const canvas = canvasRef.current
+	canvas.width = 250;
+	canvas.height = 250;
+	canvas.style.width = "90vw";
+	canvas.style.height = "90vh";
+	const context = canvas.getContext('2d')
+	drawBackground(context)
+	drawDashedLine(context)
+	drawPlayBar(context, canvas, playBarPosY)
   }, [ playBarPosY])
 
 	return (
