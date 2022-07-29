@@ -5,6 +5,10 @@
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
+	margin-top: 150px;
     display: block;
-	background-color: black;
+	border-color: pink;
+	border-style: solid;
+	border-width: 10px;
+	box-sizing: border-box;
 }
