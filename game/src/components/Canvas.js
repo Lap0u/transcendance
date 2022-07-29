@@ -1,9 +1,28 @@
 import './Canvas.css';
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 
 const Canvas = () => {
   const canvasRef = useRef(null)
   
+  const [playBarPosY, movePlayBar] = useState(25);
+
+  function getMousePos(event) {
+	  const canvas = canvasRef.current
+	  var rect = canvas.getBoundingClientRect();
+	  console.log(event.clientY - rect.top);
+	  return {
+	  	x: event.clientX - rect.left,
+	  	y: ((event.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height,
+	};
+}
+  	const drawPlayBar = (context) => {
+	//	console.log(playBarPosY);
+		const playBarPosX = 20;
+		const playBarWidth = 2;
+		const playBarHeight = 18;
+		context.fillStyle = 'white';
+		context.fillRect(playBarPosX, playBarPosY - (playBarHeight / 2), playBarWidth, playBarHeight);
+	}
 	const drawBackground = (context) => {
 		context.fillStyle = '#000000'
 		context.fillRect(0, 0, context.canvas.width, context.canvas.height)
@@ -14,8 +33,8 @@ const Canvas = () => {
 		context.lineCap = 'square'
 		context.setLineDash([5, 10]);/*dashes are 5px and spaces are 3px*/
 		context.beginPath();
-		context.moveTo(20.5, 0);
-		context.lineTo(20.5, 250);
+		context.moveTo(125.5, 0);
+		context.lineTo(125.5, 250);
 		context.stroke();
 	}
   useEffect(() => {
@@ -28,10 +47,11 @@ const Canvas = () => {
     //Our first draw
     drawBackground(context)
 	drawDashedLine(context)
-  }, [])
+	drawPlayBar(context)
+  }, [playBarPosY])
 
 	return (
-		<canvas ref={canvasRef} id="mainWindow">
+		<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event, context) => movePlayBar(getMousePos(event).y)}>
 			There should be the canvas of the full game
 		</canvas>
 	)
