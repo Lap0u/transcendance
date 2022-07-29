@@ -30,7 +30,7 @@ const Canvas = () => {
 	const context = canvas.getContext('2d')
 	drawBackground(context)
 	drawDashedLine(context)
-	drawPlayBar(context, canvas, playBarPosY)
+	drawPlayBar(context, playBarPosY)
   }, [ playBarPosY])
 
 	return (

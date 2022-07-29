@@ -1,10 +1,10 @@
-export const drawPlayBar = (context, canvas,  playBarPosY) => {
+export const drawPlayBar = (context,  playBarPosY) => {
 		const playBarPosX = 20;
 		const playBarWidth = 2;
 		const playBarHeight = 18;
 		context.fillStyle = 'white';
 		context.fillRect(playBarPosX, playBarPosY - (playBarHeight / 2), playBarWidth, playBarHeight);
-		drawPlayBar2(context, canvas)
+		drawPlayBar2(context, context.canvas)
 }
 
 export const getMousePosY = (event, canvas) => {
