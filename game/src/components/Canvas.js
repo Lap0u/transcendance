@@ -3,9 +3,30 @@ import React, { useRef, useEffect, useState } from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar'
 import {drawBall} from './Ball'
 
+
 const Canvas = () => {
   const canvasRef = useRef(null)
   const [playBarPosY, movePlayBar] = useState(25)
+  //const [ballPosX, moveBalX] = useState(60)
+  //const [ballPosY, moveBalY] = useState(60)
+  const ballPosX = useRef(60);
+  const ballPosY = useRef(60);
+  const [moves, moveBal] = useState(0)
+
+ // setInterval(moveBal[], 1);
+ 
+	setInterval(() => {
+		/*const canvas = canvasRef.current
+		canvas.width = 250;
+		canvas.height = 250;
+		canvas.style.width = "90vw";
+		canvas.style.height = "90vh";
+		const context = canvas.getContext('2d')
+		drawBall(context)*/
+		ballPosX.current += 0.1
+		ballPosY.current += 0.1
+		moveBal(moves + 1)
+	}, 100)
 
   useEffect(() => {
     //draw every time the cursor move
@@ -19,8 +40,8 @@ const Canvas = () => {
 	drawBackground(context)
 	drawDashedLine(context)
 	drawPlayBar(context, playBarPosY)
-	drawBall(context)
-  }, [ playBarPosY])
+	drawBall(context, ballPosX.current, ballPosY.current)
+  }, [ playBarPosY, ballPosX, ballPosY, moves])
 
 	return (
 		<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
