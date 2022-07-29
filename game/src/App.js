@@ -3,7 +3,9 @@ import Canvas from './components/Canvas'
 
 function App() {
   return (
-	<Canvas />
+	<div id="wholepage">
+		<Canvas />
+	</div>
   );
 }
 
