@@ -1,5 +1,5 @@
 export const drawPlayBar = (context,  playBarPosY) => {
-		const playBarPosX = 50;
+		const playBarPosX = 90;
 		const playBarWidth = 20;
 		const playBarHeight = 70;
 		context.fillStyle = 'white';
@@ -13,7 +13,7 @@ export const getMousePosY = (event, canvas) => {
 }
 
 export const drawPlayBar2 = (context) => {
-	const playBarPosX = context.canvas.width - 50;
+	const playBarPosX = context.canvas.width - 90;
 	const playBarWidth = 20;
 	const playBarHeight = context.canvas.height;
 	context.fillStyle = 'white';

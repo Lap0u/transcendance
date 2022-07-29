@@ -1,35 +1,26 @@
 import './Canvas.css';
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useMemo} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar'
-import {drawBall} from './Ball'
+import {Ball} from './Ball'
 
 
 const Canvas = () => {
   const canvasRef = useRef(null)
   const [playBarPosY, movePlayBar] = useState(25)
-  //const [ballPosX, moveBalX] = useState(60)
-  //const [ballPosY, moveBalY] = useState(60)
-  const ballPosX = useRef(60);
-  const ballPosY = useRef(60);
+  const ballPosX = useRef(window.innerWidth / 2);
+  const ballPosY = useRef(window.innerHeight / 2);
   const [moves, moveBal] = useState(0)
-
- // setInterval(moveBal[], 1);
+  let ball = useMemo(() => new Ball(), []);
  
 	setInterval(() => {
-		/*const canvas = canvasRef.current
-		canvas.width = 250;
-		canvas.height = 250;
-		canvas.style.width = "90vw";
-		canvas.style.height = "90vh";
-		const context = canvas.getContext('2d')
-		drawBall(context)*/
-		ballPosX.current += 0.1
-		ballPosY.current += 0.1
+		//bal position change every 100ms
+		ballPosX.current += ball.dirX * ball.speed
+		ballPosY.current += ball.dirY * ball.speed
 		moveBal(moves + 1)
 	}, 100)
 
   useEffect(() => {
-    //draw every time the cursor move
+    //draw every time the cursor move, or ball position change
 	const canvas = canvasRef.current
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
@@ -40,8 +31,8 @@ const Canvas = () => {
 	drawBackground(context)
 	drawDashedLine(context)
 	drawPlayBar(context, playBarPosY)
-	drawBall(context, ballPosX.current, ballPosY.current)
-  }, [ playBarPosY, ballPosX, ballPosY, moves])
+	ball.drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
+  }, [ playBarPosY, ballPosX, ballPosY, moves, ball])
 
 	return (
 		<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
