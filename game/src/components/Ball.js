@@ -5,8 +5,8 @@ import {playBar} from "./PlayBar";
 export var ball = {
 		dirX : -0.2,
 		dirY : 0.25,
-		speed : 1.5,
-		size : 40,
+		speed : (window.innerHeight * window.innerWidth / 100000000000000) * 20000000,
+		size : (window.innerHeight * window.innerWidth / 10000000) * 40
 //		drawBall : drawBall()
     }
 
@@ -14,6 +14,8 @@ export var ball = {
 
 export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
 
+	console.log('speed')
+	console.log(ball.speed)
 	//change direction if ther ball if it hits a wall
 	if (ballPosY  - ball.size <= 0  || 
 		ballPosY  + ball.size  >= context.canvas.height)
@@ -22,7 +24,7 @@ export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
 		(ballPosY >= playBarPosY && ballPosY <= playBarPosY + playBar.height))
 		ball.dirX *= -1;
 	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX)
-		this.dirX *= -1;
+		ball.dirX *= -1;
 	  context.fillStyle = 'white';
 	  context.beginPath();
 	  context.arc(ballPosX, ballPosY, ball.size, 0, 2 * Math.PI);
@@ -32,8 +34,8 @@ export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
 
 
 window.addEventListener('resize', () => {
-	ball.speed = (window.innerHeight * window.innerWidth) / 4500000;
-	ball.size = (window.innerHeight * window.innerWidth) / 200000;
+	ball.speed = (window.innerHeight * window.innerWidth / 100000000000000) * 20000000
+	ball.size = (window.innerHeight * window.innerWidth / 10000000) * 40
 })
 
 
