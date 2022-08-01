@@ -2,11 +2,7 @@ import './Canvas.css';
 import React, { useRef, useEffect, useState} from 'react'
 import {getMousePosY, drawPlayBar, resizePlayBar} from './PlayBar'
 import {ball, drawBall} from './Ball'
-
-
-
 import {drawScore, watchScore} from './Score'
-
 
 const Canvas = () => {
 	const canvasRef = useRef(null)

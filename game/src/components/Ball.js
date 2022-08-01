@@ -1,7 +1,5 @@
 import {playBar} from "./PlayBar";
 
-
-
 export var ball = {
 		dirX : -0.2,
 		dirY : 0.25,

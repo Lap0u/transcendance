@@ -5,14 +5,12 @@ export var playBar = {
 	height : window.innerHeight / 20
 }
 
-
 export const resizePlayBar = () => {
 	//refresh the dimensions of the bar according to the size of the window
 	playBar.posX = window.innerWidth / 30
 	playBar.width =  window.innerWidth / 100
 	playBar.height = window.innerHeight / 20
 }
-
 
 export const drawPlayBar = (context,  playBarPosY) => {
 		context.fillStyle = 'white';
