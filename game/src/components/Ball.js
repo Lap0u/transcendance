@@ -1,17 +1,19 @@
 import {playBar} from "./PlayBar";
+import {getRandomArbitrary} from './Canvas'
+
+var today = new Date()
 
 export var ball = {
-		dirX : -0.2,
-		dirY : 0.25,
+		dirX : (today.getMilliseconds() % 2) ? getRandomArbitrary(0.1, 0.9) : getRandomArbitrary(-0.9, -0.1),
+		dirY : getRandomArbitrary(-1, 1),
 		speed : (window.innerHeight + window.innerWidth) / 2 * 0.0006,
-		size : (window.innerHeight + window.innerWidth) / 2 * 0.01
+		size : (window.innerHeight + window.innerWidth) / 2 * 0.008
 		//		drawBall : drawBall()
     }
 
 export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
 
-	// console.log('speed')
-	// console.log(ball.speed)
+	// conso
 	//change direction if ther ball if it hits a wall
 	if ((ballPosY  - ball.size <= 0 && ball.dirY < 0) || 
 		(ballPosY  + ball.size  >= context.canvas.height && ball.dirY > 0))
@@ -23,9 +25,7 @@ export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
 			console.log("touche");
 			ball.dirX *= -1;
 		}
-	if (ballPosX  + ball.size <= 0 && ball.dirX < 0)
-		ball.dirX *= -1;
-	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX && ball.dirX > 0)
+	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX && ball.dirX > 0)//fake bar
 		ball.dirX *= -1;
 	  context.fillStyle = 'white';
 	  context.beginPath();
@@ -36,5 +36,5 @@ export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
 
 window.addEventListener('resize', () => {
 	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.0006
-	ball.size = (window.innerHeight + window.innerWidth) / 2 * 0.01
+	ball.size = (window.innerHeight + window.innerWidth) / 2 * 0.008
 })

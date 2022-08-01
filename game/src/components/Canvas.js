@@ -1,14 +1,18 @@
 import './Canvas.css';
 import React, { useRef, useEffect, useState} from 'react'
-import {getMousePosY, drawPlayBar, resizePlayBar} from './PlayBar'
+import {getMousePosY, drawPlayBar} from './PlayBar'
 import {ball, drawBall} from './Ball'
 import {drawScore, watchScore} from './Score'
+
+export function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
 
 const Canvas = () => {
 	const canvasRef = useRef(null)
   const [playBarPosY, movePlayBar] = useState(25)
   const ballPosX = useRef(window.innerWidth / 2);
-  const ballPosY = useRef(window.innerHeight / 2);
+  const ballPosY = useRef(getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15));
   const [moves, moveBal] = useState(0)
 	const [playersScore, updateScore] = useState([0, 0])
 
@@ -61,9 +65,5 @@ const drawDashedLine = (context) => {
 	context.lineTo(cvwidth / 2, cvheight);
 	context.stroke();
 }
-
-
-window.addEventListener('resize', resizePlayBar)
-
 
 export default Canvas;
