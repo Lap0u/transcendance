@@ -1,5 +1,5 @@
 import './Canvas.css';
-import React, { useRef, useEffect, useState, useMemo} from 'react'
+import React, { useRef, useEffect, useState} from 'react'
 import {getMousePosY, drawPlayBar, resizePlayBar} from './PlayBar'
 import {ball, drawBall} from './Ball'
 
@@ -19,7 +19,7 @@ const Canvas = () => {
 		ballPosX.current += ball.dirX * ball.speed
 		ballPosY.current += ball.dirY * ball.speed
 		moveBal(ballMoves + 1)
-	}, 100)
+	}, 0)
 
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const Canvas = () => {
 	const canvas = canvasRef.current
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-//	console.log(canvas.width, canvas.height)
+	console.log('count')
 	canvas.style.width = "90vw";
 	canvas.style.height = "90vh";
 	const context = canvas.getContext('2d')
@@ -35,8 +35,8 @@ const Canvas = () => {
 	drawDashedLine(context)
 	drawPlayBar(context, playBarPosY)
 	drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
-  }, [ playBarPosY, ballPosX, ballPosY, ballMoves])
-
+  }, [ballMoves, playBarPosY])
+	
 	return (
 		<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
 			There should be the canvas of the full game
