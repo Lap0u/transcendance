@@ -1,7 +1,9 @@
 import './Canvas.css';
-import React, { useRef, useEffect, useState, useMemo} from 'react'
-import {getMousePosY, drawPlayBar} from './PlayBar'
-import {Ball} from './Ball'
+import React, { useRef, useEffect, useState} from 'react'
+import {getMousePosY, drawPlayBar, resizePlayBar} from './PlayBar'
+import {ball, drawBall} from './Ball'
+
+
 
 import {drawScore, watchScore} from './Score'
 
@@ -13,14 +15,13 @@ const Canvas = () => {
   const ballPosY = useRef(window.innerHeight / 2);
   const [moves, moveBal] = useState(0)
 	const [playersScore, updateScore] = useState([0, 0])
-  let ball = useMemo(() => new Ball(), []);
- 
+
 	setInterval(() => {
-		//bal position change every 100ms
+	//bal position change every 100ms
 		ballPosX.current += ball.dirX * ball.speed
 		ballPosY.current += ball.dirY * ball.speed
 		moveBal(moves + 1)
-	}, 100)
+	}, 0)
 	
   useEffect(() => {
 		//draw every time the cursor move, or ball position change
@@ -33,10 +34,10 @@ const Canvas = () => {
 		drawBackground(context)
 		drawDashedLine(context)
 		drawPlayBar(context, playBarPosY)
-		ball.drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
+		drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
 		watchScore(context, ball, ballPosX, ballPosY, playersScore, updateScore)
 		drawScore(context, playersScore)
-  }, [ playBarPosY, ballPosX, ballPosY, moves, ball, playersScore])
+  }, [ playBarPosY, moves, playersScore])
 
 	return (
 		<div>
@@ -64,5 +65,9 @@ const drawDashedLine = (context) => {
 	context.lineTo(cvwidth / 2, cvheight);
 	context.stroke();
 }
+
+
+window.addEventListener('resize', resizePlayBar)
+
 
 export default Canvas;
