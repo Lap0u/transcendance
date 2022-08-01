@@ -10,7 +10,7 @@ export class Ball{
 		//  const cvwidth = context.canvas.width
 		//const cvheight = context.canvas.height
 
-		//change direction if ther ball if it hits a wall
+		//change direction if the ball if it hits a wall
 		if (ballPosY  - (this.size / 2) <= 0  || 
 		ballPosY  + (this.size / 2) >= context.canvas.height)
 			this.dirY *= -1;

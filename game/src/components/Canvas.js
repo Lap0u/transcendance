@@ -2,9 +2,11 @@ import './Canvas.css';
 import React, { useRef, useEffect, useState, useMemo} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar'
 import {Ball} from './Ball'
+import {drawScore} from './Score'
 
 
 const Canvas = () => {
+	const [playersScore, updateScore] = useState([0, 0])
   const canvasRef = useRef(null)
   const [playBarPosY, movePlayBar] = useState(25)
   const ballPosX = useRef(window.innerWidth / 2);
@@ -24,7 +26,6 @@ const Canvas = () => {
 	const canvas = canvasRef.current
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	console.log(canvas.width, canvas.height)
 	canvas.style.width = "90vw";
 	canvas.style.height = "90vh";
 	const context = canvas.getContext('2d')
@@ -32,12 +33,15 @@ const Canvas = () => {
 	drawDashedLine(context)
 	drawPlayBar(context, playBarPosY)
 	ball.drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
+	drawScore(context, playersScore)
   }, [ playBarPosY, ballPosX, ballPosY, moves, ball])
 
 	return (
-		<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
-			There should be the canvas of the full game
-		</canvas>
+		<div>
+			<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
+				There should be the canvas of the full game
+			</canvas>
+		</div>
 	)
 }
 
@@ -46,7 +50,6 @@ const drawBackground = (context) => {
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
 const drawDashedLine = (context) => {
-	console.log(context.canvas);
 	const cvwidth = context.canvas.width
 	const cvheight = context.canvas.height
 

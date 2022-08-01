@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Bit5x3';
+    src: url('fonts/bit5x3.eot');
+    src: url('fonts/bit5x3.eot?#iefix') format('embedded-opentype'),
+         url('fonts/bit5x3.woff2') format('woff2'),
+         url('fonts/bit5x3.woff') format('woff'),
+         url('fonts/bit5x3.ttf')  format('truetype'),
+         url('fonts/bit5x3.svg#Bit5x3') format('svg');
+}

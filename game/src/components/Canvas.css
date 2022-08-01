@@ -1,3 +1,22 @@
+@font-face {
+    font-family: 'Bit5x3';
+    src: url('../../fonts/pongOldFont/fonts/bit5x3.eot');
+    src: url('../../fonts/pongOldFont/fonts/bit5x3.eot?#iefix') format('embedded-opentype'),
+        url('../../fonts/pongOldFont/fonts/bit5x3.woff2') format('woff2'),
+        url('../../fonts/pongOldFont/fonts/bit5x3.woff') format('woff'),
+        url('../../fonts/pongOldFont/fonts/bit5x3.ttf')  format('truetype'),
+        url('../../fonts/pongOldFont/fonts/bit5x3.svg#Bit5x3') format('svg');
+}
+
+@font-face {
+    font-family: 'press_start_2pregular';
+    src: url('../../fonts/retroFont/press-start-2p.regular-webfont.woff2') format('woff2'),
+         url('../../fonts/retroFont/press-start-2p.regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 #mainWindow {
 	padding-left: 0;
     padding-right: 0;
