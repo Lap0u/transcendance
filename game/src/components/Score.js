@@ -17,3 +17,22 @@ export const drawScore = (context, playerScore) => {
 	context.fillText(playerScore[1], playerTwoX, y);
 	context.stroke();
 }
+
+export const watchScore = (context, ball, ballPosX, ballPosY, score, updateScore) => {
+	const newArray = score.slice();
+	if (ballPosX.current  - (ball.size / 2) <= 0)
+	{
+		newArray[1] += 1
+		updateScore(newArray)
+		ballPosX.current = window.innerWidth / 2
+		ballPosY.current = window.innerHeight / 2
+
+	}
+	else if (ballPosX.current  + (ball.size / 2) >= context.canvas.width)
+	{
+		newArray[0] += 1
+		updateScore(newArray)
+		ballPosX.current = window.innerWidth / 2
+		ballPosY.current = window.innerHeight / 2
+	}
+}
