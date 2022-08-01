@@ -18,8 +18,8 @@ const Canvas = () => {
 
 	setInterval(() => {
 	//bal position change every 100ms
-		ballPosX.current += ball.dirX * ball.speed
-		ballPosY.current += ball.dirY * ball.speed
+		ballPosX.current += (ball.dirX * window.innerWidth/ 3000) * ball.speed
+		ballPosY.current += (ball.dirY * window.innerHeight / 3000) * ball.speed
 		moveBal(moves + 1)
 	}, 0)
 	
