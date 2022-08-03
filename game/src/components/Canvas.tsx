@@ -4,7 +4,7 @@ import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
 import {ball, drawBall} from './Ball.tsx'
 import {drawScore, watchScore} from './Score.tsx'
 
-export function getRandomArbitrary(min, max) {
+export function getRandomArbitrary(min : number, max : number) {
   return Math.random() * (max - min) + min;
 }
 
@@ -25,12 +25,12 @@ const Canvas = () => {
 	
   useEffect(() => {
 		//draw every time the cursor move, or ball position change
-		const canvas = canvasRef.current
+		const canvas : any = canvasRef.current
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 		canvas.style.width = "90vw";
 		canvas.style.height = "90vh";
-		const context = canvas.getContext('2d')
+		const context : any = canvas.getContext('2d')
 		drawBackground(context)
 		drawDashedLine(context)
 		drawPlayBar(context, playBarPosY)
@@ -48,11 +48,11 @@ const Canvas = () => {
 	)
 }
 
-const drawBackground = (context) => {
+const drawBackground = (context : any) => {
 	context.fillStyle = '#000000'
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
-const drawDashedLine = (context) => {
+const drawDashedLine = (context : any) => {
 	const cvwidth = context.canvas.width
 	const cvheight = context.canvas.height
 

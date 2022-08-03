@@ -1,4 +1,3 @@
-
 export var playBar = {
 	posX :  window.innerWidth / 30,
 	width :  window.innerWidth / 120,
@@ -12,20 +11,20 @@ export const resizePlayBar = () => {
 	playBar.height = window.innerHeight / 15
 }
 
-export const drawPlayBar = (context,  playBarPosY) => {
+export const drawPlayBar = (context : any,  playBarPosY : number) => {
 		context.fillStyle = 'white';
 		context.fillRect(playBar.posX, playBarPosY,
 			playBar.width, playBar.height);
 			drawPlayBar2(context, context.canvas)
 		}
 		
-		export const getMousePosY = (event, canvas) => {
+		export const getMousePosY = (event : any, canvas : any) => {
 			var rect = canvas.getBoundingClientRect();
 			return ((((event.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height)
 			- (playBar.height/ 2));
 		}
 
-export const drawPlayBar2 = (context) => {
+export const drawPlayBar2 = (context : any) => {
 	const posX = window.innerWidth - playBar.posX
 	context.fillStyle = 'white';
 	context.fillRect(posX, 0, playBar.width, context.canvas.height);	

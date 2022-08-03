@@ -1,6 +1,6 @@
 import {getRandomArbitrary} from './Canvas.tsx'
 
-export const drawScore = (context, playerScore) => {
+export const drawScore = (context : any, playerScore : number) => {
 	// const playerOneX = context.canvas.width / 2 - (context.canvas.width / 2 * 20 / 100) 
 	// const playerTwoX = context.canvas.width / 2 + (context.canvas.width / 2 * 20 / 100)
 	const playerOneX = context.canvas.width / 2 - 30
@@ -22,16 +22,16 @@ export const drawScore = (context, playerScore) => {
 	context.stroke();
 }
 
-function sleep(milliseconds) {
+function sleep(milliseconds : number) {
   const date = Date.now();
-  let currentDate = null;
+  let currentDate : any = null;
   do {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
 }
 
-export async function watchScore (context, ball, ballPosX, ballPosY, score, updateScore) {
-	const newArray = score.slice();
+export async function watchScore (context : any, ball : any, ballPosX : any, ballPosY : any, score : number[], updateScore : number) {
+	const newArray : number[] = score.slice();
 	if (ballPosX.current  + (ball.size) < -10)
 	{
 		newArray[1] += 1

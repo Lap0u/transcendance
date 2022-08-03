@@ -11,7 +11,7 @@ export var ball = {
 		//		drawBall : drawBall()
     }
 
-export const drawBall = (context, ballPosX, ballPosY, playBarPosY) => {
+export const drawBall = (context : any, ballPosX : number, ballPosY : number, playBarPosY : number) => {
 
 	// conso
 	//change direction if ther ball if it hits a wall
