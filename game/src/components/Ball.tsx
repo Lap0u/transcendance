@@ -4,8 +4,7 @@ import {getRandomArbitrary} from './Canvas.tsx'
 var today = new Date()
 
 export var ball = {
-		dirX : 0.5,
-		// dirX : (today.getMilliseconds() % 2) ? getRandomArbitrary(0.1, 0.9) : getRandomArbitrary(-0.9, -0.1),
+		dirX : (today.getMilliseconds() % 2) ? getRandomArbitrary(0.1, 0.9) : getRandomArbitrary(-0.9, -0.1),
 		dirY : getRandomArbitrary(-1, 1),
 		speed : (window.innerHeight + window.innerWidth) / 2 * 0.0003,
 		size : (window.innerHeight + window.innerWidth) / 2 * 0.008
@@ -30,15 +29,15 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 			barhit = (hitpos * 100 / playBar.height)
 			barhit = barhit > 80 ? 80 : barhit
 			barhit = barhit < 20 ? 20 : barhit
-			angle = barhit * 180 / 100
+			angle = 180 - barhit * 180 / 100
 			// angle = angle > 90 ? angle - 90 : 360 - angle //essayer mais marche pas
 			console.log('sin , cos' ,Math.sin(angle), Math.cos(angle));
 			
 			console.log("before", ball.dirX, ball.dirY);
 			
 			console.log(hitpos, barhit, angle);
-			ball.dirX = Math.sin(angle) * ball.speed
-			ball.dirY = Math.cos(angle) * ball.speed;
+			ball.dirX = Math.sin(angle * (Math.PI/180)) * ball.speed
+			ball.dirY = Math.cos(angle * (Math.PI/180)) * ball.speed;
 			console.log("after", ball.dirX, ball.dirY);
 		}
 	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX && ball.dirX > 0)//fake bar
