@@ -38,7 +38,7 @@ export async function watchScore (context : any, ball : any, ballPosX : any, bal
 		updateScore(newArray)
 		ballPosX.current = window.innerWidth / 2
 		ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
-		ball.dirX = getRandomArbitrary(0.1, 0.9)
+		ball.dirX = getRandomArbitrary(0.1, 0.9) 
 		ball.dirY = getRandomArbitrary(-1, 1)
 		sleep(1000)
 	}

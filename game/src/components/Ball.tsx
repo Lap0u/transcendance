@@ -2,11 +2,10 @@ import {playBar} from "./PlayBar.tsx";
 import {getRandomArbitrary} from './Canvas.tsx'
 
 var today = new Date()
-
 export var ball = {
-		dirX : (today.getMilliseconds() % 2) ? getRandomArbitrary(0.1, 0.9) : getRandomArbitrary(-0.9, -0.1),
-		dirY : getRandomArbitrary(-1, 1),
-		speed : (window.innerHeight + window.innerWidth) / 2 * 0.0003,
+		speed : (window.innerHeight * window.innerWidth) /  10000000,
+		dirX : (today.getMilliseconds() % 2) ? getRandomArbitrary(0.1, 0.9) : getRandomArbitrary(-0.9, -0.1) ,
+		dirY : getRandomArbitrary(-1, 1) ,
 		size : (window.innerHeight + window.innerWidth) / 2 * 0.008
 		//		drawBall : drawBall()
     }
@@ -36,8 +35,8 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 			console.log("before", ball.dirX, ball.dirY);
 			
 			console.log(hitpos, barhit, angle);
-			ball.dirX = Math.sin(angle * (Math.PI/180)) * ball.speed
-			ball.dirY = Math.cos(angle * (Math.PI/180)) * ball.speed;
+			ball.dirX = Math.sin(angle * (Math.PI/180))
+			ball.dirY = Math.cos(angle * (Math.PI/180))
 			console.log("after", ball.dirX, ball.dirY);
 		}
 	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX && ball.dirX > 0)//fake bar
@@ -50,6 +49,6 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
   }
 
 window.addEventListener('resize', () => {
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.0006
+	ball.speed = (window.innerHeight * window.innerWidth) /  10000000
 	ball.size = (window.innerHeight + window.innerWidth) / 2 * 0.008
 })
