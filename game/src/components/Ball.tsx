@@ -10,6 +10,26 @@ export var ball = {
 		//		drawBall : drawBall()
     }
 
+export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball: any) => {
+	ballPosX.current = window.innerWidth / 2
+	ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
+	if (player === true)
+		ball.dirX = getRandomArbitrary(0.1, 0.9)
+	else
+		ball.dirX = getRandomArbitrary(-0.9, -0.1)
+	ball.dirY = getRandomArbitrary(-1, 1)
+}
+
+export const centerBall = (player : boolean, ballPosX : any, ballPosY : any, ball: any) => {
+	ballPosX.current = window.innerWidth / 2
+	ballPosY.current = window.innerHeight / 2
+	if (player === true)
+		ball.dirX = 1
+	else
+		ball.dirX = -1
+	ball.dirY = 0
+}
+
 export const drawBall = (context : any, ballPosX : number, ballPosY : number, playBarPosY : number) => {
 
 	// conso
@@ -37,6 +57,9 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 			console.log(hitpos, barhit, angle);
 			ball.dirX = Math.sin(angle * (Math.PI/180))
 			ball.dirY = Math.cos(angle * (Math.PI/180))
+			ball.speed *= 1.1 //acceleration de la balle a chaque touche
+			console.log('speed', ball.speed);
+			
 			console.log("after", ball.dirX, ball.dirY);
 		}
 	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX && ball.dirX > 0)//fake bar

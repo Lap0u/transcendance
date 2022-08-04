@@ -1,8 +1,10 @@
 import './Canvas.css';
 import React, { useRef, useEffect, useState} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
-import {ball, drawBall} from './Ball.tsx'
+import {ball, drawBall, resetBall, centerBall} from './Ball.tsx'
 import {drawScore, watchScore} from './Score.tsx'
+import ResetButton from './resetButton.tsx'
+
 
 export function getRandomArbitrary(min : number, max : number) {
   return Math.random() * (max - min) + min;
@@ -41,6 +43,10 @@ const Canvas = () => {
 
 	return (
 		<div>
+			<ResetButton text="resetBall" player={true} onClick={() => resetBall(false, ballPosX, ballPosY, ball)}/>
+			<ResetButton text="centerBall" player={true} onClick={() => centerBall(false, ballPosX, ballPosY, ball)}/>
+			<ResetButton text = "resetBall" player={false} onClick={() => resetBall(true, ballPosX, ballPosY, ball)}/>
+			<ResetButton text = "centerBall" player={false} onClick={() => centerBall(true, ballPosX, ballPosY, ball)}/>
 			<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
 				There should be the canvas of the full game
 			</canvas>

@@ -44,3 +44,23 @@
     transform: rotate(360deg);
   }
 }
+
+.resetButton {
+	background-color: black;
+	color: white;
+	border: none;
+	font-size: 20px;
+	margin: 10px;
+	cursor: pointer;
+}
+.resetButton:hover{
+	background-color: white;
+	color: black;
+}
+.rightButton {
+	float: right;
+}
+
+.leftButton {
+	float: left;
+}

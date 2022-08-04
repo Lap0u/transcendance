@@ -1,4 +1,4 @@
-import {getRandomArbitrary} from './Canvas.tsx'
+import {resetBall} from './Ball.tsx'
 
 export const drawScore = (context : any, playerScore : number) => {
 	// const playerOneX = context.canvas.width / 2 - (context.canvas.width / 2 * 20 / 100) 
@@ -36,20 +36,14 @@ export async function watchScore (context : any, ball : any, ballPosX : any, bal
 	{
 		newArray[1] += 1
 		updateScore(newArray)
-		ballPosX.current = window.innerWidth / 2
-		ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
-		ball.dirX = getRandomArbitrary(0.1, 0.9) 
-		ball.dirY = getRandomArbitrary(-1, 1)
+		resetBall(true, ballPosX, ballPosY, ball)
 		sleep(1000)
 	}
 	else if (ballPosX.current  + (ball.size) > context.canvas.width)
 	{
 		newArray[0] += 1
 		updateScore(newArray)
-		ballPosX.current = window.innerWidth / 2
-		ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
-		ball.dirX = getRandomArbitrary(-0.9, -0.1)
-		ball.dirY = getRandomArbitrary(-1, 1)
+		resetBall(false, ballPosX, ballPosY, ball)
 		sleep(1000)
 	}
 }
