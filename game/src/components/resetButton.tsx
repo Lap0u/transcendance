@@ -1,3 +1,5 @@
+import './resetButton.css'
+
 const ResetButton = ({text, player, onClick}) => {
 	let pos : string;
 	if (player === true)

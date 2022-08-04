@@ -11,15 +11,15 @@ export function getRandomArbitrary(min : number, max : number) {
 }
 
 const Canvas = () => {
-	console.log('begin canvas')
 	const canvasRef = useRef(null)
-  const [playBarPosY, movePlayBar] = useState(25)
-  const ballPosX = useRef(window.innerWidth / 2);
-  const ballPosY = useRef(getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15));
-  const [moves, moveBal] = useState(0)
+	const [playBarPosY, movePlayBar] = useState(25)
+	const ballPosX = useRef(window.innerWidth / 2);
+	const ballPosY = useRef(getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15));
+	const [moves, moveBal] = useState(0)
 	const [playersScore, updateScore] = useState([0, 0])
-
-	const calculation = useMemo(() => throwBall(ballPosX, ballPosY, moveBal, moves), []);
+	
+	// console.log('begin canvas', moves)
+	// const calculation = useMemo(() => throwBall(ballPosX, ballPosY, moveBal, moves), [moves]);
 	
   useEffect(() => {
 		//draw every time the cursor move, or ball position change
@@ -35,6 +35,10 @@ const Canvas = () => {
 		drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
 		watchScore(context, ball, ballPosX, ballPosY, playersScore, updateScore)
 		drawScore(context, playersScore)
+		console.log('moves', moves);
+		ballPosX.current += ball.dirX * ball.speed
+		ballPosY.current += ball.dirY * ball.speed
+		moveBal(moves + 1)
   }, [ playBarPosY, moves, playersScore])
 
 	return (
@@ -50,14 +54,17 @@ const Canvas = () => {
 	)
 }
 
-function throwBall(ballPosX, ballPosY, moveBal, moves){
-	setInterval(() => {
-		//bal position change every 100ms
-			ballPosX.current += ball.dirX * ball.speed
-			ballPosY.current += ball.dirY * ball.speed
-			moveBal(moves + 1)
-		}, 0)
-}
+// function throwBall(ballPosX : any, ballPosY : any, moveBal : any, moves : number){
+// 	console.log('interval');
+// 	setInterval(() => {
+// 		//bal position change every 100ms
+// 		// ballPosX.current += ball.dirX * ball.speed
+// 		// ballPosY.current += ball.dirY * ball.speed
+		
+// 			console.log('throwball');
+			// moveBal(moves + 1)
+// 		}, 100)
+// }
 
 const drawBackground = (context : any) => {
 	context.fillStyle = '#000000'
