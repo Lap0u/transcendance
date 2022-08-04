@@ -1,5 +1,5 @@
 import './Canvas.css';
-import React, { useRef, useEffect, useState} from 'react'
+import React, { useRef, useEffect, useState, useMemo} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
 import {ball, drawBall, resetBall, centerBall} from './Ball.tsx'
 import {drawScore, watchScore} from './Score.tsx'
@@ -11,6 +11,7 @@ export function getRandomArbitrary(min : number, max : number) {
 }
 
 const Canvas = () => {
+	console.log('begin canvas')
 	const canvasRef = useRef(null)
   const [playBarPosY, movePlayBar] = useState(25)
   const ballPosX = useRef(window.innerWidth / 2);
@@ -18,12 +19,7 @@ const Canvas = () => {
   const [moves, moveBal] = useState(0)
 	const [playersScore, updateScore] = useState([0, 0])
 
-	setInterval(() => {
-	//bal position change every 100ms
-		ballPosX.current += ball.dirX * ball.speed
-		ballPosY.current += ball.dirY * ball.speed
-		moveBal(moves + 1)
-	}, 0)
+	const calculation = useMemo(() => throwBall(ballPosX, ballPosY, moveBal, moves), []);
 	
   useEffect(() => {
 		//draw every time the cursor move, or ball position change
@@ -52,6 +48,15 @@ const Canvas = () => {
 			</canvas>
 		</div>
 	)
+}
+
+function throwBall(ballPosX, ballPosY, moveBal, moves){
+	setInterval(() => {
+		//bal position change every 100ms
+			ballPosX.current += ball.dirX * ball.speed
+			ballPosY.current += ball.dirY * ball.speed
+			moveBal(moves + 1)
+		}, 0)
 }
 
 const drawBackground = (context : any) => {
