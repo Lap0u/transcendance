@@ -3,7 +3,7 @@ import {getRandomArbitrary} from './Canvas.tsx'
 
 var today = new Date()
 export var ball = {
-		speed : (window.innerHeight + window.innerWidth) / 2 * 0.00015,
+		speed : (window.innerHeight + window.innerWidth) / 2 * 0.00047,
 		angle: today.getMilliseconds() % 2 ? getRandomArbitrary(20, 160) : getRandomArbitrary(200, 340),
 		dirX : 0,
 		dirY : 0,
@@ -13,6 +13,8 @@ export var ball = {
 	ball.dirX = Math.sin(ball.angle * (Math.PI/180))
 	ball.dirY = Math.cos(ball.angle * (Math.PI/180))
 
+	var savedWidth = window.innerWidth
+	var savedHeight = window.innerHeight
 export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball: any) => {
 	ballPosX.current = window.innerWidth / 2
 	ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
@@ -22,7 +24,9 @@ export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball
 		ball.angle =  getRandomArbitrary(200, 340)
 	ball.dirX = Math.sin(ball.angle * (Math.PI/180))
 	ball.dirY = Math.cos(ball.angle * (Math.PI/180))
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00015
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00035
+	console.log('reset');
+	
 }
 
 export const centerBall = (player : boolean, ballPosX : any, ballPosY : any, ball: any) => {
@@ -33,7 +37,8 @@ export const centerBall = (player : boolean, ballPosX : any, ballPosY : any, bal
 	else
 		ball.dirX = -1
 	ball.dirY = 0
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00015
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00035
+	console.log('center');
 }
 
 export const drawBall = (context : any, ballPosX : number, ballPosY : number, playBarPosY : number) => {
@@ -58,7 +63,10 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 			ball.angle = angle
 			ball.dirX = Math.sin(angle * (Math.PI/180))
 			ball.dirY = Math.cos(angle * (Math.PI/180))
-			ball.speed *= 1.1 //acceleration de la balle a chaque touche
+			console.log('speed avant', ball.speed);
+			ball.speed *= 1.5
+			console.log('speed apres', ball.speed);
+//acceleration de la balle a chaque touche
 		}
 	if (ballPosX  + ball.size >= context.canvas.width - playBar.posX && ball.dirX > 0)//fake bar
 		ball.dirX *= -1;
@@ -69,7 +77,14 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 	  context.fill();
   }
 
-window.addEventListener('resize', () => {
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00015
+  export const resizeBall = (ballPosX : any, ballPosY : any) => {
+
+	ballPosX.current = ballPosX.current * window.innerWidth / savedWidth 
+	ballPosY.current = ballPosY.current * window.innerHeight / savedHeight 
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00047
 	ball.size = (window.innerHeight + window.innerWidth) / 2 * 0.008
-})
+	savedWidth = window.innerWidth
+	savedHeight = window.innerHeight
+	console.log('resize');
+	
+	}

@@ -1,7 +1,7 @@
 import './Canvas.css';
-import React, { useRef, useEffect, useState, useMemo} from 'react'
+import React, { useRef, useEffect, useState} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
-import {ball, drawBall, resetBall, centerBall} from './Ball.tsx'
+import {ball, drawBall, resetBall, centerBall, resizeBall} from './Ball.tsx'
 import {drawScore, watchScore} from './Score.tsx'
 import ResetButton from './resetButton.tsx'
 
@@ -35,11 +35,12 @@ const Canvas = () => {
 		drawBall(context, ballPosX.current, ballPosY.current, playBarPosY)
 		watchScore(context, ball, ballPosX, ballPosY, playersScore, updateScore)
 		drawScore(context, playersScore)
-		console.log('moves', moves);
-		ballPosX.current += ball.dirX * ball.speed
-		ballPosY.current += ball.dirY * ball.speed
+		ballPosX.current += (ball.dirX * ball.speed)
+		ballPosY.current += (ball.dirY * ball.speed)
 		moveBal(moves + 1)
-  }, [ playBarPosY, moves, playersScore])
+	}, [ playBarPosY, moves, playersScore])
+
+  window.addEventListener('resize', () => resizeBall(ballPosX, ballPosY))
 
 	return (
 		<div>

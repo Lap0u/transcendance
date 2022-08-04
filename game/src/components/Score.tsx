@@ -9,8 +9,6 @@ export const drawScore = (context : any, playerScore : number) => {
 	const avg = (context.canvas.width + context.canvas.height) / 2;
 	const size = avg / 18 + 'px'
 
-	console.log('avg', avg);
-	console.log('size', size);
 	context.beginPath();
 	context.font = `${size} press_start_2pregular, Arial`;
 	context.textAlign = 'right';
