@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
 import {ball, drawBall, resetBall, centerBall, resizeBall} from './Ball.tsx'
 import {drawScore, watchScore} from './Score.tsx'
-import ResetButton from './resetButton.tsx'
+import ButtonTemplate from './ButtonTemplate.tsx'
 
 
 export function getRandomArbitrary(min : number, max : number) {
@@ -44,10 +44,10 @@ const Canvas = () => {
 
 	return (
 		<div>
-			<ResetButton text="resetBall" player={true} onClick={() => resetBall(false, ballPosX, ballPosY, ball)}/>
-			<ResetButton text="centerBall" player={true} onClick={() => centerBall(false, ballPosX, ballPosY, ball)}/>
-			<ResetButton text = "resetBall" player={false} onClick={() => resetBall(true, ballPosX, ballPosY, ball)}/>
-			<ResetButton text = "centerBall" player={false} onClick={() => centerBall(true, ballPosX, ballPosY, ball)}/>
+			<ButtonTemplate text="resetBall" onClick={() => resetBall(false, ballPosX, ballPosY, ball)} buttonClass={'resetButton rightButton'} />
+			<ButtonTemplate text="centerBall" onClick={() => centerBall(false, ballPosX, ballPosY, ball)} buttonClass={'resetButton rightButton'} />
+			<ButtonTemplate text = "resetBall" onClick={() => resetBall(true, ballPosX, ballPosY, ball)} buttonClass={'resetButton leftButton'} />
+			<ButtonTemplate text = "centerBall" onClick={() => centerBall(true, ballPosX, ballPosY, ball)} buttonClass={'resetButton leftButton'} />
 			<canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}>
 				There should be the canvas of the full game
 			</canvas>

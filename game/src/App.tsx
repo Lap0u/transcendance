@@ -1,11 +1,12 @@
 import './App.css';
-import Canvas from './components/Canvas.tsx'
+import Accueil from './components/Accueil.tsx'
+// import Canvas from './components/Canvas.tsx'
 
 function App() {
-	
   return (
 	<div id="wholepage">
-		<Canvas />
+		<Accueil />
+		{/* <Canvas /> */}
 	</div>
   );
 }
