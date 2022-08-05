@@ -5,9 +5,13 @@ import React, {useState} from 'react'
 // import backgroundImage from '../assets/pong_wallpaper'
 function Accueil(){
 	const [isShown, setIsShown] = useState(false);
+	const [isLogin, setIsLogin] = useState(false);
 
-	function handleClick(){
+	function launchClick(){
 	  setIsShown(true);
+	}
+	function loginClick(){
+	  setIsLogin(!isLogin);
 	}
 	return (
 		<div className='AccueilPage'>
@@ -16,12 +20,23 @@ function Accueil(){
 			<div>
 				<Background/>
 				<Welcome/>
-				<Login onClick={handleClick} />
+				<ButtonTemplate text="Login" onClick={loginClick} buttonClass={'login-button rightButton'} />
+				<Login onClick={launchClick} />
 			</div>
 			}
+			{isLogin && <LoginPop />}
 		</div>
 	)
 }	
+
+const LoginPop = () => {
+	console.log('here comes the login pop up');
+	return (
+		<div>
+
+		</div>
+	)
+}
 
 function Login({onClick}){
 	return (
@@ -29,7 +44,7 @@ function Login({onClick}){
 			<h2 className='login-message'>
 				You have to login to play<br/>
 			</h2>
-			<ButtonTemplate text="Play Game" onClick={onClick} buttonClass={'login-button'} />
+			<ButtonTemplate text="Play Game" onClick={onClick} buttonClass={'join-button'} />
 		</div>
 	)
 }

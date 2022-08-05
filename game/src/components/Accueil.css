@@ -24,6 +24,17 @@
 
 }
 
+.login-button{
+	z-index: 2;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	margin-right: 20px;
+	font-size: 0.6em;
+	color: black;
+	background-color: white;
+}
+
 .login{
 	position: absolute;
 	z-index: 3;
@@ -37,9 +48,11 @@
 	color: white;
 }
 
-.login-button{
+
+.join-button{
 	width: 13vw;
 	height: 3vw;
 	font-size: 0.6em;
 	color: black;
+	background-color: white;
 }
