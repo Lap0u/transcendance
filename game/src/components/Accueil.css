@@ -48,6 +48,15 @@
 	color: white;
 }
 
+.chat-button {
+	z-index: 2;
+	position: absolute;
+	right: 150px;
+	top: 10px;
+	font-size: 0.6em;
+	color: black;
+	background-color: white;
+}
 
 .join-button{
 	width: 13vw;
