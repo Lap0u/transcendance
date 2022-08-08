@@ -1,54 +1,43 @@
 import './Accueil.css'
 import ButtonTemplate from './ButtonTemplate.tsx'
 import Canvas from './Canvas.tsx'
+import LoginPopup from './login/Login.tsx'
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 // import backgroundImage from '../assets/pong_wallpaper'
 function Accueil(){
-	const [isShown, setIsShown] = useState(false);
-	const [isLogin, setIsLogin] = useState(false);
+	const [isLoginActive, setIsLogin] = useState(false);
 
 	const navigate = useNavigate();
 
-	function launchClick(){
-	  setIsShown(true);
-	}
 	function loginClick(){
-	  setIsLogin(!isLogin);
+	  setIsLogin(!isLoginActive);
 	}
 	return (
 		<div className='AccueilPage'>
-			{isShown && <Canvas />}
-			{!isShown && 
 			<div>
 				<Background/>
+			</div>
+			{isLoginActive && <LoginPopup isLog={isLoginActive} setLog={setIsLogin} />}
+			{!isLoginActive && 
+			<div>
 				<Welcome/>
 				<ButtonTemplate text="Login" onClick={loginClick} buttonClass={'login-button rightButton'} />
-				<Login onClick={launchClick} />
+				<LoginButton nav={navigate}/>
 				<ButtonTemplate text="Chat" onClick={() => navigate("/chat")} buttonClass={'chat-button'} />
 			</div>
 			}
-			{isLogin && <LoginPop />}
-		</div>
-	)
-}	
-
-const LoginPop = () => {
-	console.log('here comes the login pop up');
-	return (
-		<div>
-
 		</div>
 	)
 }
 
-function Login({onClick}){
+function LoginButton({nav}){
 	return (
 		<div className='login'>
 			<h2 className='login-message'>
 				You have to login to play<br/>
 			</h2>
-			<ButtonTemplate text="Play Game" onClick={onClick} buttonClass={'join-button'} />
+			<ButtonTemplate text="Enter game" onClick={() => nav("/home")} buttonClass={'join-button'} />
 		</div>
 	)
 }
