@@ -1,11 +1,23 @@
+import React from 'react';
 import './App.css';
-import Accueil from './components/Accueil.tsx'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Accueil from './components/Accueil.tsx';
+import Chat from './components/Chat/Chat.tsx';
+import Page404 from './components/Page404.tsx';
 // import Canvas from './components/Canvas.tsx'
 
 function App() {
   return (
 	<div id="wholepage">
-		<Accueil />
+		<BrowserRouter>
+			<span style={{ color: 'white' }}>This is single page application</span>
+			<Routes>
+				<Route path="/" element={<Accueil />} />
+				<Route path="/chat" element={<Chat />} />
+				{/* If no route match, then return 404 page */}
+				<Route path="*" element={<Page404 />} />
+			</Routes>
+		</BrowserRouter>
 		{/* <Canvas /> */}
 	</div>
   );
