@@ -15,7 +15,7 @@ const LoginPopup = ({isLog, setLog}) => {
 	}	
 	return (
 	<div className='loginContainer' id='main'>
-		<form className='loginForm animate'>
+		<form className='loginForm animate'> {/*-- Envoyer la vraie connexion au back */}
 			<img src={avatar} alt='Default Avatar' />
 			<span onClick={() => hideForm()} className="redCross" title="Close Modal">&times;</span>
 			<div className='fieldContainer'>
