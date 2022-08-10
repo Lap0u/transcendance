@@ -3,7 +3,7 @@ import {getRandomArbitrary} from './Canvas.tsx'
 
 var today = new Date()
 export var ball = {
-		speed : (window.innerHeight + window.innerWidth) / 2 * 0.00047,
+		speed : (window.innerHeight + window.innerWidth) / 2 * 0.0015,
 		angle: today.getMilliseconds() % 2 ? getRandomArbitrary(20, 160) : getRandomArbitrary(200, 340),
 		dirX : 0,
 		dirY : 0,
@@ -15,6 +15,7 @@ export var ball = {
 
 	var savedWidth = window.innerWidth
 	var savedHeight = window.innerHeight
+
 export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball: any) => {
 	ballPosX.current = window.innerWidth / 2
 	ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
@@ -24,7 +25,7 @@ export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball
 		ball.angle =  getRandomArbitrary(200, 340)
 	ball.dirX = Math.sin(ball.angle * (Math.PI/180))
 	ball.dirY = Math.cos(ball.angle * (Math.PI/180))
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00035
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.0015
 	console.log('reset');
 	
 }
@@ -37,7 +38,7 @@ export const centerBall = (player : boolean, ballPosX : any, ballPosY : any, bal
 	else
 		ball.dirX = -1
 	ball.dirY = 0
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00035
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.0015
 	console.log('center');
 }
 
