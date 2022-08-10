@@ -20,8 +20,8 @@ const Canvas = () => {
 	
 	// console.log('begin canvas', moves)
 	// const calculation = useMemo(() => throwBall(ballPosX, ballPosY, moveBal, moves), [moves]);
-	
-  useEffect(() => {
+	window.requestAnimationFrame(updateCanvas)
+  	function updateCanvas () {
 		//draw every time the cursor move, or ball position change
 		const canvas : any = canvasRef.current
 		canvas.width = window.innerWidth;
@@ -38,7 +38,7 @@ const Canvas = () => {
 		ballPosX.current += (ball.dirX * ball.speed)
 		ballPosY.current += (ball.dirY * ball.speed)
 		moveBal(moves + 1)
-	}, [ playBarPosY, moves, playersScore])
+	}
 
   window.addEventListener('resize', () => resizeBall(ballPosX, ballPosY))
 
