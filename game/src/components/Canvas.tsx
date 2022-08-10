@@ -1,5 +1,5 @@
 import './Canvas.css';
-import React, { useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
 import {ball, drawBall, resetBall, centerBall, resizeBall} from './Ball.tsx'
 import {drawScore, watchScore} from './Score.tsx'
@@ -20,8 +20,8 @@ const Canvas = () => {
 	
 	// console.log('begin canvas', moves)
 	// const calculation = useMemo(() => throwBall(ballPosX, ballPosY, moveBal, moves), [moves]);
-	window.requestAnimationFrame(updateCanvas)
-  	function updateCanvas () {
+	
+	function updateCanvas () {
 		//draw every time the cursor move, or ball position change
 		const canvas : any = canvasRef.current
 		canvas.width = window.innerWidth;
@@ -39,7 +39,9 @@ const Canvas = () => {
 		ballPosY.current += (ball.dirY * ball.speed)
 		moveBal(moves + 1)
 	}
-
+	useEffect(() => {
+		window.requestAnimationFrame(updateCanvas)
+	})
   window.addEventListener('resize', () => resizeBall(ballPosX, ballPosY))
 
 	return (

@@ -7,30 +7,19 @@ import { useNavigate } from 'react-router-dom';
 const MainPage = () =>
 {
 	const [inMatchmaking, setMatchmaking] = useState(false);
-	const [inGame, setInGame] = useState(false);
 	const navigate = useNavigate();
 
 	const joinMatchmaking = () =>{
 		setMatchmaking(!inMatchmaking)
 	}
 
-	function changeGame () {
-		if (inMatchmaking) {
-			console.log('executed');
-			
-			setMatchmaking(!inMatchmaking)
-			setInGame(!inGame)
-		}
-	}
 	if (inMatchmaking) {
 		setTimeout( function() {
-			changeGame()
+			navigate("/game")
 		},
 		3000)
 	}
 
-	if (inGame)
-		navigate("/game")
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
 	return (
 		<div style={{color: 'red'}}>
