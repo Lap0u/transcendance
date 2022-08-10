@@ -4,6 +4,7 @@ import {getRandomArbitrary} from './Canvas.tsx'
 var today = new Date()
 export var ball = {
 		speed : (window.innerHeight + window.innerWidth) / 2 * 0.004,
+		acceleration : 1,
 		angle: today.getMilliseconds() % 2 ? getRandomArbitrary(20, 160) : getRandomArbitrary(200, 340),
 		dirX : 0,
 		dirY : 0,
@@ -65,7 +66,8 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 			ball.dirX = Math.sin(angle * (Math.PI/180))
 			ball.dirY = Math.cos(angle * (Math.PI/180))
 			console.log('speed avant', ball.speed);
-			ball.speed *= 1.5
+			ball.acceleration *= 1.5;
+			ball.speed *= 1.5;
 			console.log('speed apres', ball.speed);
 //acceleration de la balle a chaque touche
 		}
@@ -82,7 +84,7 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 
 	ballPosX.current = ballPosX.current * window.innerWidth / savedWidth 
 	ballPosY.current = ballPosY.current * window.innerHeight / savedHeight 
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00047
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.004 * ball.acceleration
 	ball.size = (window.innerHeight + window.innerWidth) / 2 * 0.008
 	savedWidth = window.innerWidth
 	savedHeight = window.innerHeight

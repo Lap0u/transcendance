@@ -2,6 +2,7 @@ export var playBar = {
 	posX :  window.innerWidth / 30,
 	width :  window.innerWidth / 120,
 	height : window.innerHeight / 15
+
 }
 
 export const resizePlayBar = () => {
