@@ -1,10 +1,18 @@
 import './Accueil.css'
 import ButtonTemplate from './ButtonTemplate.tsx'
 import Canvas from './Canvas.tsx'
+import io from "socket.io-client"; 
 import LoginPopup from './login/Login.tsx'
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 // import backgroundImage from '../assets/pong_wallpaper'
+
+const socket = io('http://localhost:3000');
+socket.on('init', handleInit);
+
+function handleInit(msg : string) {
+	console.log(msg);
+}
 function Accueil(){
 	const [isLoginActive, setIsLogin] = useState(false);
 
