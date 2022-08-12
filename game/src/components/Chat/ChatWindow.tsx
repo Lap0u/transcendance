@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ButtonTemplate from '../ButtonTemplate.tsx';
+import ButtonTemplate from '../ButtonTemplate';
 import axios from 'axios';
 import io from 'socket.io-client';
 import './Chat.css';

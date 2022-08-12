@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import jwt_decode from "jwt-decode";
-import ChatHeader from './ChatHeader.tsx';
-import ChatUserList from './ChatUserList.tsx';
-import ChatWindow from './ChatWindow.tsx';
+import ChatHeader from './ChatHeader';
+import ChatUserList from './ChatUserList';
+import ChatWindow from './ChatWindow';
 
 const Chat = () => {
   const [token, setToken] = useState(null);

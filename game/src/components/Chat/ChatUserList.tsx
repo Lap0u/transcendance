@@ -1,5 +1,5 @@
 import React from 'react';
-import ButtonTemplate from '../ButtonTemplate.tsx';
+import ButtonTemplate from '../ButtonTemplate';
 
 const UserListItem = ({ user, setChatWith }) => {
   const chatWithUser = () => {
@@ -7,7 +7,7 @@ const UserListItem = ({ user, setChatWith }) => {
   };
 
   return <div style={{ display: 'flex' }}>
-    {user.username} <ButtonTemplate text={"Chat with him"} onClick={chatWithUser} />
+    {user.username} <ButtonTemplate text={"Chat with him"} onClick={chatWithUser} buttonClass="" />
   </div>
 };
 

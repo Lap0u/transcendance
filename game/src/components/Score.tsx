@@ -1,4 +1,4 @@
-import {resetBall} from './Ball.tsx'
+import {resetBall} from './Ball'
 
 export const drawScore = (context : any, playerScore : number) => {
 	// const playerOneX = context.canvas.width / 2 - (context.canvas.width / 2 * 20 / 100) 
