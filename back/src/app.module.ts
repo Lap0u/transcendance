@@ -11,6 +11,7 @@ import { User } from './user/user.entity';
 import { Chat } from './chat/chat.entity';
 import { SocketModule } from './socket/socket.module';
 import { SocketGateway } from './socket.gateway';
+import { PaddleService } from './paddle/paddle.service';
 
 @Module({
   imports: [
@@ -33,6 +34,6 @@ import { SocketGateway } from './socket.gateway';
     SocketModule,
   ],
   controllers: [AppController, PaddleController],
-  providers: [AppService, SocketGateway],
+  providers: [AppService, SocketGateway, PaddleService],
 })
 export class AppModule {}
