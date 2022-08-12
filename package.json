@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@nestjs/cli": "^9.0.0",
     "@types/jest": "^28.1.6",
     "@types/node": "^18.6.3",
     "@types/react": "^18.0.15",

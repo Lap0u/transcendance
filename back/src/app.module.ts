@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
-import { GameModule } from './game/game.module';
+import { PaddleController } from './paddle/paddle.controller';
 import { User } from './user/user.entity';
 import { Chat } from './chat/chat.entity';
 import { SocketModule } from './socket/socket.module';
@@ -31,9 +31,8 @@ import { SocketGateway } from './socket.gateway';
     AuthModule,
     ChatModule,
     SocketModule,
-	GameModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, PaddleController],
   providers: [AppService, SocketGateway],
 })
 export class AppModule {}
