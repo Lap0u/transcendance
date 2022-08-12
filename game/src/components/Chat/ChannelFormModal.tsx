@@ -46,8 +46,6 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token }) => {
 			setPasswordStare(true);
 		else
 			setPasswordStare(false);
-
-		console.log(passwordState);
 	}
 
   return (
