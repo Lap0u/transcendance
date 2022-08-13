@@ -6,12 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
-import { PaddleController } from './paddle/paddle.controller';
+import { PaddleController } from './gameplay/paddle.controller';
 import { User } from './user/user.entity';
 import { Chat } from './chat/chat.entity';
 import { SocketModule } from './socket/socket.module';
 import { SocketGateway } from './socket.gateway';
-import { PaddleService } from './paddle/paddle.service';
+import { PaddleService } from './gameplay/paddle.service';
 
 @Module({
   imports: [

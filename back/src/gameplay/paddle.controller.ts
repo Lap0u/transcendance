@@ -1,5 +1,5 @@
 import { Controller, Get, Put, Param, Body, Post } from "@nestjs/common";
-import { CreatePaddleDto } from "./paddle.dto";
+import { CreatePaddleDto, UpdatePaddleDto } from "./paddle.dto";
 import { PaddleService } from "./paddle.service";
 
 @Controller('paddle')
@@ -12,23 +12,23 @@ export class PaddleController {
 	
 	@Get('/:paddleId')
 	getPaddleById(
-		@Param('paddleId') paddleId: number
+		@Param('paddleId') paddleId: string
 	) : CreatePaddleDto {
-		return "Created"
+		return this.paddleService.getPaddleById(paddleId)
 	}
 
 	@Post()
 		createPaddle(
-			@Body() body : CreatePaddleDto
+			@Body() body : UpdatePaddleDto
 	) : CreatePaddleDto {
-		return "Create Paddle"
+		return this.paddleService.createPaddle(body)
 	}
 
-	@Put()
+	@Put('/:paddleId')
 	updatePaddle(
-		@Param('paddleId') paddleId : number,
-		@Body() body : CreatePaddleDto
+		@Param('paddleId') paddleId : string,
+		@Body() body : UpdatePaddleDto
 	) : CreatePaddleDto{
-		return "Updated"
+			return this.paddleService.updatePaddle(body, paddleId)
 	}
 }
