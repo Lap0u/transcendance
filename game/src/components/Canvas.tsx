@@ -1,10 +1,9 @@
 import './Canvas.css';
-import React, {useEffect, useRef, useState} from 'react'
-import {getMousePosY, drawPlayBar} from './PlayBar.tsx'
-import {ball, drawBall, resetBall, centerBall, resizeBall} from './Ball.tsx'
-import {drawScore, watchScore} from './Score.tsx'
-import ButtonTemplate from './ButtonTemplate.tsx'
-
+import React, { useRef, useEffect, useState} from 'react'
+import {getMousePosY, drawPlayBar} from './PlayBar'
+import {ball, drawBall, resetBall, centerBall, resizeBall} from './Ball'
+import {drawScore, watchScore} from './Score'
+import ButtonTemplate from './ButtonTemplate'
 
 export function getRandomArbitrary(min : number, max : number) {
   return Math.random() * (max - min) + min;

@@ -9,9 +9,11 @@ import { ChatModule } from './chat/chat.module';
 import { PaddleController } from './gameplay/paddle.controller';
 import { User } from './user/user.entity';
 import { Chat } from './chat/chat.entity';
+import { Channel } from './channel/channel.entity';
 import { SocketModule } from './socket/socket.module';
 import { SocketGateway } from './socket.gateway';
 import { PaddleService } from './gameplay/paddle.service';
+import { ChannelModule } from './channel/channel.module';
 
 @Module({
   imports: [
@@ -25,13 +27,14 @@ import { PaddleService } from './gameplay/paddle.service';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Chat],
+      entities: [User, Chat, Channel],
       synchronize: true,
     }),
     UserModule,
     AuthModule,
     ChatModule,
     SocketModule,
+    ChannelModule,
   ],
   controllers: [AppController, PaddleController],
   providers: [AppService, SocketGateway, PaddleService],

@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Accueil from './components/Accueil.tsx';
-import Chat from './components/Chat/Chat.tsx';
-import MainPage from './components/Mainpage/MainPage.tsx';
-import Canvas from './components/Canvas.tsx';
-import Page404 from './components/Page404.tsx';
-// import Canvas from './components/Canvas.tsx'
+import MainPage from './components/Mainpage/MainPage';
+import Accueil from './components/Accueil';
+import Chat from './components/Chat/Chat';
+import Page404 from './components/Page404';
+import Canvas from './components/Canvas'
 
 function App() {
   return (

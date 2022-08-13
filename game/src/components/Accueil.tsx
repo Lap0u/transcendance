@@ -1,8 +1,8 @@
 import './Accueil.css'
-import ButtonTemplate from './ButtonTemplate.tsx'
-import Canvas from './Canvas.tsx'
 import io from "socket.io-client"; 
-import LoginPopup from './login/Login.tsx'
+import LoginPopup from './login/Login'
+import ButtonTemplate from './ButtonTemplate'
+import Canvas from './Canvas'
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 // import backgroundImage from '../assets/pong_wallpaper'

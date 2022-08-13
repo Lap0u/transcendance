@@ -1,13 +1,15 @@
-import React from 'react';
-import ButtonTemplate from '../ButtonTemplate.tsx';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'antd';
 import axios from 'axios';
 import './Chat.css';
+import ChannelFormModal from './ChannelFormModal';
 
 const BACK_URL = "http://localhost:4000";
 
 const ChatHeader = ({ token, setToken, setUsers, currUser }) => {
 	const navigate = useNavigate();
+	const [isModalVisible, setIsModalVisible] = useState(false);
 
   const getAllUsers = async () => {
     try {
@@ -62,14 +64,20 @@ const ChatHeader = ({ token, setToken, setUsers, currUser }) => {
     }
   };
 
+  const openCreateChannelModal = async () => {
+    setIsModalVisible(true);
+  };
+
   return (
     <div style={{ display: 'flex' }}>
-      <ButtonTemplate text={"Back to home"} onClick={() => navigate("/")} buttonClass="chat-header-button" />
-      <ButtonTemplate text={"List all user"} onClick={getAllUsers} buttonClass="chat-header-button" />
-      <ButtonTemplate text={"Create toto"} onClick={createToto} buttonClass="chat-header-button" />
-      <ButtonTemplate text={"Create tata"} onClick={createTata} buttonClass="chat-header-button" />
-      <ButtonTemplate text={"Login as toto"} onClick={loginAsToto} buttonClass="chat-header-button" />
-      <ButtonTemplate text={"Login as tata"} onClick={loginAsTata} buttonClass="chat-header-button" />
+      <ChannelFormModal token={token} isModalVisible={isModalVisible} closeModal={() => setIsModalVisible(false)} />
+      <Button onClick={() => navigate("/")} className="chat-header-button">Back to home</Button>
+      <Button onClick={getAllUsers} className="chat-header-button">List all user</Button>
+      <Button onClick={createToto} className="chat-header-button">Create toto</Button>
+      <Button onClick={createTata} className="chat-header-button">Create tata</Button>
+      <Button onClick={loginAsToto} className="chat-header-button">Login as toto</Button>
+      <Button onClick={loginAsTata} className="chat-header-button">Login as tata</Button>
+      <Button onClick={openCreateChannelModal} className="chat-header-button">Create channel</Button>
       { currUser && <div>Connected user: {currUser.username}</div>}
     </div>
   )

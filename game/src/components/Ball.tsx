@@ -1,5 +1,5 @@
-import {playBar} from "./PlayBar.tsx";
-import {getRandomArbitrary} from './Canvas.tsx'
+import {playBar} from "./PlayBar";
+import {getRandomArbitrary} from './Canvas'
 
 var today = new Date()
 export var ball = {
