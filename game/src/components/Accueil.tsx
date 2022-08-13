@@ -39,7 +39,8 @@ function Accueil(){
 	)
 }
 
-function LoginButton({nav}){
+function LoginButton(props : any){
+	const nav = props.nav;
 	return (
 		<div className='login'>
 			<h2 className='login-message'>

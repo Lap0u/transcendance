@@ -10,11 +10,11 @@ const CHANNEL_TYPE = {
 	private: 'private',
 };
 
-const ChannelFormModal = ({ isModalVisible, closeModal, token }) => {
+const ChannelFormModal = ({ isModalVisible, closeModal, token }: channelForModalProps) => {
 	const [form] = Form.useForm();
 	const [passwordState, setPasswordStare] = useState(false);
 
-  const sendChannel = async (values) => {
+  const sendChannel = async (values :any) => {
     try {
       const res = await axios.post(`${BACK_URL}/channels`, values, { headers: { Authorization: `Bearer ${token}` }});
 			console.log(res.data);
@@ -83,4 +83,9 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token }) => {
   );
 };
 
+type channelForModalProps = {
+  isModalVisible : any, 
+  closeModal : any,
+  token : any
+}
 export default ChannelFormModal;

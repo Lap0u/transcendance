@@ -16,7 +16,7 @@ export const drawPlayBar = (context : any,  playBarPosY : number) => {
 		context.fillStyle = 'white';
 		context.fillRect(playBar.posX, playBarPosY,
 			playBar.width, playBar.height);
-			drawPlayBar2(context, context.canvas)
+			drawPlayBar2(context)
 		}
 		
 		export const getMousePosY = (event : any, canvas : any) => {

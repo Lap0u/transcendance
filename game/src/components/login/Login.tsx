@@ -1,7 +1,9 @@
 import './login.css'
-import avatar from '../../assets/default-avatar.png'
+// import avatar from '../../assets/default-avatar.png'
 
-const LoginPopup = ({isLog, setLog}) => {
+const avatar = '../../assets/default-avatar.png'
+
+const LoginPopup = ({isLog, setLog} : loginPopupProps) => {
 
 	function hideForm(){
 		setLog(!isLog)
@@ -36,6 +38,11 @@ const LoginPopup = ({isLog, setLog}) => {
 		</form>
 	</div>
 	)
+}
+
+type loginPopupProps = {
+	isLog: any,
+	setLog: any
 }
 
 export default LoginPopup;

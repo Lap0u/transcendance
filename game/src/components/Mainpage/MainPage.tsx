@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
-import ButtonTemplate from '../ButtonTemplate.tsx'
-import Loader from './Loader.tsx'
+import ButtonTemplate from '../ButtonTemplate'
+import Loader from './Loader'
 import { useNavigate } from 'react-router-dom';
 
 

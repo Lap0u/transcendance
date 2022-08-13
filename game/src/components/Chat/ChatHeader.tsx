@@ -7,7 +7,7 @@ import ChannelFormModal from './ChannelFormModal';
 
 const BACK_URL = "http://localhost:4000";
 
-const ChatHeader = ({ token, setToken, setUsers, currUser }) => {
+const ChatHeader = ({ token, setToken, setUsers, currUser } :chatHeaderProps) => {
 	const navigate = useNavigate();
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -83,4 +83,10 @@ const ChatHeader = ({ token, setToken, setUsers, currUser }) => {
   )
 };
 
+type chatHeaderProps = {
+  token : any,
+  setToken : any,
+  setUsers : any, 
+  currUser : any
+}
 export default ChatHeader;
