@@ -28,8 +28,6 @@ export class PaddleService {
 
 	updatePaddle(payload: UpdatePaddleDto, paddleId: string) {
 		let updatedPaddle: CreatePaddleDto;
-		console.log('payload', payload);
-		console.log('id', paddleId);
 		
 		const updatedPaddleList = this.paddles.map(paddle => {
 			if (paddle.id === paddleId){

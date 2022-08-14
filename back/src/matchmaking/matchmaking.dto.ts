@@ -5,3 +5,7 @@ export class joinMatchmakingDto{
 export class matchmakingDto{
     id: string;
 }
+
+export class quitMatchmakingDto{
+    id: string;
+}
