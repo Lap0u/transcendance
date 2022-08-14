@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Form, Input, Modal, Radio } from 'antd';
 import axios from 'axios';
 
@@ -12,7 +11,6 @@ const CHANNEL_TYPE = {
 
 const ChannelFormModal = ({ isModalVisible, closeModal, token }: channelForModalProps) => {
 	const [form] = Form.useForm();
-	const [passwordState, setPasswordStare] = useState(false);
 
   const sendChannel = async (values :any) => {
     try {
@@ -38,15 +36,7 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token }: channelForModal
   const handleCancel = () => {
     closeModal();
 		form.resetFields();
-		setPasswordStare(false);
   };
-
-	const checkChannelType = (value: string) => {
-		if (value === CHANNEL_TYPE.protected)
-			setPasswordStare(true);
-		else
-			setPasswordStare(false);
-	}
 
   return (
 		<Modal title="Create Channel" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
@@ -57,7 +47,7 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token }: channelForModal
         initialValues={{ type: CHANNEL_TYPE.public }}
       >
 				<Form.Item name="type">
-          <Radio.Group onChange={(e) => checkChannelType(e.target.value)}>
+          <Radio.Group>
             <Radio value={CHANNEL_TYPE.public}>Public</Radio>
             <Radio value={CHANNEL_TYPE.private}>Private</Radio>
             <Radio value={CHANNEL_TYPE.protected}>Protected</Radio>
@@ -70,22 +60,30 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token }: channelForModal
         >
           <Input />
         </Form.Item>
-        { passwordState && <Form.Item
-					name="password"
-          label="Password"
-          rules={[{ required: true, message: 'Please input the password!' }]}
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
         >
-          <Input />
-        </Form.Item> }
-        
+          {({ getFieldValue }) =>
+            getFieldValue('type') === CHANNEL_TYPE.protected ? (
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true, message: 'Please input the password!' }]}
+              >
+                <Input />
+              </Form.Item>
+            ) : null
+          }
+        </Form.Item>
       </Form>
 		</Modal>
   );
 };
 
 type channelForModalProps = {
-  isModalVisible : any, 
-  closeModal : any,
-  token : any
+  isModalVisible : boolean, 
+  closeModal : () => void,
+  token : string,
 }
 export default ChannelFormModal;

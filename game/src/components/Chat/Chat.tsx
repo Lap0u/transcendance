@@ -3,12 +3,16 @@ import jwt_decode from "jwt-decode";
 import ChatHeader from './ChatHeader';
 import ChatUserList from './ChatUserList';
 import ChatWindow from './ChatWindow';
+import ChannelsList from './ChannelsList';
+
 
 const Chat = () => {
   const [token, setToken] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [chatWith, setChatWith] = useState(null);
+  const [channels, setChannels] = useState([]);
+
 
   useEffect(() => {
     if (token) {
@@ -26,10 +30,12 @@ const Chat = () => {
 
   return (
     <div style={{ color: 'white' }}>
-      <ChatHeader token={token} setToken={setToken} setUsers={setUsers} currUser={currUser} />
+      <ChatHeader token={token} setToken={setToken} setUsers={setUsers} currUser={currUser} setChannels={setChannels}/>
       <div style={{ display: 'flex' }}>
         <ChatUserList users={users} setChatWith={setChatWith} />
         <ChatWindow currUser={currUser} user={chatWith} token={token} />
+        <ChannelsList channels={channels} setChannels={setChannels} />
+
       </div>
     </div>
   );
