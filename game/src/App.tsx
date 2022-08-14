@@ -6,6 +6,7 @@ import Accueil from './components/Accueil';
 import Chat from './components/Chat/Chat';
 import Page404 from './components/Page404';
 import Canvas from './components/Canvas'
+import GameMenu from './components/game_menu/Game_menu';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
 				<Route path="/home" element={<MainPage />} />
 				<Route path="/chat" element={<Chat />} />
 				<Route path="/game" element={<Canvas />} />
+				<Route path="/menu" element={<GameMenu />} />
 				{/* If no route match, then return 404 page */}
 				<Route path="*" element={<Page404 />} />
 			</Routes>
