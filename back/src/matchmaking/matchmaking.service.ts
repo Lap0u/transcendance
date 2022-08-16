@@ -18,15 +18,13 @@ export class MatchmakingService {
 		this.matchmakingList.push(newUserInMatchmaking);
 		return newUserInMatchmaking;
 	}
+	
     quitMatchmaking(userId: string) :matchmakingDto[] {
-        console.log('userID', userId);
-        console.log('list', this.matchmakingList);
         
         
         const newMatchmakingList = this.matchmakingList.filter(user => {
             return user.id != userId
         })
-        console.log('then', newMatchmakingList);
         
         this.matchmakingList = newMatchmakingList;
 

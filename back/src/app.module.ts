@@ -16,6 +16,7 @@ import { SocketGateway } from './socket.gateway';
 import { PaddleService } from './paddle(test)/paddle.service';
 import { MatchmakingService } from './matchmaking/matchmaking.service';
 import { ChannelModule } from './channel/channel.module';
+import { GameSocketGateway } from './gamesocket.gateway';
 
 @Module({
   imports: [
@@ -39,6 +40,6 @@ import { ChannelModule } from './channel/channel.module';
     ChannelModule,
   ],
   controllers: [AppController, PaddleController, MatchmakingController],
-  providers: [AppService, SocketGateway, PaddleService, MatchmakingService],
+  providers: [AppService, SocketGateway, PaddleService, MatchmakingService, GameSocketGateway],
 })
 export class AppModule {}
