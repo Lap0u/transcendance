@@ -5,14 +5,14 @@ import ChatUserList from './ChatUserList';
 import ChatWindow from './ChatWindow';
 import ChannelsList from './ChannelsList';
 
-
 const Chat = () => {
   const [token, setToken] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [chatWith, setChatWith] = useState(null);
   const [channels, setChannels] = useState([]);
-
+  const [selectedChannel, setSelectedChannel] = useState(null);
+	const [isChannelModalVisible, setIsChannelModalVisible] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -30,12 +30,27 @@ const Chat = () => {
 
   return (
     <div style={{ color: 'white' }}>
-      <ChatHeader token={token} setToken={setToken} setUsers={setUsers} currUser={currUser} setChannels={setChannels}/>
+      <ChatHeader
+        token={token}
+        setToken={setToken}
+        setUsers={setUsers}
+        currUser={currUser}
+        setChannels={setChannels}
+        selectedChannel={selectedChannel}
+        isModalVisible={isChannelModalVisible}
+        openModal={() => setIsChannelModalVisible(true)}
+        closeModal={() => {
+          setIsChannelModalVisible(false);
+          setSelectedChannel(null);
+        }}
+      />
       <div style={{ display: 'flex' }}>
         <ChatUserList users={users} setChatWith={setChatWith} />
         <ChatWindow currUser={currUser} user={chatWith} token={token} />
-        <ChannelsList channels={channels} setChannels={setChannels} />
-
+        <ChannelsList channels={channels} setSelectedChannel={(channel: any) => {
+          setSelectedChannel(channel);
+          setIsChannelModalVisible(true);
+        }} />
       </div>
     </div>
   );

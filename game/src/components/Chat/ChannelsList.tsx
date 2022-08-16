@@ -1,43 +1,34 @@
 import { Button } from 'antd';
 import { EditOutlined, UserAddOutlined } from '@ant-design/icons';
+import { ChannelType } from './ChannelType';
 
-type ChannelType = {
-	id: string,
-	type: string,
-	password: string,
-	ownerId: string,
-	administratorsId: string[],
-	usersId: string[],
-	channelName: string,
-}
-
-const UserListItem = ({ channel } : ChannelsListItemProps) => {
+const ChannelListItem = ({ channel, setSelectedChannel } : ChannelsListItemProps) => {
 
   return <div style={{ display: 'flex' }}>
     {channel.channelName}
-		<Button icon={<EditOutlined />}>Edit</Button>
-		<Button icon={<UserAddOutlined />}>Add user</Button>
-		<Button>Set Administrator</Button>
+		<Button icon={<EditOutlined />} onClick={() => setSelectedChannel(channel)}>Edit</Button>
+		<Button icon={<UserAddOutlined />}>Manage user</Button>
   </div>
 };
 
-const ChannelsList = ({ channels, setChannels } : ChannelsListProps) => {
+const ChannelsList = ({ channels, setSelectedChannel } : ChannelsListProps) => {
   if (channels.length === 0) return <div>No channels</div>
 
   return (
     <div>
-      { channels.map((channel: any) => <UserListItem key={channel.id} channel={channel} />)}
+      { channels.map((channel: any) => <ChannelListItem key={channel.id} channel={channel} setSelectedChannel={setSelectedChannel} />)}
     </div>
   );
 };
 
 type ChannelsListProps = {
   channels : ChannelType[],
-	setChannels : any,
+	setSelectedChannel : any,
 }
 
 type ChannelsListItemProps = {
   channel : ChannelType,
+  setSelectedChannel: any,
 }
 
 export default ChannelsList;

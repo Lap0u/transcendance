@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import axios from 'axios';
 import './Chat.css';
 import ChannelFormModal from './ChannelFormModal';
+import { ChannelType } from './ChannelType';
 
 const BACK_URL = "http://localhost:4000";
 
-const ChatHeader = ({ token, setToken, setUsers, currUser, setChannels } :chatHeaderProps) => {
+const ChatHeader = ({ token, setToken, setUsers, currUser, setChannels, selectedChannel, isModalVisible, openModal, closeModal } :chatHeaderProps) => {
 	const navigate = useNavigate();
-	const [isModalVisible, setIsModalVisible] = useState(false);
 
   const getAllUsers = async () => {
     try {
@@ -64,10 +63,6 @@ const ChatHeader = ({ token, setToken, setUsers, currUser, setChannels } :chatHe
     }
   };
 
-  const openCreateChannelModal = async () => {
-    setIsModalVisible(true);
-  };
-
   const getAllChannels = async () => {
     try {
       const res = await axios.get(`${BACK_URL}/channels`, { headers: { Authorization: `Bearer ${token}` }});
@@ -79,14 +74,14 @@ const ChatHeader = ({ token, setToken, setUsers, currUser, setChannels } :chatHe
 
   return (
     <div style={{ display: 'flex' }}>
-      <ChannelFormModal token={token} isModalVisible={isModalVisible} closeModal={() => setIsModalVisible(false)} />
+      <ChannelFormModal token={token} isModalVisible={isModalVisible} closeModal={closeModal} channel={selectedChannel} />
       <Button onClick={() => navigate("/")} className="chat-header-button">Back to home</Button>
       <Button onClick={getAllUsers} className="chat-header-button">List all user</Button>
       <Button onClick={createToto} className="chat-header-button">Create toto</Button>
       <Button onClick={createTata} className="chat-header-button">Create tata</Button>
       <Button onClick={loginAsToto} className="chat-header-button">Login as toto</Button>
       <Button onClick={loginAsTata} className="chat-header-button">Login as tata</Button>
-      <Button onClick={openCreateChannelModal} className="chat-header-button">Create channel</Button>
+      <Button onClick={openModal} className="chat-header-button">Create channel</Button>
       <Button onClick={getAllChannels} className="chat-header-button">List all channels</Button>
       { currUser && <div>Connected user: {currUser.username}</div>}
     </div>
@@ -99,5 +94,9 @@ type chatHeaderProps = {
   setUsers : any, 
   currUser : any,
   setChannels : any,
+  selectedChannel: ChannelType | null,
+  isModalVisible: boolean,
+  openModal: any,
+  closeModal: any,
 }
 export default ChatHeader;
