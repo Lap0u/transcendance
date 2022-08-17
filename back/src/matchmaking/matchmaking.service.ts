@@ -13,7 +13,7 @@ export class MatchmakingService {
 		return this.matchmakingList
 	}
 
-	joinMatchmaking(payload :joinMatchmakingDto): matchmakingDto {
+	async joinMatchmaking(payload :joinMatchmakingDto): Promise<matchmakingDto> {
 		let newUserInMatchmaking = {
 			id: uuid(),
 			...payload
@@ -21,10 +21,14 @@ export class MatchmakingService {
 		this.matchmakingList.push(newUserInMatchmaking);
 		if(this.matchmakingList.length >= 2)
 		{
-			this.socketService.socket.emit(`matchFound:`, 'We got a match');
-			console.log('found it');
+			const socklist =  await this.socketService.socket.sockets.allSockets();
+			const iter = socklist.values();
+			iter.next()//skip the chat socket
+			this.socketService.socket.to(iter.next().value).emit(`matchFound:`, 'We got a match1');
+			iter.next()//skip the chat socket
+			this.socketService.socket.to(iter.next().value).emit(`matchFound:`, 'We got a match3');
+			console.log('list', socklist);
 		}
-
 		return newUserInMatchmaking;
 	}
 	

@@ -40,6 +40,6 @@ import { GameSocketGateway } from './gamesocket.gateway';
     ChannelModule,
   ],
   controllers: [AppController, PaddleController, MatchmakingController],
-  providers: [AppService, SocketGateway, PaddleService, MatchmakingService, GameSocketGateway],
+  providers: [AppService, SocketGateway, PaddleService, MatchmakingService],
 })
 export class AppModule {}

@@ -43,13 +43,6 @@ const GameMenu = () => {
       joinMatchmakingList(sessionId) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
     if (!inMatchmaking)
       quitMatchmakingList(sessionId)
-    socket.on('connect', () => {
-      console.log('socket connect');
-    });
-
-    socket.on('disconnect', () => {
-      console.log('socket disconnect');
-    });
 
     socket.on(`matchFound:`, (gameId) => {
       console.log('gameId', gameId)

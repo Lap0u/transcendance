@@ -11,9 +11,9 @@ export class MatchmakingController {
 	}
 	
 	@Post()
-	joinMatchmaking(
+	async joinMatchmaking(
 		@Body() body : joinMatchmakingDto
-	) : matchmakingDto {
+	) : Promise<matchmakingDto> {
 		return this.matchmakingService.joinMatchmaking(body)
 	}
 
