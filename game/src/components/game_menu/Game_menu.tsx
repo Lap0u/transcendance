@@ -51,7 +51,7 @@ const GameMenu = () => {
       console.log('socket disconnect');
     });
 
-    socket.on(`matchFound`, (gameId) => {
+    socket.on(`matchFound:`, (gameId) => {
       console.log('gameId', gameId)
     });
   }, [inMatchmaking]);
