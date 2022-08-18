@@ -2,13 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { v4 as uuid} from 'uuid';
+import { matchesDto } from './matches.dto';
 
+function generateNewGame (gameId :string, playerOne : string, playerTwo : string) {
+	const newGame = {
+		gameId : gameId,
+		playerOneId : playerOne,
+		playerTwoId : playerTwo
+	}
+	this.currentMatches.push(newGame)
+}
 @Injectable()
 export class MatchmakingService {
 	constructor(
 		private socketService: SocketService,
 		) {}
 	private  matchmakingList : matchmakingDto[] = []
+	private  currentMatches : matchesDto[] = []
 	getMatchmakingList() : matchmakingDto[] {
 		return this.matchmakingList
 	}
@@ -21,13 +31,17 @@ export class MatchmakingService {
 		this.matchmakingList.push(newUserInMatchmaking);
 		if(this.matchmakingList.length >= 2)
 		{
+			const gameId = uuid()
 			const socklist =  await this.socketService.socket.sockets.allSockets();
-			const iter = socklist.values();
-			iter.next()//skip the chat socket
-			this.socketService.socket.to(iter.next().value).emit(`matchFound:`, 'We got a match1');
-			iter.next()//skip the chat socket
-			this.socketService.socket.to(iter.next().value).emit(`matchFound:`, 'We got a match3');
-			console.log('list', socklist);
+			const socketArray = Array.from(socklist)
+			const playerOne = socketArray[1]
+			const playerTwo = socketArray[3]
+
+			this.socketService.socket.to(playerOne).emit(`matchFound:`, gameId);
+			this.socketService.socket.to(playerTwo).emit(`matchFound:`, gameId);
+			this.quitMatchmaking(playerOne);
+			this.quitMatchmaking(playerTwo);
+			generateNewGame(gameId, playerOne, playerTwo)
 		}
 		return newUserInMatchmaking;
 	}
