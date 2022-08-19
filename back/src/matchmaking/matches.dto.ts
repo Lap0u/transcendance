@@ -1,5 +1,5 @@
 export class matchesDto {
-    gameiD : string;
+    gameId : string;
     playerOneId : string;
-    playerTwoid :  string;
+    playerTwoId :  string;
 }

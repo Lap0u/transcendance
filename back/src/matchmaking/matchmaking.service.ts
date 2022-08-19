@@ -4,13 +4,13 @@ import { SocketService } from '../socket/socket.service';
 import { v4 as uuid} from 'uuid';
 import { matchesDto } from './matches.dto';
 
-function generateNewGame (gameId :string, playerOne : string, playerTwo : string) {
+function generateNewGame (gameId :string, playerOne : string, playerTwo : string, currentMatches : matchesDto[]) {
 	const newGame = {
 		gameId : gameId,
 		playerOneId : playerOne,
 		playerTwoId : playerTwo
 	}
-	this.currentMatches.push(newGame)
+	currentMatches.push(newGame)
 }
 @Injectable()
 export class MatchmakingService {
@@ -41,7 +41,7 @@ export class MatchmakingService {
 			this.socketService.socket.to(playerTwo).emit(`matchFound:`, gameId);
 			this.quitMatchmaking(playerOne);
 			this.quitMatchmaking(playerTwo);
-			generateNewGame(gameId, playerOne, playerTwo)
+			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches)
 		}
 		return newUserInMatchmaking;
 	}
