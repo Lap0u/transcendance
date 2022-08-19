@@ -4,6 +4,8 @@ import ChatHeader from './ChatHeader';
 import ChatUserList from './ChatUserList';
 import ChatWindow from './ChatWindow';
 import ChannelsList from './ChannelsList';
+import ChannelManageUserModal from './ChannelManageUserModal';
+import { ChannelModalType } from './ChannelType';
 
 const Chat = () => {
   const [token, setToken] = useState(null);
@@ -13,6 +15,7 @@ const Chat = () => {
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState(null);
 	const [isChannelModalVisible, setIsChannelModalVisible] = useState(false);
+  const [isManageUserModalOpen, setIsManageUserModalOpen] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -44,12 +47,26 @@ const Chat = () => {
           setSelectedChannel(null);
         }}
       />
+      <ChannelManageUserModal
+        users={users}
+        channel={selectedChannel}
+        isOpen={isManageUserModalOpen}
+        handleCancel={() => {
+          setIsManageUserModalOpen(false);
+          setSelectedChannel(null);
+        }}
+        token={token}
+      />
       <div style={{ display: 'flex' }}>
         <ChatUserList users={users} setChatWith={setChatWith} />
         <ChatWindow currUser={currUser} user={chatWith} token={token} />
-        <ChannelsList channels={channels} setSelectedChannel={(channel: any) => {
+        <ChannelsList channels={channels} setSelectedChannel={(channel: any, type: string) => {
           setSelectedChannel(channel);
-          setIsChannelModalVisible(true);
+          if (type === ChannelModalType.edit) {
+            setIsChannelModalVisible(true);
+          } else {
+            setIsManageUserModalOpen(true);
+          }
         }} />
       </div>
     </div>
