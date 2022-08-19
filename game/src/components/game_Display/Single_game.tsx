@@ -27,19 +27,19 @@ const SingleGame = () => {
 	const canvasRef = useRef(null)
     
     function updateGame (gameState: any) {
-        const canvas : any = canvasRef.current
+        const canvas : any = document.getElementById('canvas')
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         canvas.style.width = "90vw";
         canvas.style.height = "90vh";
-        console.log('rendered');
+        console.log('render');
         
         const context : any = canvas.getContext('2d')
         drawBackground(context)
 		drawDashedLine(context)
 
     }
-    socket.on('newGameState', handleGameState)
+    socket.on(`newGameState`, handleGameState)
 
     
     function handleGameState(gameState : any) {// any !

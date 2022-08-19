@@ -11,6 +11,8 @@ function generateNewGame (gameId :string, playerOne : string, playerTwo : string
 		playerTwoId : playerTwo
 	}
 	currentMatches.push(newGame)
+	console.log('genGame');
+	
 	sockets.emit('newGameState', 'yop')
 }
 
