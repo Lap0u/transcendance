@@ -4,14 +4,16 @@ import { SocketService } from '../socket/socket.service';
 import { v4 as uuid} from 'uuid';
 import { matchesDto } from './matches.dto';
 
-function generateNewGame (gameId :string, playerOne : string, playerTwo : string, currentMatches : matchesDto[]) {
+function generateNewGame (gameId :string, playerOne : string, playerTwo : string, currentMatches : matchesDto[], sockets : any) {
 	const newGame = {
 		gameId : gameId,
 		playerOneId : playerOne,
 		playerTwoId : playerTwo
 	}
 	currentMatches.push(newGame)
+	sockets.emit('newGameState', 'yop')
 }
+
 @Injectable()
 export class MatchmakingService {
 	constructor(
@@ -35,13 +37,13 @@ export class MatchmakingService {
 			const socklist =  await this.socketService.socket.sockets.allSockets();
 			const socketArray = Array.from(socklist)
 			const playerOne = socketArray[1]
-			const playerTwo = socketArray[3]
+			const playerTwo = socketArray[4]
 
 			this.socketService.socket.to(playerOne).emit(`matchFound:`, gameId);
 			this.socketService.socket.to(playerTwo).emit(`matchFound:`, gameId);
 			this.quitMatchmaking(playerOne);
 			this.quitMatchmaking(playerTwo);
-			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches)
+			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, this.socketService.socket)
 		}
 		return newUserInMatchmaking;
 	}
