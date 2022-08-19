@@ -1,12 +1,14 @@
+import { useParams } from "react-router-dom"
 
-const SingleGame = ({gameId} : gameProps) => {
-    console.log(gameId);
+const SingleGame = () => {
+    
+    const params = useParams()
     return (
-        <h1 style={{ color: 'red'}}>Test {gameId}</h1>
+        <h1 style={{ color: 'red'}}>Test {params.id}</h1>
     )
 }
 
 type gameProps = {
-    gameId : string
+    location?: any
 }
 export default SingleGame;

@@ -47,7 +47,7 @@ const GameMenu = () => {
 
     socket.on(`matchFound:`, (gameId) => {
       console.log('gameId', gameId)
-      navigate('/singleGame', {replace : true})
+      navigate(`/singleGame/${gameId}`);
     });
   }, [inMatchmaking]);
 

@@ -20,7 +20,7 @@ function App() {
 				<Route path="/chat" element={<Chat />} />
 				<Route path="/game" element={<Canvas />} />
 				<Route path="/menu" element={<GameMenu />} />
-				<Route path="/singleGame" element={<SingleGame gameId={"random"} />} />
+				<Route path="/singleGame/:id" element={<SingleGame />} />
 				{/* If no route match, then return 404 page */}
 				<Route path="*" element={<Page404 />} />
 			</Routes>
