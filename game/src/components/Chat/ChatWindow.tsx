@@ -6,8 +6,6 @@ import './Chat.css';
 
 const BACK_URL = "http://localhost:4000";
 
-const socket = io(BACK_URL).connect();
-
 const HistoryContent = ({ currUser, user, content }: historyContentProps) => {
   if (content.senderId === currUser.id) {
     return (
@@ -31,10 +29,10 @@ type historyContentProps = {
   content: any
 }
 
-const ChatWindow = ({ currUser, user, token } : chatWindowProps) => {
+const ChatWindow = ({ currUser, user, token , sock} : chatWindowProps) => {
   const [message, setMessage] = useState("");
   const [history, setHistory]: any = useState([]);
-
+  const socket = sock
   const historyEndRef: any = useRef(null);
 
   useEffect(() => {
@@ -47,7 +45,7 @@ const ChatWindow = ({ currUser, user, token } : chatWindowProps) => {
       console.log('socket disconnect');
     });
 
-    socket.on(`receiveMessage:${currUser.id}`, (message) => {
+    socket.on(`receiveMessage:${currUser.id}`, (message : string) => {
       setHistory([...history, message]);
       scrollToBottom();
     });
@@ -130,7 +128,8 @@ const ChatWindow = ({ currUser, user, token } : chatWindowProps) => {
 type chatWindowProps = {
   currUser: any,
   user: any, 
-  token: any
+  token: any,
+  sock: any
 }
 
 export default ChatWindow;

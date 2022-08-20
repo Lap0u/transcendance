@@ -12,8 +12,6 @@ function generateNewGame (gameId :string, playerOne : string, playerTwo : string
 	}
 	currentMatches.push(newGame)
 	console.log('genGame');
-	
-	sockets.emit('newGameState', 'yop')
 }
 
 @Injectable()
@@ -46,7 +44,8 @@ export class MatchmakingService {
 			this.quitMatchmaking(playerOne);
 			this.quitMatchmaking(playerTwo);
 			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, this.socketService.socket)
-		}
+			this.socketService.socket.emit(`newGameState`, 'yop')
+}
 		return newUserInMatchmaking;
 	}
 	

@@ -3,8 +3,6 @@ import { io } from "socket.io-client";
 
 const BACK_URL = "http://localhost:4000";
 
-const socket = io(BACK_URL).connect();
-
 const drawBackground = (context : any) => {
 	context.fillStyle = '#000000'
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
@@ -23,9 +21,9 @@ const drawDashedLine = (context : any) => {
 	context.stroke();
 }
 
-const SingleGame = () => {
+const SingleGame = (props : any) => {
 	const canvasRef = useRef(null)
-    
+    const socket = props.socket;
     function updateGame (gameState: any) {
         const canvas : any = document.getElementById('canvas')
         canvas.width = window.innerWidth;
@@ -43,7 +41,7 @@ const SingleGame = () => {
 
     
     function handleGameState(gameState : any) {// any !
-        gameState = JSON.parse(gameState)
+        console.log('update');       
         requestAnimationFrame(() => updateGame(gameState))     
     }
     return (

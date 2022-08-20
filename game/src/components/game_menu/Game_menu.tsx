@@ -8,14 +8,12 @@ import Canvas from '../Canvas';
 
 const BACK_URL = "http://localhost:4000";
 
-const socket = io(BACK_URL).connect();
-
 const sessionId = uuid()
 
-const GameMenu = () => {
+const GameMenu = (props : any) => {
   
   const [inMatchmaking, setMatchmaking] = useState(false);
-  
+  const socket = props.socket;
 	const navigate = useNavigate();
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
@@ -45,7 +43,7 @@ const GameMenu = () => {
     if (!inMatchmaking)
       quitMatchmakingList(sessionId)
 
-    socket.on(`matchFound:`, (gameId) => {
+    socket.on(`matchFound:`, (gameId : string) => {
       console.log('gameId', gameId)
       navigate(`/singleGame/${gameId}`);
     });

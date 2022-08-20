@@ -4,12 +4,12 @@ import ChatHeader from './ChatHeader';
 import ChatUserList from './ChatUserList';
 import ChatWindow from './ChatWindow';
 
-const Chat = () => {
+const Chat = (props : any) => {
   const [token, setToken] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [chatWith, setChatWith] = useState(null);
-
+  const socket = props.socket;
   useEffect(() => {
     if (token) {
       // Add token in local storage to avoid connect when refresh page
@@ -29,7 +29,7 @@ const Chat = () => {
       <ChatHeader token={token} setToken={setToken} setUsers={setUsers} currUser={currUser} />
       <div style={{ display: 'flex' }}>
         <ChatUserList users={users} setChatWith={setChatWith} />
-        <ChatWindow currUser={currUser} user={chatWith} token={token} />
+        <ChatWindow currUser={currUser} user={chatWith} token={token} sock={socket}/>
       </div>
     </div>
   );
