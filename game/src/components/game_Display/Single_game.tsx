@@ -1,12 +1,61 @@
 import { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import {
+    BACK_WIN_WIDTH,
+    BACK_WIN_HEIGHT,
+} from '../constants'
 
-const BACK_URL = "http://localhost:4000";
+const BALLSIZE = 10
 
 const drawBackground = (context : any) => {
 	context.fillStyle = '#000055'
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
+
+const drawScore = (context : any, score: scoreType) => {
+	const playerOneX = context.canvas.width / 2 - 30
+	const playerTwoX = context.canvas.width / 2 + 40
+	const y = context.canvas.height * 8 / 100
+	const avg = (context.canvas.width + context.canvas.height) / 2;
+	const size = avg / 18 + 'px'
+
+	context.beginPath();
+	context.font = `${size} press_start_2pregular, Arial`;
+	context.textAlign = 'right';
+	context.textBaseline = 'top';
+	context.fillStyle = 'white';
+	context.fillText(score.playerOne, playerOneX , y);
+	context.stroke();
+	context.beginPath();
+	context.font = `${size} press_start_2pregular, Arial`;
+	context.textAlign = 'left';
+	context.textBaseline = 'top';
+	context.fillStyle = 'white';
+	context.fillText(score.playerTwo, playerTwoX, y);
+	context.stroke();
+}
+
+const drawBall = (context: any, ball : ballType) => {
+    const convertedX = ball.pos.x * context.canvas.width / BACK_WIN_WIDTH
+    const convertedY = ball.pos.y * context.canvas.height / BACK_WIN_HEIGHT
+    
+    context.fillStyle = 'white';
+    context.beginPath();
+    context.arc(convertedX, convertedY, BALLSIZE, 0, 2 * Math.PI);
+    context.closePath();
+    context.fill();
+}
+
+function drawPlayBar (context: any, player: playerType) {
+    const width =  window.innerWidth / 120
+    const height = window.innerHeight / 15
+    const posX =  player.pos.x * context.canvas.width / BACK_WIN_WIDTH
+    const posY =  player.pos.y * context.canvas.height / BACK_WIN_HEIGHT - (height / 2)
+
+    context.fillStyle = 'white';
+    context.fillRect(posX, posY, width, height)
+    
+}
+
 const drawDashedLine = (context : any) => {
 	const cvwidth = context.canvas.width
 	const cvheight = context.canvas.height
@@ -33,11 +82,16 @@ const SingleGame = (props : any) => {
         canvas.height = window.innerHeight;
         canvas.style.width = "90vw";
         canvas.style.height = "90vh";
-        console.log('render');
+        
+        console.log('fullCont', gameState);
         
         const context : any = canvas.getContext('2d')
         drawBackground(context)
 		drawDashedLine(context)
+        drawPlayBar(context, gameState.leftPlayer)
+        drawPlayBar(context, gameState.rightPlayer)
+        drawBall(context, gameState.ball)
+        drawScore(context, gameState.score)
 
     }
     useEffect(() => {
@@ -45,7 +99,7 @@ const SingleGame = (props : any) => {
         setNewState(newState)
     })
     function handleGameState(gameState : any) {// any !
-        console.log('update');       
+        console.log('update');
         requestAnimationFrame(() => updateGame(gameState))     
     }
     return (
@@ -58,4 +112,24 @@ const SingleGame = (props : any) => {
         </div>
     )
 }
+
+type playerType = {
+    pos: {
+        x: number;
+        y: number;
+    }
+}
+
+type ballType = {
+    pos: {
+        x: number;
+        y: number;
+    }
+}
+
+type scoreType = {
+    playerOne: number,
+    playerTwo: number,
+}
+
 export default SingleGame;

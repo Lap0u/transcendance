@@ -1,6 +1,6 @@
 import {
-    WIN_WIDTH,
-    WIN_HEIGHT,
+    BACK_WIN_WIDTH,
+    BACK_WIN_HEIGHT,
     FRAME_RATE
 } from './constants'
 
@@ -21,7 +21,7 @@ function startGameInterval(playerOne: string, playerTwo : string, state: any, so
         console.log('bouclette');
         
         if (status !== -1) {
-            socket.to(playerOne).to(playerTwo).emit('newGameState', JSON.stringify(state));
+            socket.to(playerOne).to(playerTwo).emit('newGameState', state);
         } else {
             socket.to(playerOne).to(playerTwo).emit('gameOver')
             console.log('status', status);
@@ -35,25 +35,29 @@ function createGameState() {
     return {
         leftPlayer : {
             pos: {
-                x: 100,
-                y: 300
+                x: BACK_WIN_WIDTH / 20,
+                y: BACK_WIN_HEIGHT / 2
             }
         },
         rightPlayer : {
             pos: {
-                x: 100,
-                y: 300
+                x: BACK_WIN_WIDTH / 20 * 19,
+                y: BACK_WIN_HEIGHT / 2
             }
         },
         ball : {
             pos: {
-                x: WIN_WIDTH / 2,
-                y: WIN_HEIGHT / 2
+                x: BACK_WIN_WIDTH / 2,
+                y: BACK_WIN_HEIGHT / 2
             }
         },
+        score :{
+            playerOne: 0,
+            playerTwo: 0,
+        },
         scale : {
-            width: WIN_WIDTH,
-            heihgt: WIN_HEIGHT
+            width: BACK_WIN_WIDTH,
+            heihgt: BACK_WIN_HEIGHT
         }
     }
 }
