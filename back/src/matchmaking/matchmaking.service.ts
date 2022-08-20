@@ -3,6 +3,7 @@ import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { v4 as uuid} from 'uuid';
 import { matchesDto } from './matches.dto';
+import { launchGame} from '../game/game'
 
 function generateNewGame (gameId :string, playerOne : string, playerTwo : string, currentMatches : matchesDto[], sockets : any) {
 	const newGame = {
@@ -11,7 +12,6 @@ function generateNewGame (gameId :string, playerOne : string, playerTwo : string
 		playerTwoId : playerTwo
 	}
 	currentMatches.push(newGame)
-	console.log('genGame');
 }
 
 @Injectable()
@@ -44,7 +44,7 @@ export class MatchmakingService {
 			this.quitMatchmaking(playerOne);
 			this.quitMatchmaking(playerTwo);
 			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, this.socketService.socket)
-			this.socketService.socket.emit(`newGameState`, 'yop')
+			launchGame(playerOne, playerTwo, this.socketService.socket)
 }
 		return newUserInMatchmaking;
 	}
