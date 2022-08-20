@@ -1,10 +1,10 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
 const BACK_URL = "http://localhost:4000";
 
 const drawBackground = (context : any) => {
-	context.fillStyle = '#000000'
+	context.fillStyle = '#000055'
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
 const drawDashedLine = (context : any) => {
@@ -25,7 +25,7 @@ const SingleGame = (props : any) => {
 	const canvasRef = useRef(null)
     const socket = props.socket;
     function updateGame (gameState: any) {
-        const canvas : any = document.getElementById('canvas')
+        const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         canvas.style.width = "90vw";
@@ -38,8 +38,6 @@ const SingleGame = (props : any) => {
 
     }
     socket.on(`newGameState`, handleGameState)
-
-    
     function handleGameState(gameState : any) {// any !
         console.log('update');       
         requestAnimationFrame(() => updateGame(gameState))     

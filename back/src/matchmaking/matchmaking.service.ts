@@ -36,8 +36,8 @@ export class MatchmakingService {
 			const gameId = uuid()
 			const socklist =  await this.socketService.socket.sockets.allSockets();
 			const socketArray = Array.from(socklist)
-			const playerOne = socketArray[1]
-			const playerTwo = socketArray[4]
+			const playerOne = socketArray[0]
+			const playerTwo = socketArray[1]
 
 			this.socketService.socket.to(playerOne).emit(`matchFound:`, gameId);
 			this.socketService.socket.to(playerTwo).emit(`matchFound:`, gameId);
