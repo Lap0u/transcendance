@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import {
     BACK_WIN_WIDTH,
     BACK_WIN_HEIGHT,
+    BACK_BALL_SIZE,
 } from '../constants'
 
-const BALLSIZE = 10
+const BALL_SIZE = 0.012
 
 const drawBackground = (context : any) => {
 	context.fillStyle = '#000055'
@@ -37,10 +38,10 @@ const drawScore = (context : any, score: scoreType) => {
 const drawBall = (context: any, ball : ballType) => {
     const convertedX = ball.pos.x * context.canvas.width / BACK_WIN_WIDTH
     const convertedY = ball.pos.y * context.canvas.height / BACK_WIN_HEIGHT
-    
+    const bsize = (context.canvas.height + context.canvas.width) * BACK_BALL_SIZE / (BACK_WIN_HEIGHT + BACK_WIN_WIDTH)
     context.fillStyle = 'white';
     context.beginPath();
-    context.arc(convertedX, convertedY, BALLSIZE, 0, 2 * Math.PI);
+    context.arc(convertedX, convertedY, bsize, 0, 2 * Math.PI);
     context.closePath();
     context.fill();
 }
