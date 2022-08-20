@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
 const BACK_URL = "http://localhost:4000";
@@ -22,8 +22,11 @@ const drawDashedLine = (context : any) => {
 }
 
 const SingleGame = (props : any) => {
-	const canvasRef = useRef(null)
+	const canvasRef = useRef(null);
+    const [newState, setNewState] = useState();
+
     const socket = props.socket;
+
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
@@ -37,7 +40,10 @@ const SingleGame = (props : any) => {
 		drawDashedLine(context)
 
     }
-    socket.on(`newGameState`, handleGameState)
+    useEffect(() => {
+        socket.on(`newGameState`, handleGameState)
+        setNewState(newState)
+    })
     function handleGameState(gameState : any) {// any !
         console.log('update');       
         requestAnimationFrame(() => updateGame(gameState))     

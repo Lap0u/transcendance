@@ -11,16 +11,17 @@ export function launchGame(playerOne: string, playerTwo : string, socket : any) 
 }
 
 function gameLoop(state: any) : number {
-    console.log('we send loop');
-    
-    return 2
+    state = state
+    return 1
 }
 
 function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any)  {
     const intervalId = setInterval(() => {
         const status : number = gameLoop(state)
+        console.log('bouclette');
+        
         if (status !== -1) {
-            socket.to(playerOne).to(playerTwo).emit('gameState', JSON.stringify(state));
+            socket.to(playerOne).to(playerTwo).emit('newGameState', JSON.stringify(state));
         } else {
             socket.to(playerOne).to(playerTwo).emit('gameOver')
             console.log('status', status);
