@@ -5,8 +5,6 @@ import {
     BACK_BALL_SIZE,
 } from '../constants'
 
-const BALL_SIZE = 0.012
-
 const drawBackground = (context : any) => {
 	context.fillStyle = '#000055'
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
@@ -38,13 +36,17 @@ const drawScore = (context : any, score: scoreType) => {
 const drawBall = (context: any, ball : ballType) => {
     const convertedX = ball.pos.x * context.canvas.width / BACK_WIN_WIDTH
     const convertedY = ball.pos.y * context.canvas.height / BACK_WIN_HEIGHT
-    const bsize = (context.canvas.height + context.canvas.width) * BACK_BALL_SIZE / (BACK_WIN_HEIGHT + BACK_WIN_WIDTH)
+    // const bsize = (context.canvas.height + context.canvas.width) * BACK_BALL_SIZE / (BACK_WIN_HEIGHT + BACK_WIN_WIDTH)
+    const xRad = BACK_BALL_SIZE * context.canvas.height / BACK_WIN_HEIGHT
+    const yRad = BACK_BALL_SIZE * context.canvas.width / BACK_WIN_WIDTH
     context.fillStyle = 'white';
     context.beginPath();
-    context.arc(convertedX, convertedY, bsize, 0, 2 * Math.PI);
+    // context.arc(convertedX, convertedY, 1, 0, 2 * Math.PI);
+    context.ellipse(convertedX, convertedY, xRad, yRad, Math.PI / 2, 0, 2 * Math.PI)
     context.closePath();
     context.fill();
 }
+
 
 function drawPlayBar (context: any, player: playerType) {
     const width =  window.innerWidth / 120
@@ -81,8 +83,13 @@ const SingleGame = (props : any) => {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        canvas.style.width = "90vw";
-        canvas.style.height = "90vh";
+        if (window.innerHeight * 2 > window.innerWidth) {
+            canvas.style.width = "90vw";
+            canvas.style.height = "45vw";
+        } else {
+            canvas.style.width = "180vh";
+            canvas.style.height = "90vh";
+        }
         
         console.log('fullCont', gameState);
         
