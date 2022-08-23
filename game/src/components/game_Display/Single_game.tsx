@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { drawScore } from "../Score";
 import { drawBackground } from "./draw_background";
 import { drawBall } from "./draw_ball";
 import { drawPlayBar } from "./draw_paddle";
+import { drawScore } from "./draw_score";
 import { getMousePosY, sendNewBar } from "./draw_utils";
 
 const SingleGame = (props : any) => {
@@ -30,7 +30,10 @@ const SingleGame = (props : any) => {
         drawPlayBar(context, gameState.leftPlayer)
         drawPlayBar(context, gameState.rightPlayer)
         drawBall(context, gameState.ball)
+        console.log('avant');
         drawScore(context, gameState.score)
+        console.log('apres');
+        
     }
     useEffect(() => {
         socket.on(`newGameState`, handleGameState)

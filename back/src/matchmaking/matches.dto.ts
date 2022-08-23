@@ -1,8 +1,10 @@
+import { matchmakingDto } from "./matchmaking.dto";
+
 export class matchesDto {
     gameId : string;
-    playerOneId : string;
+    playerOne : matchmakingDto;
     playerOneY : number;
-    playerTwoId :  string;
+    playerTwo :  matchmakingDto;
     playerTwoY : number;
 
 }

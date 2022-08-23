@@ -6,11 +6,11 @@ import { matchesDto } from './matches.dto';
 import { launchGame} from '../game/game'
 import { BACK_WIN_HEIGHT } from 'src/game/constants';
 
-function generateNewGame (gameId :string, playerOne : string, playerTwo : string, currentMatches : matchesDto[], sockets : any) {
+function generateNewGame (gameId :string, playerOne : matchmakingDto, playerTwo : matchmakingDto, currentMatches : matchesDto[]) {
 	const newGame = {
 		gameId : gameId,
-		playerOneId : playerOne,
-		playerTwoId : playerTwo,
+		playerOne : playerOne,
+		playerTwo : playerTwo,
 		playerOneY : BACK_WIN_HEIGHT / 2,
 		playerTwoY : BACK_WIN_HEIGHT / 2
 	}
@@ -27,32 +27,43 @@ export class MatchmakingService {
 	getMatchmakingList() : matchmakingDto[] {
 		return this.matchmakingList
 	}
-	updatePosX(data: any, id : string) : any {
+	updatePosX(data: any, sender : string) : any {
 		if (data){
-			this.currentMatches[0].playerOneY = data
-			console.log('test', data, id);
+			for (const elem of this.currentMatches) {
+				if (elem.playerOne.socket === sender) {
+					elem.playerOneY = data
+					return;
+				}
+				if (elem.playerTwo.socket === sender) {
+					elem.playerTwoY = data
+					return;
+				}
+			}
 		}
 	} 
 
 	async joinMatchmaking(payload :joinMatchmakingDto): Promise<matchmakingDto> {
+		const socklist =  await this.socketService.socket.sockets.allSockets();
+		const socketArray = Array.from(socklist)
 		let newUserInMatchmaking = {
 			id: uuid(),
+			socket: socketArray[this.matchmakingList.length], //ne marchera pas quand il y aura des spectateurs
 			...payload
 		}
 		this.matchmakingList.push(newUserInMatchmaking);
+		console.log('list', this.matchmakingList);
+		
 		if(this.matchmakingList.length >= 2)
 		{
 			const gameId = uuid()
-			const socklist =  await this.socketService.socket.sockets.allSockets();
-			const socketArray = Array.from(socklist)
-			const playerOne = socketArray[0]
-			const playerTwo = socketArray[1]
 
-			this.socketService.socket.to(playerOne).emit(`matchFound:`, gameId);
-			this.socketService.socket.to(playerTwo).emit(`matchFound:`, gameId);
-			this.quitMatchmaking(playerOne);
-			this.quitMatchmaking(playerTwo);
-			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, this.socketService.socket)
+			const playerOne = this.matchmakingList[0]
+			const playerTwo = this.matchmakingList[1]
+			this.socketService.socket.to(playerOne.socket).emit(`matchFound:`, gameId);
+			this.socketService.socket.to(playerTwo.socket).emit(`matchFound:`, gameId);
+			this.quitMatchmaking(playerOne.socket);
+			this.quitMatchmaking(playerTwo.socket);
+			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches)
 			launchGame(playerOne, playerTwo, this.socketService.socket, this.currentMatches)
 }
 		return newUserInMatchmaking;

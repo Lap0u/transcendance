@@ -8,6 +8,6 @@ export function getMousePosY(event: any, canvas: any) {
 }
 
 export function sendNewBar(socket: any, newPos : number) {
-    console.log('emit', newPos);    
+    // console.log('emit', newPos);    
     socket.emit(`paddleMove`, newPos)
 }

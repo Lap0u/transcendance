@@ -1,3 +1,4 @@
+import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
 import {
     BACK_WIN_WIDTH,
     BACK_WIN_HEIGHT,
@@ -6,9 +7,9 @@ import {
     DEFAULT_BALL_SPEED
 } from './constants'
 
-export function launchGame(playerOne: string, playerTwo : string, socket : any, game: any) {
+export function launchGame(playerOne: matchmakingDto, playerTwo : matchmakingDto, socket : any, game: any) {
     const state = createGameState();
-    startGameInterval(playerOne, playerTwo, state, socket, game);
+    startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game);
 }
 
 function handleWallBounce(ball: any) {
@@ -40,6 +41,7 @@ function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket
     ball.pos.y += (dirY * ball.speed)
     handleWallBounce(ball)
     state.leftPlayer.pos.y = curGames[0].playerOneY
+    state.rightPlayer.pos.y = curGames[0].playerTwoY
     state.ball = ball 
     return 1
 }
@@ -50,6 +52,7 @@ function startGameInterval(playerOne: string, playerTwo : string, state: any, so
         // console.log('bouclette', state);
         if (status !== -1) {
             socket.to(playerOne).to(playerTwo).emit('newGameState', state);
+            
         } else {
             socket.to(playerOne).to(playerTwo).emit('gameOver')
             
