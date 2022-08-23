@@ -2,7 +2,6 @@ import './Accueil.css'
 import io from "socket.io-client"; 
 import LoginPopup from './login/Login'
 import ButtonTemplate from './ButtonTemplate'
-import Canvas from './Canvas'
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 // import backgroundImage from '../assets/pong_wallpaper'
@@ -46,7 +45,7 @@ function LoginButton(props : any){
 			<h2 className='login-message'>
 				You have to login to play<br/>
 			</h2>
-			<ButtonTemplate text="Enter game" onClick={() => nav("/home")} buttonClass={'join-button'} />
+			<ButtonTemplate text="Enter game" onClick={() => nav("/menu")} buttonClass={'join-button'} />
 		</div>
 	)
 }

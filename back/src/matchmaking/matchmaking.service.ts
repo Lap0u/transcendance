@@ -51,8 +51,6 @@ export class MatchmakingService {
 			...payload
 		}
 		this.matchmakingList.push(newUserInMatchmaking);
-		console.log('list', this.matchmakingList);
-		
 		if(this.matchmakingList.length >= 2)
 		{
 			const gameId = uuid()
