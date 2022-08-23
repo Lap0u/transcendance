@@ -16,7 +16,7 @@ import { SocketGateway } from './socket.gateway';
 import { PaddleService } from './paddle(test)/paddle.service';
 import { MatchmakingService } from './matchmaking/matchmaking.service';
 import { ChannelModule } from './channel/channel.module';
-import { GameSocketGateway } from './gamesocket.gateway';
+import { MatchmakingModule } from './matchmaking/matchmaking.module';
 
 @Module({
   imports: [
@@ -38,6 +38,7 @@ import { GameSocketGateway } from './gamesocket.gateway';
     ChatModule,
     SocketModule,
     ChannelModule,
+    MatchmakingModule,
   ],
   controllers: [AppController, PaddleController, MatchmakingController],
   providers: [AppService, SocketGateway, PaddleService, MatchmakingService],

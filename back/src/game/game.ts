@@ -6,10 +6,9 @@ import {
     DEFAULT_BALL_SPEED
 } from './constants'
 
-export function launchGame(playerOne: string, playerTwo : string, socket : any) {
-    console.log('We got in');
+export function launchGame(playerOne: string, playerTwo : string, socket : any, game: any) {
     const state = createGameState();
-    startGameInterval(playerOne, playerTwo, state, socket);
+    startGameInterval(playerOne, playerTwo, state, socket, game);
 }
 
 function handleWallBounce(ball: any) {
@@ -23,46 +22,32 @@ function handleWallBounce(ball: any) {
         ball.angle = (180 - ball.angle) % 360
     
     }
-    if (ball.angle < 0) //repasse l'angle en positif pour quese les protections double rebond fonctionnent
+    if (ball.angle < 0) //repasse l'angle en positif pour que les protections double rebond fonctionnent
         ball.angle = 360 - (ball.angle * -1)
 }
 
 
-function gameLoop(state: any) : number {
+function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket : any, curGames: any) : number {
     let ball = state.ball
-    let playerOne = state.playerOne
-    let playerTwo = state.playerTwo
-    var saveX = state.ball.pos.x
-    var saveY = state.ball.pos.y
+    let playerOnePaddle = state.playerOne
+    let playerTwoPaddle = state.playerTwo
 
     const dirX = Math.sin(ball.angle * (Math.PI/180))
     const dirY = Math.cos(ball.angle * (Math.PI/180))
     
     
-    // if (ball.pos.x + BACK_BALL_SIZE < BACK_WIN_WIDTH || 
-    //     ball.pos.x - BACK_BALL_SIZE > 0)
-        ball.pos.x += (dirX * ball.speed)
-    // if (ball.pos.y - (BACK_BALL_SIZE) > 0 &&
-    //     ball.pos.y + (BACK_BALL_SIZE) < BACK_WIN_HEIGHT)
+    ball.pos.x += (dirX * ball.speed)
     ball.pos.y += (dirY * ball.speed)
-    const saveangle = ball.angle
     handleWallBounce(ball)
-    if (saveangle !== ball.angle)
-        console.log('dif bef aft', saveangle, ball.angle);
-        
-    
-    // if (saveX === ball.pos.x || saveY === ball.pos.y)
-    //     return -1
-    state.ball = ball
-    
+    state.leftPlayer.pos.y = curGames[0].playerOneY
+    state.ball = ball 
     return 1
 }
 
-function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any)  {
+function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGames : any)  {
     const intervalId = setInterval(() => {
-        const status : number = gameLoop(state)
+        const status : number = gameLoop(state, playerOne, playerTwo, socket, curGames)
         // console.log('bouclette', state);
-        
         if (status !== -1) {
             socket.to(playerOne).to(playerTwo).emit('newGameState', state);
         } else {
