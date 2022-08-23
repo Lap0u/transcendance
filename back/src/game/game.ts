@@ -4,7 +4,10 @@ import {
     BACK_WIN_HEIGHT,
     FRAME_RATE,
     BACK_BALL_SIZE,
-    DEFAULT_BALL_SPEED
+    DEFAULT_BALL_SPEED,
+    STARTINGPOS_LEFT_X,
+    STARTINGPOS_RIGHT_X,
+    PADDLE_HEIGHT,
 } from './constants'
 
 export function launchGame(playerOne: matchmakingDto, playerTwo : matchmakingDto, socket : any, game: any) {
@@ -12,10 +15,14 @@ export function launchGame(playerOne: matchmakingDto, playerTwo : matchmakingDto
     startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game);
 }
 
-function handleWallBounce(ball: any) {
-    if(ball.pos.x + BACK_BALL_SIZE > BACK_WIN_WIDTH && ball.angle < 180) { //hit right
+function handleWallBounce(ball: any, leftPosY : number, rightPosY :number) {
+    if(ball.pos.x + BACK_BALL_SIZE > STARTINGPOS_RIGHT_X && 
+        ball.pos.y > rightPosY - PADDLE_HEIGHT / 2 && ball.pos.y < rightPosY + PADDLE_HEIGHT / 2 &&
+        ball.angle < 180) { //hit right
         ball.angle = (360 - ball.angle) % 360 
-    } else if(ball.pos.x - BACK_BALL_SIZE <= 0 && ball.angle > 180) { //hit left
+    } else if(ball.pos.x - BACK_BALL_SIZE <= STARTINGPOS_LEFT_X && 
+        ball.pos.y > leftPosY - PADDLE_HEIGHT / 2 && ball.pos.y < leftPosY + PADDLE_HEIGHT / 2 &&
+        ball.angle > 180) { //hit left
         ball.angle = (360 - ball.angle) % 360
     } else if (ball.pos.y - (BACK_BALL_SIZE) <= 0 && ball.angle > 90 && ball.angle < 270) { //hit top
         ball.angle = (180 - ball.angle) % 360
@@ -39,9 +46,9 @@ function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket
     
     ball.pos.x += (dirX * ball.speed)
     ball.pos.y += (dirY * ball.speed)
-    handleWallBounce(ball)
     state.leftPlayer.pos.y = curGames[0].playerOneY
     state.rightPlayer.pos.y = curGames[0].playerTwoY
+    handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y)
     state.ball = ball 
     return 1
 }
@@ -65,13 +72,13 @@ function createGameState() {
     return {
         leftPlayer : {
             pos: {
-                x: BACK_WIN_WIDTH / 20,
+                x: STARTINGPOS_LEFT_X,
                 y: BACK_WIN_HEIGHT / 2
             }
         },
         rightPlayer : {
             pos: {
-                x: BACK_WIN_WIDTH / 20 * 19,
+                x: STARTINGPOS_RIGHT_X,
                 y: BACK_WIN_HEIGHT / 2
             }
         },
