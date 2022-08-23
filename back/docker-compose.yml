@@ -1,15 +1,25 @@
 version: '3.8'
+
 services:
+
   db:
-    image: postgres:14.1-alpine
+    image: postgres
     restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - .env.dev
     ports:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+ #     - ./db:/docker-entrypoint-initdb.d/
+
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
 volumes:
   db:
     driver: local
