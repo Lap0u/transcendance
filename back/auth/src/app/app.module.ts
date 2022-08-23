@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
 import { Accounts } from '../auth/accounts.entity';
+import { PassportModule } from '@nestjs/passport';
 
 
 let envFilePath = ".env.dev";
@@ -17,6 +18,7 @@ console.log(`Running on ${process.env.ENVIRONMENT} mode`);
   imports: [
     ConfigModule.forRoot({ envFilePath }),
     AuthModule,
+	PassportModule.register({ session : true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,

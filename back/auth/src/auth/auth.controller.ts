@@ -13,6 +13,7 @@ export class AuthController {
 
 	//The route The Oauth will call after login
 	@Get('redirect')
+	@UseGuards(Auth42Guard)
 	redirect(@Res() res: Response) {
 		res.send(200);
 	 }

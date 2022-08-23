@@ -8,6 +8,12 @@ import { Strategy42 } from './strategies/index';
 @Module({
   imports: [TypeOrmModule.forFeature([Accounts])],
   controllers: [AuthController],
-  providers: [AuthService, Strategy42],
+  providers: [
+    Strategy42,
+    {
+      provide: 'AUTH SERVICE',
+      useClass: AuthService,
+    },
+  ],
 })
 export class AuthModule {}
