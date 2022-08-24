@@ -7,11 +7,12 @@ import ChannelsList from './ChannelsList';
 import ChannelManageUserModal from './ChannelManageUserModal';
 import { ChannelModalType } from './ChannelType';
 
-const Chat = () => {
+const Chat = (props : any) => {
   const [token, setToken] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [chatWith, setChatWith] = useState(null);
+  const socket = props.socket;
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState(null);
 	const [isChannelModalVisible, setIsChannelModalVisible] = useState(false);
