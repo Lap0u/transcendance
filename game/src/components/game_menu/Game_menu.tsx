@@ -3,8 +3,6 @@ import { Button, Space, version } from "antd";
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid} from 'uuid';
 import axios from 'axios';
-import io from 'socket.io-client';
-import Canvas from '../Canvas';
 
 const BACK_URL = "http://localhost:4000";
 
