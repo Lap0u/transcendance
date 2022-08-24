@@ -1,7 +1,6 @@
-import React from 'react';
 import ButtonTemplate from '../ButtonTemplate';
 
-const UserListItem = ({ user, setChatWith }) => {
+const UserListItem = ({ user, setChatWith } : userListItemProps) => {
   const chatWithUser = () => {
     setChatWith(user);
   };
@@ -11,7 +10,7 @@ const UserListItem = ({ user, setChatWith }) => {
   </div>
 };
 
-const ChatUserList = ({ users, setChatWith }) => {
+const ChatUserList = ({ users, setChatWith } :chatUserListProps) => {
   if (users.length === 0) return <div>No users</div>
 
   return (
@@ -21,4 +20,13 @@ const ChatUserList = ({ users, setChatWith }) => {
   );
 };
 
+type userListItemProps = {
+  user: any,
+  setChatWith: any
+}
+
+type chatUserListProps = {
+  users: any,
+  setChatWith: any
+}
 export default ChatUserList;

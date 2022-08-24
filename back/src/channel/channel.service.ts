@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ArrayContains } from 'typeorm';
 import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
-import { Channel } from './channel.entity';
+import { Channel, ChannelType } from './channel.entity';
 
 @Injectable()
 export class ChannelService {
@@ -41,7 +41,11 @@ export class ChannelService {
 
 		channel.type = payload.type;
 		channel.channelName = payload.channelName;
-		channel.password = payload.password;
+    // Remove password if is not protected type
+    if (channel.type !== ChannelType.PROTECTED) {
+      payload.password = null;
+    }
+    channel.password = payload.password;
 		channel.administratorsId = payload.administratorsId;
 		channel.usersId = payload.usersId;
 		

@@ -1,6 +1,6 @@
 import {resetBall} from './Ball'
 
-export const drawScore = (context : any, playerScore : number) => {
+export const drawScore = (context : any, playerScore : any) => {
 	// const playerOneX = context.canvas.width / 2 - (context.canvas.width / 2 * 20 / 100) 
 	// const playerTwoX = context.canvas.width / 2 + (context.canvas.width / 2 * 20 / 100)
 	const playerOneX = context.canvas.width / 2 - 30
@@ -33,7 +33,7 @@ function sleep(milliseconds : number) {
   } while (currentDate - date < milliseconds);
 }
 
-export async function watchScore (context : any, ball : any, ballPosX : any, ballPosY : any, score : number[], updateScore : number) {
+export async function watchScore (context : any, ball : any, ballPosX : any, ballPosY : any, score : number[], updateScore : any) {
 	const newArray : number[] = score.slice();
 	if (ballPosX.current  + (ball.size) < -10)
 	{

@@ -10,11 +10,11 @@ export class ChannelController {
   private readonly service: ChannelService;
 
 	@UseGuards(JwtAuthGuard)
-  @Get(':userId')
-  getChannelsById(
-		@Param('userId') userId: string
+  @Get()
+  getUserChannels(
+		@Request() req: any
 	): Promise<Channel[]> {
-    return this.service.getChannelsById(userId);
+    return this.service.getChannelsById(req.user.id);
   }
 
 	@UseGuards(JwtAuthGuard)

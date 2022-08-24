@@ -3,7 +3,8 @@ import {getRandomArbitrary} from './Canvas'
 
 var today = new Date()
 export var ball = {
-		speed : (window.innerHeight + window.innerWidth) / 2 * 0.00047,
+		speed : (window.innerHeight + window.innerWidth) / 2 * 0.004,
+		acceleration : 1,
 		angle: today.getMilliseconds() % 2 ? getRandomArbitrary(20, 160) : getRandomArbitrary(200, 340),
 		dirX : 0,
 		dirY : 0,
@@ -15,6 +16,7 @@ export var ball = {
 
 	var savedWidth = window.innerWidth
 	var savedHeight = window.innerHeight
+
 export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball: any) => {
 	ballPosX.current = window.innerWidth / 2
 	ballPosY.current = getRandomArbitrary(window.innerHeight / 15, window.innerHeight - window.innerHeight / 15)
@@ -24,7 +26,7 @@ export const resetBall = (player : boolean, ballPosX : any, ballPosY : any, ball
 		ball.angle =  getRandomArbitrary(200, 340)
 	ball.dirX = Math.sin(ball.angle * (Math.PI/180))
 	ball.dirY = Math.cos(ball.angle * (Math.PI/180))
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00035
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.004
 	console.log('reset');
 	
 }
@@ -37,7 +39,7 @@ export const centerBall = (player : boolean, ballPosX : any, ballPosY : any, bal
 	else
 		ball.dirX = -1
 	ball.dirY = 0
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00035
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.004
 	console.log('center');
 }
 
@@ -64,7 +66,8 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 			ball.dirX = Math.sin(angle * (Math.PI/180))
 			ball.dirY = Math.cos(angle * (Math.PI/180))
 			console.log('speed avant', ball.speed);
-			ball.speed *= 1.5
+			ball.acceleration *= 1.5;
+			ball.speed *= 1.5;
 			console.log('speed apres', ball.speed);
 //acceleration de la balle a chaque touche
 		}
@@ -81,7 +84,7 @@ export const drawBall = (context : any, ballPosX : number, ballPosY : number, pl
 
 	ballPosX.current = ballPosX.current * window.innerWidth / savedWidth 
 	ballPosY.current = ballPosY.current * window.innerHeight / savedHeight 
-	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.00047
+	ball.speed = (window.innerHeight + window.innerWidth) / 2 * 0.004 * ball.acceleration
 	ball.size = (window.innerHeight + window.innerWidth) / 2 * 0.008
 	savedWidth = window.innerWidth
 	savedHeight = window.innerHeight

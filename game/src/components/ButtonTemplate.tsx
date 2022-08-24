@@ -1,6 +1,6 @@
 import './ButtonTemplate.css'
 
-const ButtonTemplate = ({text, onClick, buttonClass}) => {
+const ButtonTemplate = ({text , onClick, buttonClass} : buttonProps) => {
 	return (
 		<div>
 			<button className={buttonClass} onClick={onClick}>
@@ -9,5 +9,9 @@ const ButtonTemplate = ({text, onClick, buttonClass}) => {
 		</div>
 	)
 }
-
+type buttonProps = {
+	text: string,
+	onClick: any,
+	buttonClass: string
+}
 export default ButtonTemplate;

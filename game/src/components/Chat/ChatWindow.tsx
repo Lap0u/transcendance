@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ButtonTemplate from '../ButtonTemplate';
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -8,7 +8,7 @@ const BACK_URL = "http://localhost:4000";
 
 const socket = io(BACK_URL).connect();
 
-const HistoryContent = ({ currUser, user, content }) => {
+const HistoryContent = ({ currUser, user, content }: historyContentProps) => {
   if (content.senderId === currUser.id) {
     return (
       <div className='chat-window-mymessage-wrapper'>
@@ -25,7 +25,13 @@ const HistoryContent = ({ currUser, user, content }) => {
   );
 };
 
-const ChatWindow = ({ currUser, user, token }) => {
+type historyContentProps = {
+  currUser: any,
+  user: any, 
+  content: any
+}
+
+const ChatWindow = ({ currUser, user, token } : chatWindowProps) => {
   const [message, setMessage] = useState("");
   const [history, setHistory]: any = useState([]);
 
@@ -120,5 +126,11 @@ const ChatWindow = ({ currUser, user, token }) => {
     </div>
   );
 };
+
+type chatWindowProps = {
+  currUser: any,
+  user: any, 
+  token: any
+}
 
 export default ChatWindow;

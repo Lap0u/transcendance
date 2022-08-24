@@ -5,7 +5,6 @@ import {ball, drawBall, resetBall, centerBall, resizeBall} from './Ball'
 import {drawScore, watchScore} from './Score'
 import ButtonTemplate from './ButtonTemplate'
 
-
 export function getRandomArbitrary(min : number, max : number) {
   return Math.random() * (max - min) + min;
 }
@@ -21,7 +20,7 @@ const Canvas = () => {
 	// console.log('begin canvas', moves)
 	// const calculation = useMemo(() => throwBall(ballPosX, ballPosY, moveBal, moves), [moves]);
 	
-  useEffect(() => {
+	function updateCanvas () {
 		//draw every time the cursor move, or ball position change
 		const canvas : any = canvasRef.current
 		canvas.width = window.innerWidth;
@@ -38,8 +37,10 @@ const Canvas = () => {
 		ballPosX.current += (ball.dirX * ball.speed)
 		ballPosY.current += (ball.dirY * ball.speed)
 		moveBal(moves + 1)
-	}, [ playBarPosY, moves, playersScore])
-
+	}
+	useEffect(() => {
+		window.requestAnimationFrame(updateCanvas)
+	})
   window.addEventListener('resize', () => resizeBall(ballPosX, ballPosY))
 
 	return (

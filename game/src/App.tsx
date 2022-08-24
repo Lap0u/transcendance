@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './components/Mainpage/MainPage';
 import Accueil from './components/Accueil';
 import Chat from './components/Chat/Chat';
 import Page404 from './components/Page404';
-// import Canvas from './components/Canvas'
+import Canvas from './components/Canvas'
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
 			<span style={{ color: 'white' }}>This is single page application</span>
 			<Routes>
 				<Route path="/" element={<Accueil />} />
+				<Route path="/home" element={<MainPage />} />
 				<Route path="/chat" element={<Chat />} />
+				<Route path="/game" element={<Canvas />} />
 				{/* If no route match, then return 404 page */}
 				<Route path="*" element={<Page404 />} />
 			</Routes>
