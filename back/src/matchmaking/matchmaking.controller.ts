@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Body, Post, Delete } from "@nestjs/common";
+import { matchesDto } from "./matches.dto";
 import { matchmakingDto, joinMatchmakingDto } from "./matchmaking.dto";
 import { MatchmakingService } from "./matchmaking.service";
 
@@ -8,6 +9,11 @@ export class MatchmakingController {
 	@Get() 
 	getMatchmakingList() : matchmakingDto[]{
 		return this.matchmakingService.getMatchmakingList()
+	}
+	
+	@Get(`/games`)
+	getMatchesList() : matchesDto[]{
+		return this.matchmakingService.getMatchesList()
 	}
 	
 	@Post()

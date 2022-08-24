@@ -44,7 +44,6 @@ const SingleGame = (props : any) => {
     }
     return (
         <div>
-            <h1 style={{ color: 'red'}}>Test</h1>
             <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
             {/* <canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}> */}
                 There should be the canvas of the full game

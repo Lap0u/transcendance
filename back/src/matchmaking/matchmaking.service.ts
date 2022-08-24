@@ -27,6 +27,9 @@ export class MatchmakingService {
 	getMatchmakingList() : matchmakingDto[] {
 		return this.matchmakingList
 	}
+	getMatchesList() : matchesDto[] {
+		return this.currentMatches
+	}
 	updatePosX(data: any, sender : string) : any {
 		if (data){
 			for (const elem of this.currentMatches) {
