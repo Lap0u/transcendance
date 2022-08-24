@@ -60,7 +60,7 @@ const Chat = (props : any) => {
       />
       <div style={{ display: 'flex' }}>
         <ChatUserList users={users} setChatWith={setChatWith} />
-        <ChatWindow currUser={currUser} user={chatWith} token={token} />
+        <ChatWindow currUser={currUser} user={chatWith} token={token} sock={socket}/>
         <ChannelsList channels={channels} setSelectedChannel={(channel: any, type: string) => {
           setSelectedChannel(channel);
           if (type === ChannelModalType.edit) {
