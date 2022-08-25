@@ -5,6 +5,7 @@ import { drawPlayBar } from "./draw_paddle";
 import { drawScore } from "./draw_score";
 import { getMousePosY, sendNewBar } from "./draw_utils";
 import { useLocation } from "react-router-dom"
+
 const SingleGame = (props : any) => {
     const canvasRef = useRef(null);
     const [newState, setNewState] = useState();

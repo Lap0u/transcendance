@@ -9,6 +9,8 @@ import {
     STARTINGPOS_RIGHT_X,
     PADDLE_HEIGHT,
     PADDLE_WIDTH,
+    GOAL_DELAY,
+    NO_NEW_FRAME,
 } from './constants'
 
 function getRandomArbitrary(min : number, max : number) {
@@ -84,23 +86,26 @@ function resetBall(side : number) {
     return ball
 }
 
-const sleep = (ms :number) => new Promise(r => setTimeout(r, ms));
-
 function checkGoal(ball: any, state: any) {
     if(ball.pos.x <= 0) {
         state.score.playerTwo += 1
         ball = resetBall(0)
-        sleep(300)
+        state.frameDelay = GOAL_DELAY
     }
     else if (ball.pos.x >= BACK_WIN_WIDTH) {
         state.score.playerOne += 1
         ball = resetBall(1)
-        sleep(300)
+        state.frameDelay = GOAL_DELAY
     }
     return ball
 }
 
 function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket : any, curGames: any) : number {
+
+    if (state.frameDelay > 0){
+        state.frameDelay--;
+        return 1;
+    }
     let ball = state.ball
     let playerOnePaddle = state.playerOne
     let playerTwoPaddle = state.playerTwo
@@ -121,10 +126,11 @@ function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket
 function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGame : any)  {
     const intervalId = setInterval(() => {
         const status : number = gameLoop(state, playerOne, playerTwo, socket, curGame)
-        if (status !== -1) {
+        
+        if (status === 1) {
             socket.emit(curGame.gameId, state);
             
-        } else {
+        } else if (status !== NO_NEW_FRAME){
             socket.emit('gameOver')
             clearInterval(intervalId)
         }
@@ -154,6 +160,7 @@ function createGameState() {
         scale : {
             width: BACK_WIN_WIDTH,
             heihgt: BACK_WIN_HEIGHT
-        }
+        },
+        frameDelay: 0
     }
 }

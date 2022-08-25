@@ -67,7 +67,7 @@ export class MatchmakingService {
 			this.quitMatchmaking(playerTwo.socket);
 			const newGame = generateNewGame(gameId, playerOne, playerTwo, this.currentMatches)
 			launchGame(playerOne, playerTwo, this.socketService.socket, newGame)
-}
+		}
 		return newUserInMatchmaking;
 	}
 	
