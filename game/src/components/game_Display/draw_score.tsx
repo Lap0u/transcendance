@@ -1,7 +1,6 @@
 import { scoreType } from "./game.dto";
 
 export const drawScore = (context : any, score: scoreType) => {
-	console.log('score', score);
 	
 	const playerOneX = context.canvas.width / 2 - 30
 	const playerTwoX = context.canvas.width / 2 + 40

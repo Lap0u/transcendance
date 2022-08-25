@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import ButtonTemplate from '../ButtonTemplate';
 import axios from 'axios';
-import io from 'socket.io-client';
 import './Chat.css';
 
 const BACK_URL = "http://localhost:4000";

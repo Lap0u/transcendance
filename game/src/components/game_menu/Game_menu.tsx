@@ -19,6 +19,8 @@ const GameMenu = (props : any) => {
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
+  console.log(`sock`, socket);
+  
 
   const quitMatchmakingList = async(userId: string) => {
     try {
@@ -57,14 +59,14 @@ const GameMenu = (props : any) => {
   useEffect(() => {
   
     if (inMatchmaking)
-      joinMatchmakingList(sessionId) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+      joinMatchmakingList(socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
     if (!inMatchmaking)
-      quitMatchmakingList(sessionId)
+      quitMatchmakingList(socket.id)
     socket.on(`matchFound:`, (gameId : string) => {
       console.log('gameId', gameId)
       navigate(`/singleGame/${gameId}`);
     });
-  }, [inMatchmaking]);
+  }, [inMatchmaking, socket, navigate]);
 
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (

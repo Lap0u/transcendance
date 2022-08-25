@@ -84,13 +84,7 @@ function resetBall(side : number) {
     return ball
 }
 
-function sleep(milliseconds : number) {
-    const date = Date.now();
-    let currentDate : any = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-  }  
+const sleep = (ms :number) => new Promise(r => setTimeout(r, ms));
 
 function checkGoal(ball: any, state: any) {
     if(ball.pos.x <= 0) {
@@ -117,23 +111,21 @@ function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket
     
     ball.pos.x += (dirX * ball.speed)
     ball.pos.y += (dirY * ball.speed)
-    state.leftPlayer.pos.y = curGames[0].playerOneY
-    state.rightPlayer.pos.y = curGames[0].playerTwoY
+    state.leftPlayer.pos.y = curGames.playerOneY
+    state.rightPlayer.pos.y = curGames.playerTwoY
     handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y)
     state.ball= checkGoal(ball, state)
     return 1
 }
 
-function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGames : any)  {
+function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGame : any)  {
     const intervalId = setInterval(() => {
-        const status : number = gameLoop(state, playerOne, playerTwo, socket, curGames)
-        // console.log('bouclette', state);
+        const status : number = gameLoop(state, playerOne, playerTwo, socket, curGame)
         if (status !== -1) {
-            socket.to(playerOne).to(playerTwo).emit('newGameState', state);
+            socket.emit(curGame.gameId, state);
             
         } else {
-            socket.to(playerOne).to(playerTwo).emit('gameOver')
-            
+            socket.emit('gameOver')
             clearInterval(intervalId)
         }
     }, 1000 / FRAME_RATE)
