@@ -1,3 +1,5 @@
+import { Accounts } from '../auth/accounts.entity';
+
 export type UserDetails = {
   id: string;
   intraId: string;
@@ -14,7 +16,4 @@ export type IntraUserDetails = {
   accountUsername: string;
 };
 
-export type name = {
-  familyName: string;
-  givenName: string;
-};
+export type Done = (err: Error, user: Accounts) => void;

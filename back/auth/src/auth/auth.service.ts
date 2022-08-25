@@ -14,7 +14,7 @@ export class AuthService implements AuthentificationProvider {
   async validateUser(details: IntraUserDetails) {
     const { id } = details;
     const user = await this.userRepo.findOneBy({ id });
-    console.log(user);
+    //  console.log(user);
     if (user) return user;
     return this.createUser(details);
   }
@@ -23,7 +23,7 @@ export class AuthService implements AuthentificationProvider {
     const user = this.userRepo.create(details);
     return this.userRepo.save(user);
   }
-  findUser() {
-    throw new Error('Method not implemented.');
+  findUser(id: string): Promise<Accounts | undefined> {
+    return this.userRepo.findOneBy({ id });
   }
 }

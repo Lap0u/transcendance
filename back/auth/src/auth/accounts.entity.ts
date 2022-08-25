@@ -20,20 +20,3 @@ export class Accounts {
   @Column({ nullable: true })
   accountUsername: string;
 }
-
-/*export class Accounts {
-	@PrimaryGeneratedColumn()
-	id: string;
-  
-	@Column({ unique: true })
-	intraId: string;
-  
-	@Column()
-	name: string;
-  
-	@Column()
-	Intralogin: string;
-  
-	@Column({ nullable: true })
-	avatar: string;
-  }*/

@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
 import { Accounts } from '../auth/accounts.entity';
 import { PassportModule } from '@nestjs/passport';
+import { TypeOrmSession } from '../auth/session.entity';
+import { DataSource } from 'typeorm';
 
 
 let envFilePath = ".env.dev";
@@ -26,9 +28,14 @@ console.log(`Running on ${process.env.ENVIRONMENT} mode`);
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [Accounts],
+      entities: [Accounts, TypeOrmSession],
       synchronize: true,
     }),
   ],
 })
-export class AppModule {}
+export class AppModule {
+	constructor(private dataSource: DataSource) {}
+	getDataSource() {
+		return this.dataSource;
+	  }
+}

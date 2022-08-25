@@ -1,21 +1,26 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { PassportSerializer } from "@nestjs/passport";
 import { Accounts } from "../auth/accounts.entity";
+import { AuthentificationProvider } from "../auth/auth";
+import { Done } from "./types";
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-	constructor(){
+	constructor(@Inject('AUTH_SERVICE') private readonly authService: AuthentificationProvider){
 		super();
 	}
 
-	serializeUser(user: Accounts, done: (err: Error, user: Accounts) => void){
+	serializeUser(user: Accounts, done: Done){
+		console.log("serialized : ");
 		done(null, user)
 	}
 
-	deserializeUser(user: Accounts, done: (err: Error, user: Accounts) => void){
-		const userDb = null;
-		done(null, userDb)
+	async deserializeUser(user: Accounts, done: Done){
+		const userDb = await this.authService.findUser(user.id); 
+		console.log("deserialized : ", userDb);
+		return userDb ? done(null, userDb) : done(null, null);
+
 	}
 }

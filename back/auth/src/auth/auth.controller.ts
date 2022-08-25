@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { Response } from "express";
-import { Auth42Guard } from './guards/index';
+import { Auth42Guard, AuthenticatedGuard} from './guards/index';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +19,7 @@ export class AuthController {
 	 }
 
 	@Get('status')
+	@UseGuards(AuthenticatedGuard)
 	status() { return "status"}
 
 	@Get('logout')
