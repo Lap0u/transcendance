@@ -1,33 +1,22 @@
 import {useState, useEffect} from 'react'
 import { Button, Space, version } from "antd";
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuid} from 'uuid';
 import axios from 'axios';
-import { GameList } from './GameList';
-
-const BACK_URL = "http://localhost:4000";
-
-const sessionId = uuid()
+import { GameList, game } from './GameList';
+import { BACK_URL } from '../constants';
 
 const GameMenu = (props : any) => {
   
   const [inMatchmaking, setMatchmaking] = useState(false);
-  const [matchmakingList, setMatchmakingList] = useState([]);
-  // const [gamesList, setGamesList] = useState([]);
+  const [gamesList, setGamesList] = useState<game[]>([]);
   const socket = props.socket;
 	const navigate = useNavigate();
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
-  console.log(`sock`, socket);
-  
-
   const quitMatchmakingList = async(userId: string) => {
     try {
-      const res = await axios.delete(`${BACK_URL}/matchmaking/${userId}`);
-      if(res) {
-        setMatchmakingList(res.data)
-      }
+         await axios.delete(`${BACK_URL}/matchmaking/${userId}`);
     } catch(e) {
       alert(`Une erreur s'est passé ${e}`);
     }
@@ -35,27 +24,27 @@ const GameMenu = (props : any) => {
 
   const joinMatchmakingList = async(userId: string) => {
     try {
-      const res = await axios.post(`${BACK_URL}/matchmaking`, { id: userId});
-      if (res) {  
-        setMatchmakingList(res.data)
-      }
+        await axios.post(`${BACK_URL}/matchmaking`, { id: userId});
     } catch(e) {
       alert(`Une erreur s'est passé ${e}`);
     }
   }
-
-  const gamesList = 2
-  // const getMatchesList = async () => {
-  //   try {
-  //     const res = await axios.get(`${BACK_URL}/matchmaking/games`);
-  //     if (res && res.data.length !== gamesList.length) {
-  //       setGamesList(res.data)
-  //     }
-  //   } catch(e) {
-  //     alert(`Une erreur s'est passé ${e}`);
-  //   }
-  // }
-  // setInterval(getMatchesList, 1000)
+  const getMatchesList = async () => {
+    try {
+        const res = await axios.get(`${BACK_URL}/matchmaking/games`);
+        console.log('list', res);
+        setGamesList(res.data)
+      }
+      catch(e) {
+        alert(`Une erreur s'est passé ${e}`);
+    }
+  }
+  useEffect(() => {
+    const interval = setInterval(getMatchesList, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
   useEffect(() => {
   
     if (inMatchmaking)
@@ -74,8 +63,8 @@ const GameMenu = (props : any) => {
       <h1>antd version: {version}</h1>
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
-        <GameList games={gamesList} />
       </Space>
+      <GameList games={gamesList} />
     </div>
   );
 };
