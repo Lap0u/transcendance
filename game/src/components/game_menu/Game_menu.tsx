@@ -1,51 +1,61 @@
 import {useState, useEffect} from 'react'
 import { Button, Space, version } from "antd";
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuid} from 'uuid';
 import axios from 'axios';
-
-const BACK_URL = "http://localhost:4000";
-
-const sessionId = uuid()
+import { GameList, game } from './GameList';
+import { BACK_URL } from '../constants';
 
 const GameMenu = (props : any) => {
   
   const [inMatchmaking, setMatchmaking] = useState(false);
+  const [gamesList, setGamesList] = useState<game[]>([]);
   const socket = props.socket;
 	const navigate = useNavigate();
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
-
   const quitMatchmakingList = async(userId: string) => {
     try {
-      const res = await axios.delete(`${BACK_URL}/matchmaking/${userId}`);
+         await axios.delete(`${BACK_URL}/matchmaking/${userId}`);
     } catch(e) {
       alert(`Une erreur s'est passé ${e}`);
     }
   }
-
 
   const joinMatchmakingList = async(userId: string) => {
     try {
-      const res = await axios.post(`${BACK_URL}/matchmaking`, { id: userId});
+        await axios.post(`${BACK_URL}/matchmaking`, { id: userId});
     } catch(e) {
       alert(`Une erreur s'est passé ${e}`);
     }
   }
-
+  const getMatchesList = async () => {
+    try {
+        const res = await axios.get(`${BACK_URL}/matchmaking/games`);
+        console.log('list', res);
+        setGamesList(res.data)
+      }
+      catch(e) {
+        alert(`Une erreur s'est passé ${e}`);
+    }
+  }
+  useEffect(() => {
+    const interval = setInterval(getMatchesList, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
   useEffect(() => {
   
     if (inMatchmaking)
-      joinMatchmakingList(sessionId) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+      joinMatchmakingList(socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
     if (!inMatchmaking)
-      quitMatchmakingList(sessionId)
-
+      quitMatchmakingList(socket.id)
     socket.on(`matchFound:`, (gameId : string) => {
       console.log('gameId', gameId)
       navigate(`/singleGame/${gameId}`);
     });
-  }, [inMatchmaking]);
+  }, [inMatchmaking, socket, navigate]);
 
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (
@@ -54,6 +64,7 @@ const GameMenu = (props : any) => {
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
       </Space>
+      <GameList games={gamesList} />
     </div>
   );
 };

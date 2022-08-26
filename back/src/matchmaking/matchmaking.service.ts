@@ -15,6 +15,7 @@ function generateNewGame (gameId :string, playerOne : matchmakingDto, playerTwo 
 		playerTwoY : BACK_WIN_HEIGHT / 2
 	}
 	currentMatches.push(newGame)
+	return newGame
 }
 
 @Injectable()
@@ -26,6 +27,9 @@ export class MatchmakingService {
 	private  currentMatches : matchesDto[] = []
 	getMatchmakingList() : matchmakingDto[] {
 		return this.matchmakingList
+	}
+	getMatchesList() : matchesDto[] {
+		return this.currentMatches
 	}
 	updatePosX(data: any, sender : string) : any {
 		if (data){
@@ -43,11 +47,11 @@ export class MatchmakingService {
 	} 
 
 	async joinMatchmaking(payload :joinMatchmakingDto): Promise<matchmakingDto> {
-		const socklist =  await this.socketService.socket.sockets.allSockets();
-		const socketArray = Array.from(socklist)
+		console.log(`pay`, payload);
+		
 		let newUserInMatchmaking = {
 			id: uuid(),
-			socket: socketArray[this.matchmakingList.length], //ne marchera pas quand il y aura des spectateurs
+			socket: payload.id, //ne marchera pas quand il y aura des spectateurs
 			...payload
 		}
 		this.matchmakingList.push(newUserInMatchmaking);
@@ -61,9 +65,9 @@ export class MatchmakingService {
 			this.socketService.socket.to(playerTwo.socket).emit(`matchFound:`, gameId);
 			this.quitMatchmaking(playerOne.socket);
 			this.quitMatchmaking(playerTwo.socket);
-			generateNewGame(gameId, playerOne, playerTwo, this.currentMatches)
-			launchGame(playerOne, playerTwo, this.socketService.socket, this.currentMatches)
-}
+			const newGame = generateNewGame(gameId, playerOne, playerTwo, this.currentMatches)
+			launchGame(playerOne, playerTwo, this.socketService.socket, newGame)
+		}
 		return newUserInMatchmaking;
 	}
 	
@@ -71,7 +75,7 @@ export class MatchmakingService {
         
         
         const newMatchmakingList = this.matchmakingList.filter(user => {
-            return user.id != userId
+            return user.socket != userId
         })
         
         this.matchmakingList = newMatchmakingList;

@@ -9,6 +9,8 @@ import {
     STARTINGPOS_RIGHT_X,
     PADDLE_HEIGHT,
     PADDLE_WIDTH,
+    GOAL_DELAY,
+    NO_NEW_FRAME,
 } from './constants'
 
 function getRandomArbitrary(min : number, max : number) {
@@ -84,29 +86,26 @@ function resetBall(side : number) {
     return ball
 }
 
-function sleep(milliseconds : number) {
-    const date = Date.now();
-    let currentDate : any = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-  }  
-
 function checkGoal(ball: any, state: any) {
     if(ball.pos.x <= 0) {
         state.score.playerTwo += 1
         ball = resetBall(0)
-        sleep(300)
+        state.frameDelay = GOAL_DELAY
     }
     else if (ball.pos.x >= BACK_WIN_WIDTH) {
         state.score.playerOne += 1
         ball = resetBall(1)
-        sleep(300)
+        state.frameDelay = GOAL_DELAY
     }
     return ball
 }
 
 function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket : any, curGames: any) : number {
+
+    if (state.frameDelay > 0){
+        state.frameDelay--;
+        return 1;
+    }
     let ball = state.ball
     let playerOnePaddle = state.playerOne
     let playerTwoPaddle = state.playerTwo
@@ -117,23 +116,22 @@ function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket
     
     ball.pos.x += (dirX * ball.speed)
     ball.pos.y += (dirY * ball.speed)
-    state.leftPlayer.pos.y = curGames[0].playerOneY
-    state.rightPlayer.pos.y = curGames[0].playerTwoY
+    state.leftPlayer.pos.y = curGames.playerOneY
+    state.rightPlayer.pos.y = curGames.playerTwoY
     handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y)
     state.ball= checkGoal(ball, state)
     return 1
 }
 
-function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGames : any)  {
+function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGame : any)  {
     const intervalId = setInterval(() => {
-        const status : number = gameLoop(state, playerOne, playerTwo, socket, curGames)
-        // console.log('bouclette', state);
-        if (status !== -1) {
-            socket.to(playerOne).to(playerTwo).emit('newGameState', state);
+        const status : number = gameLoop(state, playerOne, playerTwo, socket, curGame)
+        
+        if (status === 1) {
+            socket.emit(curGame.gameId, state);
             
-        } else {
-            socket.to(playerOne).to(playerTwo).emit('gameOver')
-            
+        } else if (status !== NO_NEW_FRAME){
+            socket.emit('gameOver')
             clearInterval(intervalId)
         }
     }, 1000 / FRAME_RATE)
@@ -162,6 +160,7 @@ function createGameState() {
         scale : {
             width: BACK_WIN_WIDTH,
             heihgt: BACK_WIN_HEIGHT
-        }
+        },
+        frameDelay: 0
     }
 }

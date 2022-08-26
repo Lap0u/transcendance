@@ -4,13 +4,16 @@ import { drawBall } from "./draw_ball";
 import { drawPlayBar } from "./draw_paddle";
 import { drawScore } from "./draw_score";
 import { getMousePosY, sendNewBar } from "./draw_utils";
+import { useLocation } from "react-router-dom"
 
 const SingleGame = (props : any) => {
-	const canvasRef = useRef(null);
+    const canvasRef = useRef(null);
     const [newState, setNewState] = useState();
-
+    const pageLocation = useLocation();
+    const path = pageLocation.pathname.split('/')
+    const gameSocket = path[path.length - 1]
+    
     const socket = props.socket;
-    socket.emit(`start`);
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
@@ -30,13 +33,10 @@ const SingleGame = (props : any) => {
         drawPlayBar(context, gameState.leftPlayer)
         drawPlayBar(context, gameState.rightPlayer)
         drawBall(context, gameState.ball)
-        console.log('avant');
         drawScore(context, gameState.score)
-        console.log('apres');
-        
     }
     useEffect(() => {
-        socket.on(`newGameState`, handleGameState)
+        socket.on(gameSocket, handleGameState)
         setNewState(newState)
     })
     function handleGameState(gameState : any) {// any !
@@ -44,7 +44,6 @@ const SingleGame = (props : any) => {
     }
     return (
         <div>
-            <h1 style={{ color: 'red'}}>Test</h1>
             <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
             {/* <canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}> */}
                 There should be the canvas of the full game
