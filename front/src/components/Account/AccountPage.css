@@ -1,0 +1,109 @@
+
+#wholepage {
+	background-color: black;
+	width: 100vw;
+	height: 100vh;
+	margin: none;
+	color: white;
+	padding: none;
+}
+
+.account-page{
+	text-align: center;
+
+}
+
+.account-info ul{
+	background-color: #1c1c1c;
+
+}
+
+.account-info
+{
+	text-align: left;
+    position: fixed;
+    top: 50%;
+    left: calc(50% - 100px);
+    transform: translate(-60%, -40%);
+	width: 300px;
+	line-height: 4vh;
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.account-info .info-type{
+
+	font-size: min(5vh, 20px);
+	color:white;
+	white-space: nowrap;
+}
+
+.account-info .info{
+	position: relative;
+	font-size: min(4vh, 20px);
+	color: cornflowerblue;
+	white-space: nowrap;
+	float:right;
+}
+
+.account-info .button-change-username{
+	text-align: center;
+	line-height: 0;
+	width: 125px;
+	height: 20px;
+	position: relative;
+	color:cornflowerblue;
+	float: right;
+	top : 5px;
+	left: 170px;
+	
+
+}
+
+.account-info .avatar {
+	position: relative;
+	padding-top: 20px;
+}
+
+.account-info .avatar .info-type {
+	top: 60px;
+}
+.account-info .avatar .info{
+	bottom: 45px;
+}
+
+.account-info .avatarImg{
+	background-color: #1c1c1c;
+	border-radius: 50%; 
+	width: 50px;
+	height: auto;
+	float: right;
+	position: relative;
+}
+
+.account-info .button-upload-avatar{
+
+	line-height: 0;
+	width: 125px;
+	height: 20px;
+	position: relative;
+	color:cornflowerblue;
+	float: right;
+	left: 200px;
+	bottom: 35px;
+}
+
+.account-page .top-line{
+	width: 100vw;
+	border-top: 2px dashed white;
+	position: relative;
+	top: 25vh;
+	
+}
+
+.account-page .bottom-line{
+	width: 100vw;
+	border-style: dashed;
+	position: relative;
+	top: 80vh;
+}
