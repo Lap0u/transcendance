@@ -11,15 +11,16 @@ import { io } from 'socket.io-client';
 
 const BACK_URL = "http://localhost:4000";
 
-const socket = io(BACK_URL).connect();
+//const socket = io(BACK_URL).connect();
 
 function App() {
   return (
 	<div id="wholepage">
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<Accueil />} />
 				<Route path = "/account" element={<AccountPage/>} />
+				<Route path="/" element={<Accueil />} />
+				{/*<Route path = "/account" element={<AccountPage/>} />
 				<Route path="/chat" element={<Chat socket={socket}/>} />
 				<Route path="/menu" element={<GameMenu socket={socket}/>} />
 				<Route path="/singleGame/:id" element={<SingleGame socket={socket}/>} />

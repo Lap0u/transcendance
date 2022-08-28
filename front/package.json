@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@types/multer": "^1.4.7",
     "web-vitals": "^2.1.4"
   }
 }

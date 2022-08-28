@@ -6,8 +6,8 @@ import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 // import backgroundImage from '../assets/pong_wallpaper'
 
-const socket = io('http://localhost:3000');
-socket.on('init', handleInit);
+//const socket = io('http://localhost:4000');
+//socket.on('init', handleInit);
 
 function handleInit(msg : string) {
 	console.log(msg);
@@ -17,9 +17,6 @@ function Accueil(){
 
 	const navigate = useNavigate();
 
-	function loginClick(){
-	  setIsLogin(!isLoginActive);
-	}
 	return (
 		<div className='AccueilPage'>
 			<div>
@@ -29,7 +26,7 @@ function Accueil(){
 			{!isLoginActive && 
 			<div>
 				<Welcome/>
-				<ButtonTemplate text="Login" onClick={loginClick} buttonClass={'login-button rightButton'} />
+				<ButtonTemplate text="Login" onClick={() => {window.location.href = 'http://localhost:4000/auth/login'}} buttonClass={'login-button rightButton'} />
 				<LoginButton nav={navigate}/>
 				<ButtonTemplate text="Chat" onClick={() => navigate("/chat")} buttonClass={'chat-button'} />
 			</div>
