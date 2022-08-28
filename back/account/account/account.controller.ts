@@ -26,9 +26,16 @@ export class AccountController {
     return user_info;
   }
 
-  @Get('avatar')
-  addAvatar() {
-    return 'haha';
+  @Post('avatar')
+  @UseGuards(AuthenticatedGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addAvatar(
+    @Req() req: Request,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    return this.usersService.addAvatar(id, file.buffer, file.originalname);
   }
 
   @Get('test')

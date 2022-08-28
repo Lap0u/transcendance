@@ -18,7 +18,7 @@ export class Strategy42 extends PassportStrategy(Strategy){
 	}
 	async validate(accessToken: string, refreshToken: string, profile: Profile){
 		const  { id, username, name} = profile;
-		const avatar = 123;
+		const avatar = null;
 		const accountUsername = "nobody";
 		const details : IntraUserDetails = {id, username, name, avatar, accountUsername };
 //		console.log(id, username, name );

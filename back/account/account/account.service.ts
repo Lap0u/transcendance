@@ -12,14 +12,13 @@ export class AccountService {
     private readonly databaseFilesService: DatabaseFilesService,
   ) {}
 
-  async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
+  async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
     const avatar = await this.databaseFilesService.uploadDatabaseFile(
       imageBuffer,
       filename,
     );
-    await this.usersRepository.update(userId, {
-      avatar: avatar.id,
-    });
+    console.log('id', userId, 'avatar', avatar.id);
+    await this.usersRepository.update({ id: userId }, { avatar: avatar.id });
     return avatar;
   }
 }
