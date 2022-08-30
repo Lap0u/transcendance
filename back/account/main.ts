@@ -10,9 +10,9 @@ import { TypeormStore } from 'connect-typeorm/out';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-	allowedHeaders: ['content-type'],
-  origin: 'http://localhost:3000',
-  credentials: true,
+	allowedHeaders: ['Content-Type'],
+  	origin: 'http://localhost:3000',
+  	credentials: true,
   });
   const sessionRepository = app
   .get(AppModule)

@@ -1,20 +1,10 @@
 
 import axios from 'axios';
-import { promises } from 'fs';
-import { async } from 'q';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { array, number } from 'yargs';
 import './AccountPage.css'
-import loup from './avatar/loup.png'
 
 const BACK_URL = "http://localhost:4000";
-
-type user ={
-	name:string;
-	username:string;
-	avatar:string;
-}
 
 
 interface PropDiplayWhenClick {
@@ -40,36 +30,97 @@ function ButtonChangeUsername() {
 
 function ButtonChangeAvatar(props: PropDiplayWhenClick) {
 
-	return (
+	const [selectedFile, setSelectedFile] = useState("");
+	const [isFilePicked, setIsFilePicked] = useState(false);
+
+	const changeHandler = (event : any) => {
+		setSelectedFile(event.target.files[0]);
+		setIsFilePicked(true);
+	};
+
+	async function handleSubmission()  {
+
+		//console.log("fiiiile", selectedFile);
+		//formData.append('file', selectedFile);
+		var FormData = require("form-data");
+		const formData = new FormData();
+		formData.append("file", selectedFile);
+  		formData.append("type", "avatar");
+		await axios.post("http://localhost:4000/account/avatar", formData, {
+			withCredentials:true ,
+			method: "post",
+			headers: {}
+		})
+			.then(function (response) {
+			  //handle success
+			  console.log(response);
+			})
+			.catch(function (response) {
+			  //handle error
+			  console.log(response);
+			});
+	}
+/*	return (
 		<div>
 		<button className='button-upload-avatar' onClick={() => props.displayElem === 'none' ? props.clickButton('block') : props.clickButton('none')}>
 			<i>Change avatar...</i>
 		</button>
 		<input className="input-file" type='file' accept='.jpg,.jpeg,.png' style={{display:props.displayElem}}></input>
 		</div>
-	  );
+	  );*/
+
+	return (
+		<div>
+			<button className='button-upload-avatar' onClick={() => props.displayElem === 'none' ? props.clickButton('block') : props.clickButton('none')}>
+					<i>Change avatar...</i>
+			</button>
+			<input className="input-file" type='file' accept='.jpg,.jpeg,.png' style={{display:props.displayElem}} onChange={changeHandler} />
+			<button  style={{display:props.displayElem}} onClick={handleSubmission}>envoye</button>
+		</div>
+	)
+}
+
+function isJson(str: string) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }
 
 
 
 const AccountInfo = () => {
+
 	const [user, getUser] = useState({name : "", username: "", avatar: ""});
+//	const [fullName, getFullName] = useState({givenName : "", familyName: ""});
+	//const [avatarImg, getAvatarImg] = useState();
 	const [displayChangeAvatar, changeAvatar] = useState('none');
-	
+
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account`,  {withCredentials:true }).then((response) => {
+			console.log(response.data);
+			console.log("resssss", response.data);
 			getUser(response.data);
-		});
+		})
 	}, []);
-	const fullName : string = user.name;
-	const {givenName, familyName} = JSON.parse(fullName);
-	console.log(user);
+
+	function getName() : string {
+		if (!isJson(user.name))
+			return " ";
+		const {givenName, familyName} = JSON.parse(user.name);
+		return (" " + givenName + " " + familyName);
+	 }
+	console.log("useer AVATAR", user.avatar);
+
+
 	return (
 		<div>
 		<div className='top-line'/>
 		<li className='account-info'>
 			<ul className='avatar'>
-				<img className='avatarImg' src={loup} alt="Avatar"/>
+				<img className='avatarImg' src={ BACK_URL + '/account/avatar/file/' + user.avatar} alt="Avatar"/>
 				<ButtonChangeAvatar displayElem={displayChangeAvatar} clickButton={changeAvatar}/>
 			</ul>
 			<ul className='username'>
@@ -79,7 +130,7 @@ const AccountInfo = () => {
 			</ul>
 			<ul className='name'>
 				<i className='info-type'>Name </i>
-				<i className='info'>{givenName} {familyName} </i>
+				<i className='info'>{getName()}</i>
 			</ul>
 			<ul className='login' >
 				<i className='info-type'>Login </i>
