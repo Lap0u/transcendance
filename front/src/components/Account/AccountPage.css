@@ -113,13 +113,21 @@
 .avatar .input-file{
 	line-height: 100%;
 	font-size: 10px;
-	position: absolute;
-	left: 240px;
+	position: relative;
+	left: 80px;
 	bottom: 3px;
 	margin: 0;
 	padding: 0;
 }
 
+.avatar .submit-file{
+	position: absolute;
+	font-size: 12px;
+	top: 125px;
+	left: 50px;
+	line-height: 100%;
+	background-color: dimgray;
+}
 .username  .change-username{
 	text-align: center;
 }

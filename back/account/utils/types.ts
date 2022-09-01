@@ -4,8 +4,9 @@ export type IntraUserDetails = {
   id: string;
   username: string;
   name: string;
-  avatar: number;
   accountUsername: string;
+  filename: string;
+  data: Uint8Array;
 };
 
 export type DatabaseFile = {

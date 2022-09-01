@@ -35,7 +35,7 @@ function ButtonChangeAvatar(props: PropDiplayWhenClick) {
 
 	const changeHandler = (event : any) => {
 		setSelectedFile(event.target.files[0]);
-		setIsFilePicked(true);
+		setIsFilePicked(isFilePicked === false ? true : false);
 	};
 
 	async function handleSubmission()  {
@@ -46,7 +46,7 @@ function ButtonChangeAvatar(props: PropDiplayWhenClick) {
 		const formData = new FormData();
 		formData.append("file", selectedFile);
   		formData.append("type", "avatar");
-		await axios.post("http://localhost:4000/account/avatar", formData, {
+		await axios.post(`${BACK_URL}/account/avatar`, formData, {
 			withCredentials:true ,
 			method: "post",
 			headers: {}
@@ -54,28 +54,21 @@ function ButtonChangeAvatar(props: PropDiplayWhenClick) {
 			.then(function (response) {
 			  //handle success
 			  console.log(response);
+			  window.location.reload();
 			})
 			.catch(function (response) {
 			  //handle error
 			  console.log(response);
 			});
 	}
-/*	return (
-		<div>
-		<button className='button-upload-avatar' onClick={() => props.displayElem === 'none' ? props.clickButton('block') : props.clickButton('none')}>
-			<i>Change avatar...</i>
-		</button>
-		<input className="input-file" type='file' accept='.jpg,.jpeg,.png' style={{display:props.displayElem}}></input>
-		</div>
-	  );*/
-
+	  
 	return (
-		<div>
-			<button className='button-upload-avatar' onClick={() => props.displayElem === 'none' ? props.clickButton('block') : props.clickButton('none')}>
-					<i>Change avatar...</i>
+		<div className='change-avatar'>
+			<button className='button-upload-avatar' onClick={() =>  props.displayElem === 'none' ? props.clickButton('block') : props.clickButton('none')}>
+					<i>Change avatar</i>
 			</button>
-			<input className="input-file" type='file' accept='.jpg,.jpeg,.png' style={{display:props.displayElem}} onChange={changeHandler} />
-			<button  style={{display:props.displayElem}} onClick={handleSubmission}>envoye</button>
+			<input id='input-file' className="input-file" type='file' accept='.jpg,.jpeg,.png'style={{display:props.displayElem}} onChange={changeHandler} />
+			<button className="submit-file" style={{display: (isFilePicked && props.displayElem !== 'none') ? 'block' : 'none'}} onClick={handleSubmission}>Submit</button>
 		</div>
 	)
 }
@@ -93,9 +86,8 @@ function isJson(str: string) {
 
 const AccountInfo = () => {
 
-	const [user, getUser] = useState({name : "", username: "", avatar: ""});
-//	const [fullName, getFullName] = useState({givenName : "", familyName: ""});
-	//const [avatarImg, getAvatarImg] = useState();
+	const [user, getUser] = useState({name : "", username: "", avatar: "", accountUsername:""});
+
 	const [displayChangeAvatar, changeAvatar] = useState('none');
 
 	useEffect(() => {
@@ -120,12 +112,12 @@ const AccountInfo = () => {
 		<div className='top-line'/>
 		<li className='account-info'>
 			<ul className='avatar'>
-				<img className='avatarImg' src={ BACK_URL + '/account/avatar/file/' + user.avatar} alt="Avatar"/>
+				<img className='avatarImg' src={ BACK_URL + '/account/avatar/' } alt="Avatar"/>
 				<ButtonChangeAvatar displayElem={displayChangeAvatar} clickButton={changeAvatar}/>
 			</ul>
 			<ul className='username'>
 				<i className='info-type'>Username</i>
-				<i className='info'>{user.username}</i>
+				<i className='info'>{user.accountUsername}</i>
 				<ButtonChangeUsername />	
 			</ul>
 			<ul className='name'>

@@ -1,20 +1,21 @@
 import {
   Controller,
   Get,
-  Inject,
   Post,
   Req,
+  Res,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Accounts } from '../entities/accounts.entity';
 import { AuthenticatedGuard } from '../auth/guards';
 import { Response, Request } from 'express';
 import { AccountService } from './account.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { AuthService } from '../auth/auth.service';
+import { Readable } from 'stream';
 
 @Controller('account')
 export class AccountController {
@@ -42,7 +43,26 @@ export class AccountController {
     console.log(file);
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return this.usersService.addAvatar(id, file.buffer, file.originalname);
+    return this.usersService.changeAvatar(id, file.buffer, file.originalname);
+  }
+
+  @Get('avatar')
+  @UseGuards(AuthenticatedGuard)
+  async getAvatar(
+    @Req() req: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    const user = await this.authService.findUser(id);
+    const stream = Readable.from(user.data);
+    const filename = user.filename.replace(/[^\x00-\x7F]/g, '?');
+    response.set({
+      'Content-Disposition': `inline; filename="${filename}"`,
+      'Content-Type': 'image',
+    });
+
+    return new StreamableFile(stream);
   }
 
   @Get('test')

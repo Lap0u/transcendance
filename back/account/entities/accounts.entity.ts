@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm';
-import DatabaseFile from './files.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Accounts' })
 export class Accounts {
@@ -24,10 +17,12 @@ export class Accounts {
   @Column({ nullable: true })
   accountUsername: string;
 
-  @JoinColumn({ name: 'avatar' })
-  @OneToOne(() => DatabaseFile, {
-    nullable: true,
-  })
   @Column({ nullable: true })
-  public avatar?: number;
+  filename: string;
+
+  @Column({
+    nullable: true,
+    type: 'bytea',
+  })
+  data: Uint8Array;
 }
