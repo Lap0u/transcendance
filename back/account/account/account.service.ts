@@ -20,4 +20,12 @@ export class AccountService {
       data: imageBuffer,
     });
   }
+
+  async changeUsername(id: string, username: string) {
+    const user = await this.usersRepository.findOneBy({ id });
+    return this.usersRepository.save({
+      ...user, // existing fields
+      accountUsername: username,
+    });
+  }
 }

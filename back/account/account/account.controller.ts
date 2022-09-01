@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -36,7 +37,7 @@ export class AccountController {
   @Post('avatar')
   @UseGuards(AuthenticatedGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async addAvatar(
+  async changeAvatar(
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -46,7 +47,7 @@ export class AccountController {
     return this.usersService.changeAvatar(id, file.buffer, file.originalname);
   }
 
-  @Get('avatar')
+  @Get('avatar/:v')
   @UseGuards(AuthenticatedGuard)
   async getAvatar(
     @Req() req: Request,
@@ -65,8 +66,11 @@ export class AccountController {
     return new StreamableFile(stream);
   }
 
-  @Get('test')
-  test() {
-    return 'test';
+  @Post('username')
+  async changeUsername(@Req() req: Request, @Body() data: any) {
+    const { newUsername } = data;
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    return this.usersService.changeUsername(id, newUsername);
   }
 }

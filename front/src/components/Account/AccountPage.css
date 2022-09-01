@@ -77,8 +77,11 @@
 
 .account-info .avatarImg{
 	border-radius: 50%; 
-	width: 120px;
-	height: auto;
+	height: 25vh;
+	width: 25vh;
+	max-height: 130px;
+	max-width: 130px;
+	object-fit: cover;
 	position: relative;
 }
 
@@ -115,17 +118,17 @@
 	font-size: 10px;
 	position: relative;
 	left: 80px;
-	bottom: 3px;
+	top: 3px;
 	margin: 0;
 	padding: 0;
 }
 
 .avatar .submit-file{
-	position: absolute;
+	position: relative;
 	font-size: 12px;
-	top: 125px;
-	left: 50px;
 	line-height: 100%;
+	left: 105px;
+	top: 9px;
 	background-color: dimgray;
 }
 .username  .change-username{
