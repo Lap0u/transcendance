@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Req,
   Res,
@@ -72,5 +74,10 @@ export class AccountController {
     const session_info = req.session['passport'];
     const { id } = session_info.user;
     return this.usersService.changeUsername(id, newUsername);
+  }
+
+  @Get('username/validate/:username')
+  async validateUsername(@Param('username', ParseIntPipe) username: string) {
+    return this.usersService.checkDuplicateUsername(username);
   }
 }

@@ -14,7 +14,7 @@ export class Accounts {
   @Column({ nullable: true })
   username: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true, nullable: true })
   accountUsername: string;
 
   @Column({ nullable: true })
