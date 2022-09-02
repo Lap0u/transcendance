@@ -24,11 +24,16 @@ function ButtonChangeUsername(props : any) {
 			alert("Your username must contains only alphanumeric dot or hyphen and not contain uppercases.");
 			return false;
 		}
-		if  (username.length < 4 || username.length > 11){
+		if (username.length < 4 || username.length > 11){
 			alert("Your username must contains  between 4 and 11 character");
 			return false;
 		}
-		await axios.get(`${BACK_URL}/account/username/validate/`,  {withCredentials:true })
+		console.log("prevvvvv", props.prevUsername)
+		if (username === props.prevUsername){
+			alert("Please provide an username differnent from your current one");
+			return false;
+		}
+		await axios.get(`${BACK_URL}/account/username/validate/${username}`,  {withCredentials:true })
 		.then((response) => {
 			if (response.data === false){
 				alert("Sorry this username is already use, please choose an other");
@@ -50,6 +55,8 @@ function ButtonChangeUsername(props : any) {
 		const isUsernameOk : boolean = await validateUsername();
 		if (!isUsernameOk)
 			return;
+		if (window.confirm("Change your username?") === false)
+			return;
 		await axios.post(`${BACK_URL}/account/username/`, {newUsername :username}, {
 			withCredentials:true ,
 			method: "post",
@@ -59,11 +66,11 @@ function ButtonChangeUsername(props : any) {
 			props.refresh(username);
 			clearInput.current = "";
 		})
-		.catch(function (response) {
+		.catch((error) => {
 		  clearInput.current = "";
-		  alert("Someting went wrong, please retry")
-		  
+			handleErrors(error)
 		});
+		  
 	}
 
 	return (
@@ -71,7 +78,8 @@ function ButtonChangeUsername(props : any) {
 		<button className='button-change-username' onClick={() => updateUsername()}>
 			<i>Change username</i>
 		</button>
-			<input className="input-text" type='text'onChange={(e) => newUsername(e)} value={clearInput.current}></input>
+			<input className="input-text" type='text' onChange={(e) => newUsername(e)} 
+			onKeyDown={(e) => { if (e.key === 'Enter') updateUsername()}} value={clearInput.current}></input>
 		</div>
 	  );
 }
@@ -80,6 +88,7 @@ function ButtonChangeAvatar(props : any) {
 	const [displayElem, clickButton] = useState('none');
 	const [selectedFile, setSelectedFile] = useState("");
 	const [isFilePicked, setIsFilePicked] = useState(false);
+	const clearInput = useRef("");
 
 	const changeHandler = (event : any) => {
 		setSelectedFile(event.target.files[0]);
@@ -87,8 +96,7 @@ function ButtonChangeAvatar(props : any) {
 		setIsFilePicked(event.target.value !== "" ? true : false);
 	};
 
-	async function handleSubmission()  {
-
+	async function handleSubmission(e : any)  {
 	
 		if (window.confirm("Change your avatar?") === false)
 			return;
@@ -101,15 +109,16 @@ function ButtonChangeAvatar(props : any) {
 			method: "post",
 			headers: {}
 		})
-			.then(function (response) {
-			  console.log(response);
-			  clickButton('none');
-			  props.refresh(props.avatar + 1);
-			})
-			.catch(function (response) {
-			  //handle error
-			  alert("Someting went wrong, please retry");
-			});
+		.then(function (response) {
+		  console.log(response);
+		  clickButton('none');
+		  props.refresh(props.avatar + 1);
+		  e.target.value= null;
+		})
+		.catch((error) => {
+			clearInput.current = "";
+			handleErrors(error)
+		});
 	}
 	  
 	return (
@@ -117,8 +126,10 @@ function ButtonChangeAvatar(props : any) {
 			<button className='button-upload-avatar' onClick={() =>  displayElem === 'none' ? clickButton('block') : clickButton('none')}>
 					<i>Change avatar</i>
 			</button>
-			<input id='input-file' className="input-file" type='file' accept='.jpg,.jpeg,.png' style={{display:displayElem}} onChange={(e) => changeHandler(e)} />
-			<button className="submit-file" style={{display: (isFilePicked && displayElem !== 'none') ? 'block' : 'none'}} onClick={handleSubmission}>Submit</button>
+			<input id='input-file' className="input-file" type='file' accept='.jpg,.jpeg,.png'
+			style={{display:displayElem}} onChange={(e) => changeHandler(e)} value={clearInput.current} />
+			<button className="submit-file" style={{display: (isFilePicked && displayElem !== 'none') ? 'block' : 'none'}} 
+			onClick={(e) => handleSubmission(e)}>Submit</button>
 		</div>
 	)
 }
@@ -137,11 +148,12 @@ const Avatar = (props : any) => {
 
 const UserName = (props : any) => {
 
+	const prevUsername : string = props.username;
 	return (
 	<ul className='username'>
 		<i className='info-type'>Username</i>
 		<i className='info'> {props.username}</i>
-		<ButtonChangeUsername refresh={props.updateUsername} />	
+		<ButtonChangeUsername refresh={props.updateUsername} prevUsername={prevUsername}/>	
 	</ul>
 	)
 }

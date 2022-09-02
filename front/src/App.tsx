@@ -8,6 +8,8 @@ import GameMenu from './components/game_menu/Game_menu';
 import AccountPage from './components/Account/AccountPage';
 import SingleGame from './components/game_Display/Single_game';
 import { io } from 'socket.io-client';
+import Disconnected from './components/ErrorPage/Disconnected';
+import InternalError from './components/ErrorPage/InternalError';
 
 const BACK_URL = "http://localhost:4000";
 
@@ -25,6 +27,8 @@ function App() {
 				<Route path="/menu" element={<GameMenu socket={socket}/>} />
 				<Route path="/singleGame/:id" element={<SingleGame socket={socket}/>} />
 				{/* If no route match, then return 404 page */}
+				<Route path = "/error403" element={<Disconnected/>} />
+				<Route path = "/error500" element={<InternalError/>} />
 				<Route path="*" element={<Page404 />} />
 			</Routes>
 		</BrowserRouter>

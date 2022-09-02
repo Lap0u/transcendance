@@ -1,5 +1,5 @@
 import './Accueil.css'
-import io from "socket.io-client"; 
+//import io from "socket.io-client"; 
 import LoginPopup from './login/Login'
 import ButtonTemplate from './ButtonTemplate'
 import React, {useState} from 'react'
@@ -9,9 +9,9 @@ import { useNavigate } from 'react-router-dom';
 //const socket = io('http://localhost:4000');
 //socket.on('init', handleInit);
 
-function handleInit(msg : string) {
-	console.log(msg);
-}
+//function handleInit(msg : string) {
+//	console.log(msg);
+//}
 function Accueil(){
 	const [isLoginActive, setIsLogin] = useState(false);
 
@@ -35,7 +35,7 @@ function Accueil(){
 	)
 }
 
-function LoginButton(props : any){
+export function LoginButton(props : any){
 	const nav = props.nav;
 	return (
 		<div className='loginButton'>

@@ -77,7 +77,7 @@ export class AccountController {
   }
 
   @Get('username/validate/:username')
-  async validateUsername(@Param('username', ParseIntPipe) username: string) {
-    return this.usersService.checkDuplicateUsername(username);
+  async validateUsername(@Param() params) {
+    return this.usersService.checkDuplicateUsername(params.username);
   }
 }

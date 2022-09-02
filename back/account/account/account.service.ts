@@ -31,8 +31,7 @@ export class AccountService {
 
   async checkDuplicateUsername(accountUsername: string) {
     const user = await this.usersRepository.findOneBy({ accountUsername });
-    if (user == null) console.log('nothing fiiiiiiiiind');
-	console.log("fiiiiiind", user);
+    if (user == null) return true;
     return false;
   }
 }
