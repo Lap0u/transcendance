@@ -6,14 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
-import { PaddleController } from './paddle(test)/paddle.controller';
 import { MatchmakingController } from './matchmaking/matchmaking.controller';
 import { User } from './user/user.entity';
 import { Chat } from './chat/chat.entity';
 import { Channel } from './channel/channel.entity';
 import { SocketModule } from './socket/socket.module';
 import { SocketGateway } from './socket.gateway';
-import { PaddleService } from './paddle(test)/paddle.service';
 import { MatchmakingService } from './matchmaking/matchmaking.service';
 import { ChannelModule } from './channel/channel.module';
 import { MatchmakingModule } from './matchmaking/matchmaking.module';
@@ -40,7 +38,7 @@ import { MatchmakingModule } from './matchmaking/matchmaking.module';
     ChannelModule,
     MatchmakingModule,
   ],
-  controllers: [AppController, PaddleController, MatchmakingController],
-  providers: [AppService, SocketGateway, PaddleService, MatchmakingService],
+  controllers: [AppController, MatchmakingController],
+  providers: [AppService, SocketGateway, MatchmakingService],
 })
 export class AppModule {}
