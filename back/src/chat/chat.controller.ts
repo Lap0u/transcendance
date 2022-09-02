@@ -36,6 +36,14 @@ export class ChatController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/channel/:channelId')
+  getChannelChatHistoryByChannelId(
+    @Param('channelId') channelId: string,
+  ): Promise<Chat[]> {
+    return this.service.getChannelChatHistoryByChannelId(channelId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post(':anotherId')
   sendMessage(
     @Request() req: any,

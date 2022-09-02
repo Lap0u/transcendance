@@ -1,15 +1,20 @@
-import { Avatar, Checkbox, Modal, Table } from "antd";
+import { Avatar, Checkbox, Modal, Table } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { ChannelType } from "./ChannelType";
-import defaultAvatar from "../../assets/default-avatar.png";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { ChannelType } from './const';
+import defaultAvatar from '../../assets/default-avatar.png';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { BACK_URL } from '../../global';
 
 const { Column } = Table;
 
-const BACK_URL = "http://localhost:4000";
-
-const ChannelManageUserModal = ({ users, channel, isOpen, handleCancel, token }: ChannelManageUserProps) => {
+const ChannelManageUserModal = ({
+  users,
+  channel,
+  isOpen,
+  handleCancel,
+  token,
+}: ChannelManageUserProps) => {
   const [inChannelUsers, setInChannelUsers] = useState<string[]>([]);
   const [channelAdmins, setChannelAdmins] = useState<string[]>([]);
 
@@ -29,8 +34,9 @@ const ChannelManageUserModal = ({ users, channel, isOpen, handleCancel, token }:
     const values = { ...channel };
     values.usersId = inChannelUsers;
     values.administratorsId = channelAdmins;
-    const res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, { headers: { Authorization: `Bearer ${token}` } });
-    console.log(res.data);
+    const res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     handleCancel();
   };
 
@@ -67,8 +73,15 @@ const ChannelManageUserModal = ({ users, channel, isOpen, handleCancel, token }:
   };
 
   return (
-    <Modal title="Manage user" visible={isOpen} onOk={handleOk} onCancel={handleCancel}>
-      <Table dataSource={users} pagination={false}>
+    <Modal
+      title="Manage user"
+      visible={isOpen}
+      onOk={handleOk}
+      onCancel={handleCancel}>
+      <Table
+        dataSource={users}
+        pagination={false}
+        style={{ maxHeight: 700, overflow: 'scroll' }}>
         <Column
           title="Username"
           dataIndex="username"
@@ -85,10 +98,13 @@ const ChannelManageUserModal = ({ users, channel, isOpen, handleCancel, token }:
           key="addToGroup"
           render={(_: any, user: any) => (
             <Checkbox
-              onChange={(e) => addUserToGroupChanged(e, user)}
+              onChange={(e) => {
+                addUserToGroupChanged(e, user);
+              }}
               disabled={channel.ownerId === user.id}
-              checked={inChannelUsers.includes(user.id)}
-            >Add</Checkbox>
+              checked={inChannelUsers.includes(user.id)}>
+              Add
+            </Checkbox>
           )}
         />
         <Column
@@ -97,9 +113,12 @@ const ChannelManageUserModal = ({ users, channel, isOpen, handleCancel, token }:
           render={(_: any, user: any) => (
             <Checkbox
               onChange={(e) => setUserAsAdminChanged(e, user)}
-              disabled={channel.ownerId === user.id || !inChannelUsers.includes(user.id)}
-              checked={channelAdmins.includes(user.id)}
-            >Is admin</Checkbox>
+              disabled={
+                channel.ownerId === user.id || !inChannelUsers.includes(user.id)
+              }
+              checked={channelAdmins.includes(user.id)}>
+              Is admin
+            </Checkbox>
           )}
         />
       </Table>
@@ -108,11 +127,11 @@ const ChannelManageUserModal = ({ users, channel, isOpen, handleCancel, token }:
 };
 
 type ChannelManageUserProps = {
-  users: any,
-  channel: ChannelType | null,
-  isOpen: boolean,
-  handleCancel: () => void,
-  token: string | null,
+  users: any;
+  channel: ChannelType | null;
+  isOpen: boolean;
+  handleCancel: () => void;
+  token: string | null;
 };
 
 export default ChannelManageUserModal;

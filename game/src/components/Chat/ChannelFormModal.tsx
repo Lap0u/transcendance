@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
-import { Form, Input, Modal, Radio } from 'antd';
-import { ChannelType } from './ChannelType';
+import { Form, Input, Modal, Radio, message } from 'antd';
+import { ChannelType, CHANNEL_TYPE } from './const';
 import axios from 'axios';
+import { BACK_URL } from '../../global';
 
-const BACK_URL = "http://localhost:4000";
-
-const CHANNEL_TYPE = {
-	public: 'public',
-	protected: 'protected',
-	private: 'private',
-};
-
-const ChannelFormModal = ({ isModalVisible, closeModal, token, channel = null }: channelForModalProps) => {
-	const [form] = Form.useForm();
+const ChannelFormModal = ({
+  isModalVisible,
+  closeModal,
+  token,
+  addNewChannel,
+  updateChannel,
+  channel = null,
+}: channelForModalProps) => {
+  const [form] = Form.useForm();
   const isEdit = !!channel;
 
   useEffect(() => {
@@ -23,49 +23,60 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token, channel = null }:
         password: channel.password,
       });
     } else {
-      form.setFieldValue("type", CHANNEL_TYPE.public);
+      form.setFieldsValue({
+        type: CHANNEL_TYPE.public,
+        channelName: '',
+        password: '',
+      });
     }
   }, [isModalVisible, channel, form]);
 
-  const sendChannel = async (values :any) => {
+  const sendChannel = async (values: any) => {
     try {
       let res = null;
       if (channel) {
-        res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, { headers: { Authorization: `Bearer ${token}` }});
+        res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        message.success('Channel edited!');
+        updateChannel(res.data);
       } else {
-        res = await axios.post(`${BACK_URL}/channels`, values, { headers: { Authorization: `Bearer ${token}` }});
+        res = await axios.post(`${BACK_URL}/channels`, values, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        message.success('New channel created!');
+        addNewChannel(res.data);
       }
-			console.log(res.data);
     } catch (e) {
-      alert(`Une erreur s'est passé ${e}`);
+      message.error(`Une erreur s'est passé ${e}`);
     }
-	};
+  };
 
-	const handleOk = async () => {
-		try {
-			const values = await form.validateFields();
-			console.log(values);
-			sendChannel(values);
-		} catch (e) {
-			// If fields not valid then return
-			return;
-		};
-		handleCancel();
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      sendChannel(values);
+    } catch (e) {
+      // If fields not valid then return
+      return;
+    }
+    handleCancel();
   };
 
   const handleCancel = () => {
     closeModal();
-		form.resetFields();
+    form.resetFields();
   };
 
   return (
-		<Modal title={isEdit ? "Modify Channel" : "Create Channel"} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-			<Form
-        form={form}
-        layout="vertical"
-        name="form_in_modal"
-      >
-				<Form.Item name="type">
+    <Modal
+      forceRender
+      title={isEdit ? 'Modify Channel' : 'Create Channel'}
+      visible={isModalVisible}
+      onOk={handleOk}
+      onCancel={handleCancel}>
+      <Form form={form} layout="vertical" name="form_in_modal">
+        <Form.Item name="type">
           <Radio.Group>
             <Radio value={CHANNEL_TYPE.public}>Public</Radio>
             <Radio value={CHANNEL_TYPE.private}>Private</Radio>
@@ -75,35 +86,40 @@ const ChannelFormModal = ({ isModalVisible, closeModal, token, channel = null }:
         <Form.Item
           name="channelName"
           label="Channel Name"
-          rules={[{ required: true, message: 'Please input the Channel Name!' }]}
-        >
+          rules={[
+            { required: true, message: 'Please input the Channel Name!' },
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
           noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
-        >
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.type !== currentValues.type
+          }>
           {({ getFieldValue }) =>
             getFieldValue('type') === CHANNEL_TYPE.protected ? (
               <Form.Item
                 name="password"
                 label="Password"
-                rules={[{ required: true, message: 'Please input the password!' }]}
-              >
+                rules={[
+                  { required: true, message: 'Please input the password!' },
+                ]}>
                 <Input />
               </Form.Item>
             ) : null
           }
         </Form.Item>
       </Form>
-		</Modal>
+    </Modal>
   );
 };
 
 type channelForModalProps = {
-  isModalVisible : boolean, 
-  closeModal : () => void,
-  token : string,
-  channel: ChannelType | null,
-}
+  isModalVisible: boolean;
+  closeModal: () => void;
+  token: string;
+  addNewChannel: (newChannel: ChannelType) => void;
+  updateChannel: (channel: ChannelType) => void;
+  channel?: ChannelType | null;
+};
 export default ChannelFormModal;
