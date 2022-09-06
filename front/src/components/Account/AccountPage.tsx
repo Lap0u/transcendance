@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { errorMonitor } from 'events';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import handleErrors from '../RequestErrors/handleErrors';
 import './AccountPage.css'
 
 const BACK_URL = "http://localhost:4000";
-
+const FRONT_URL = "http://localhost:3000";
 
 
 function ButtonChangeUsername(props : any) {
@@ -88,12 +89,12 @@ function ButtonChangeAvatar(props : any) {
 	const [displayElem, clickButton] = useState('none');
 	const [selectedFile, setSelectedFile] = useState("");
 	const [isFilePicked, setIsFilePicked] = useState(false);
-	const clearInput = useRef("");
 
 	const changeHandler = (event : any) => {
 		setSelectedFile(event.target.files[0]);
 		console.log("eveeent", event.target.value);
 		setIsFilePicked(event.target.value !== "" ? true : false);
+
 	};
 
 	async function handleSubmission(e : any)  {
@@ -116,7 +117,6 @@ function ButtonChangeAvatar(props : any) {
 		  e.target.value= null;
 		})
 		.catch((error) => {
-			clearInput.current = "";
 			handleErrors(error)
 		});
 	}
@@ -127,7 +127,7 @@ function ButtonChangeAvatar(props : any) {
 					<i>Change avatar</i>
 			</button>
 			<input id='input-file' className="input-file" type='file' accept='.jpg,.jpeg,.png'
-			style={{display:displayElem}} onChange={(e) => changeHandler(e)} value={clearInput.current} />
+			style={{display:displayElem}} onChange={(e) => changeHandler(e)} />
 			<button className="submit-file" style={{display: (isFilePicked && displayElem !== 'none') ? 'block' : 'none'}} 
 			onClick={(e) => handleSubmission(e)}>Submit</button>
 		</div>
@@ -217,10 +217,32 @@ const AccountInfo = () => {
 		</div>
 	)
 }
+
+const LogoutButton = () =>{
+
+	async function logout() {
+		await axios.get(`${BACK_URL}/auth/logout`, 
+		{
+			withCredentials:true,
+		})
+		.then((response) => {
+			console.log("logesddddd outtttt")
+			window.location.href = `${FRONT_URL}/`;
+		})
+		.catch((error) => {
+			console.log("errooooor esddddd outtttt")
+			handleErrors(error)
+		})
+	}
+	return (
+		<button onClick={() => logout()}>Logout</button>
+	)
+}
 const AccountPage = () => {
 	return (
 		<div className='account-page'>
 			<AccountInfo/>
+			<LogoutButton/>
 			
 		</div>
 	);

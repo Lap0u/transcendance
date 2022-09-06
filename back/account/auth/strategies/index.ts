@@ -17,18 +17,16 @@ export class Strategy42 extends PassportStrategy(Strategy){
 			callbackURL : process.env.CLIENT_42_CALLBACK,
 			scope : ['public'],
 		});	
+		this.databaseFilesService.initDBFiles();
 //		console.log(super.clientID)
 	}
+
+	
 	async validate(accessToken: string, refreshToken: string, profile: Profile){
 		const  { id, username, name} = profile;
 		const accountUsername = username;
 		const filename = "default";
 		const file = await this.databaseFilesService.getFileById(1);
-	//	await this.databaseFilesRepository.create({
-	//		filename,
-	//		data: dataBuffer,
-	//	  });
-	//	await this.databaseFilesRepository.save(stream);
 		const data = file.data;
 		const details : IntraUserDetails = {id, username, name, accountUsername, filename, data};
 //		console.log(id, username, name );
