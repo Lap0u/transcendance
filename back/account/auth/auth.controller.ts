@@ -20,6 +20,7 @@ export class AuthController {
 	 }
 
 	@Get('status')
+	@UseGuards(AuthenticatedGuard)
 	status(@Req() req: Request) {
 		const session_info = req.session["passport"];
 		const user_info = session_info.user;

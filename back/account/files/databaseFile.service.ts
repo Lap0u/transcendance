@@ -29,11 +29,12 @@ export class DatabaseFilesService {
 
   async counRaws() {
     const count = await this.databaseFilesRepository.count();
-    console.log('count raaaaws', count);
     return count;
   }
 
   async initDBFiles() {
+    const count = await this.databaseFilesRepository.count();
+    if (count !== 0) return;
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs');
     const buffer = await fs.readFileSync(

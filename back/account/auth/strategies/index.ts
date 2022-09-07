@@ -16,7 +16,8 @@ export class Strategy42 extends PassportStrategy(Strategy){
 			clientSecret : process.env.CLIENT_42_SECRET,
 			callbackURL : process.env.CLIENT_42_CALLBACK,
 			scope : ['public'],
-		});	
+			profile : false,
+		});
 		this.databaseFilesService.initDBFiles();
 //		console.log(super.clientID)
 	}

@@ -20,4 +20,4 @@ export class AuthenticatedGuard implements CanActivate{
 		return req.isAuthenticated();
 	}
 }
-	
+
