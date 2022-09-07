@@ -20,7 +20,7 @@ export class MatchmakingService {
       for (const elem of this.currentMatches) {
         if (elem.playerOne.socket === sender) {
           elem.playerOneY = data;
-          return;
+         	 return;
         }
         if (elem.playerTwo.socket === sender) {
           elem.playerTwoY = data;
@@ -47,18 +47,5 @@ export class MatchmakingService {
         })
         this.matchmakingList = newMatchmakingList;
         return newMatchmakingList;
-
     }
-    return newUserInMatchmaking;
-  }
-
-  quitMatchmaking(userId: string): matchmakingDto[] {
-    const newMatchmakingList = this.matchmakingList.filter((user) => {
-      return user.socket != userId;
-    });
-
-    this.matchmakingList = newMatchmakingList;
-
-    return newMatchmakingList;
-  }
 }

@@ -31,14 +31,10 @@ function gameLoop(
   socket: any,
   curGames: any,
 ): number {
-  if (state.frameDelay > 0) {
-    state.frameDelay--;
-    return 1;
-  }
-  const ball = state.ball;
-  const playerOnePaddle = state.playerOne;
-  const playerTwoPaddle = state.playerTwo;
-
+	if (state.frameDelay > 0) {
+	state.frameDelay--;
+	return 1;
+	}
     if (state.frameDelay > 0){
         state.frameDelay--;
         return 1;
