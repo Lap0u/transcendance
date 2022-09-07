@@ -85,6 +85,7 @@ export class AccountController {
   @Get('/all')
   @UseGuards(AuthenticatedGuard)
   async getAllAccounts() {
-    return this.usersService.getAllAccount();
+    const users = await this.usersService.getAllAccount();
+    return users;
   }
 }

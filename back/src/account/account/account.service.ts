@@ -35,8 +35,9 @@ export class AccountService {
     return false;
   }
 
-  getAllAccount() {
-	  console.log("all user", this.usersRepository);
-    return this.usersRepository.c;
+  async getAllAccount() {
+	  const users = await this.usersRepository.find();
+	  console.log("all user", users);
+    return users;
   }
 }
