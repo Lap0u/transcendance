@@ -1,0 +1,148 @@
+
+#wholepage {
+	background-color: black;
+	width: 100vw;
+	height: 100vh;
+	margin: none;
+	color: white;
+	padding: none;
+}
+
+.account-page{
+	text-align: center;
+
+}
+
+.account-info ul{
+	background-color: #1c1c1c;
+
+}
+
+.account-info
+{
+	z-index: 3;
+	text-align: left;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	width: 300px;
+	line-height: 4vh;
+	display: inline-block;
+	white-space: nowrap;
+	border-radius: 50%; 
+}
+
+.account-info .info-type{
+
+	font-size: min(5vh, 20px);
+	color:white;
+	white-space: nowrap;
+	text-align: left;
+}
+
+.account-info .info{
+	position: relative;
+	font-size: min(4vh, 20px);
+	color: cornflowerblue;
+	white-space: nowrap;
+	float:right;
+}
+
+.username .button-change-username{
+	font-size: 13px;
+	text-align: center;
+	line-height: 0;
+	width: 120px;
+	height: max(2.2vh, 17px);
+	position: relative;
+	color:cornflowerblue;
+	bottom: 5px;
+	left: 130px;
+}
+
+.account-info .avatar {
+	position: relative;
+	background-color: #11ffee00;
+	text-align: center;
+	right: 10px;
+}
+
+.account-info .avatar .info-type {
+	top: 60px;
+}
+.account-info .avatar .info{
+	bottom: 45px;
+}
+
+.account-info .avatarImg{
+	border-radius: 50%; 
+	height: 25vh;
+	width: 25vh;
+	max-height: 130px;
+	max-width: 130px;
+	object-fit: cover;
+	position: relative;
+}
+
+.account-info .button-upload-avatar{
+	font-size: 13px;
+	text-align: center;
+	line-height: 1;
+	width: 120px;
+	height: max(2.2vh, 17px);
+	position: relative;
+	color:cornflowerblue;
+}
+
+.account-page .top-line{
+	z-index: 2;
+	width: 100vw;
+	border-top: 2px dashed white;
+	position: relative;
+	top: 25vh;
+	
+}
+
+.account-page .bottom-line{
+	z-index: 1;
+	width: 100vw;
+	border-bottom: 2px dashed white;
+	position: relative;
+	top: 75vh;
+}
+
+
+.avatar .input-file{
+	line-height: 100%;
+	font-size: 10px;
+	position: relative;
+	left: 80px;
+	top: 3px;
+	margin: 0;
+	padding: 0;
+}
+
+.avatar .submit-file{
+	position: relative;
+	font-size: 12px;
+	line-height: 100%;
+	left: 105px;
+	top: 9px;
+	background-color: dimgray;
+}
+.username  .change-username{
+	text-align: center;
+}
+.username .input-text{
+	z-index: 4;
+	position:relative;
+	line-height: 4vh;
+	height: max(2.2vh, 17px);
+	width: 120px;
+	background-color: #1c1c1c; 
+	padding: 0;
+	bottom: 5px;
+	right: 140px;
+
+}

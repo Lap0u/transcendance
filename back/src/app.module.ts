@@ -3,11 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import { MatchmakingController } from './matchmaking/matchmaking.controller';
-import { User } from './user/user.entity';
 import { Chat } from './chat/chat.entity';
 import { Channel } from './channel/channel.entity';
 import { SocketModule } from './socket/socket.module';
@@ -15,6 +12,16 @@ import { SocketGateway } from './socket.gateway';
 import { MatchmakingService } from './matchmaking/matchmaking.service';
 import { ChannelModule } from './channel/channel.module';
 import { MatchmakingModule } from './matchmaking/matchmaking.module';
+
+import { AuthModule } from './account/auth/auth.module';
+import { Accounts } from './account/entities/accounts.entity';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmSession } from './account/entities/session.entity';
+import { DataSource } from 'typeorm';
+import { AccountModule } from './account/account/account.module';
+import { HttpModule } from '@nestjs/axios';
+import DatabaseFile from './account/entities/files.entity';
+import { DatabaseFileModule } from './account/files/databaseFile.module';
 
 @Module({
   imports: [
@@ -24,21 +31,30 @@ import { MatchmakingModule } from './matchmaking/matchmaking.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5432,
+      port: Number.parseInt(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Chat, Channel],
+      entities: [Chat, Channel, Accounts, TypeOrmSession, DatabaseFile],
       synchronize: true,
     }),
-    UserModule,
     AuthModule,
     ChatModule,
     SocketModule,
     ChannelModule,
     MatchmakingModule,
+    AuthModule,
+    AccountModule,
+    DatabaseFileModule,
+    PassportModule.register({ session: true }),
+    HttpModule,
   ],
   controllers: [AppController, MatchmakingController],
   providers: [AppService, SocketGateway, MatchmakingService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+  getDataSource() {
+    return this.dataSource;
+  }
+}

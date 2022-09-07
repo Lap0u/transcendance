@@ -7,9 +7,9 @@ import {
 } from 'typeorm';
 
 export enum ChannelType {
-  PUBLIC = "public",
-  PRIVATE = "private",
-  PROTECTED = "protected"
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+  PROTECTED = 'protected',
 }
 
 @Entity()
@@ -18,25 +18,25 @@ export class Channel {
   id!: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: ChannelType,
-    default: ChannelType.PUBLIC
+    default: ChannelType.PUBLIC,
   })
-  type!: ChannelType
+  type!: ChannelType;
 
   @Column()
   channelName!: string;
 
-	@Column({ nullable: true })
+  @Column({ nullable: true })
   password: string;
 
   @Column()
   ownerId!: string;
 
-  @Column("text", { array: true })
+  @Column('text', { array: true })
   administratorsId!: string[];
 
-  @Column("text", { array: true })
+  @Column('text', { array: true })
   usersId!: string[];
 
   /*

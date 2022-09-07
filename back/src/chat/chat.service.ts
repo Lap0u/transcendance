@@ -24,6 +24,12 @@ export class ChatService {
     });
   }
 
+  getChannelChatHistoryByChannelId(channelId: string): Promise<Chat[]> {
+    return this.chatsRepository.find({
+      where: [{ receiverId: channelId }],
+    });
+  }
+
   sendMessage(
     senderId: string,
     receiverId: string,
@@ -34,6 +40,11 @@ export class ChatService {
     newMessage.senderId = senderId;
     newMessage.receiverId = receiverId;
     newMessage.message = message;
+
+    this.socketService.socket.emit(
+      `receiveMessage:${receiverId}:${senderId}`,
+      newMessage,
+    );
 
     this.socketService.socket.emit(`receiveMessage:${receiverId}`, newMessage);
 

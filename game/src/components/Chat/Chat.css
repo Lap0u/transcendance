@@ -1,19 +1,16 @@
-.chat-header-button {
-  margin: 5px;
-}
-
 .chat-window-wrapper {
   position: relative;
   flex-grow: 1;
-  height: 600px;
-  margin: 0px 20px;
+  height: 95%;
+  margin: 20px;
   padding: 20px;
-  border: 1px solid white;
+  border: 3px solid white;
+  border-radius: 10px;
 }
 
 .chat-window-content {
-  height: 500px;
-  border: 1px solid white;
+  height: 90%;
+  /* border: 1px solid white; */
   overflow: scroll;
 }
 
@@ -29,14 +26,11 @@
 .chat-window-input {
   position: absolute;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
   bottom: 10px;
-  width: 98%;
-}
-
-.chat-window-input > input {
-  width: 90%;
-  height: 30px;
-  padding: 0px 10px;
+  width: 95%;
 }
 
 .chat-window-send-button {

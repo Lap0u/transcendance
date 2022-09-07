@@ -1,12 +1,9 @@
-import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
 
 @Entity()

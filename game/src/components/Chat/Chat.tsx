@@ -1,76 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import jwt_decode from "jwt-decode";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Layout, message } from 'antd';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BACK_URL } from '../../global';
+import handleErrors from '../RequestErrors/handleErrors';
+import ChatContentWindow from './ChatContentWindow';
 import ChatHeader from './ChatHeader';
-import ChatUserList from './ChatUserList';
-import ChatWindow from './ChatWindow';
-import ChannelsList from './ChannelsList';
-import ChannelManageUserModal from './ChannelManageUserModal';
-import { ChannelModalType } from './ChannelType';
+import ChatSiderButton from './ChatSiderButton';
+import ChatSiderList from './ChatSiderList';
+import { ChannelType, CHAT_TYPE } from './const';
 
-const Chat = (props : any) => {
+const { Header, Sider, Content } = Layout;
+
+const Chat = ({ socket }: { socket: any }) => {
+  const navigate = useNavigate();
+
+  const [chatType, setChatType] = useState(CHAT_TYPE.user);
   const [token, setToken] = useState(null);
-  const [currUser, setCurrUser] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [chatWith, setChatWith] = useState(null);
-  const socket = props.socket;
-  const [channels, setChannels] = useState([]);
-  const [selectedChannel, setSelectedChannel] = useState(null);
-	const [isChannelModalVisible, setIsChannelModalVisible] = useState(false);
-  const [isManageUserModalOpen, setIsManageUserModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [selectUser, setSelectUser] = useState(null);
+  const [ok, setOk] = useState(false);
+  const [users, setUsers] = useState<any>([]);
+  const [channels, setChannels] = useState<ChannelType[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState<ChannelType | null>(
+    null
+  );
+
+  const getAllChannels = async () => {
+	try {
+	  const res = await axios.get(`${BACK_URL}/channels`, {withCredentials:true});
+	  setChannels(res.data);
+	} catch (error) {
+	  handleErrors(error);
+	}
+  };
+  
+  const getAllUsers = async () => {
+	try {
+	  const res = await axios.get(`${BACK_URL}/account/all`, {withCredentials:true });
+	res.data = res.data.map((data: any) => ({ ...data, key: data.id }));
+	setUsers(res.data);
+	console.log("reeees", res.data);
+	} catch (error) {
+		console.log(error);
+	  handleErrors(error);
+	}
+  };
 
   useEffect(() => {
-    if (token) {
-      // Add token in local storage to avoid connect when refresh page
-      localStorage.setItem('token', token);
-      // Decode jwt and save user
-      setCurrUser(jwt_decode(token));
-    } else {
-      const saved: any = localStorage.getItem('token');
-      if (saved) {
-        setToken(saved);
-      }
-    }
-  }, [token]);
+	  console.log("use efffect");
+	axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+	.then((res) => {
+		console.log("reeees ", res.data);
+		setCurrentUser(res.data)
+		getAllUsers();
+		getAllChannels();
+		setOk(true);
+	})
+	.catch((err) => {
+		console.log("errrrrrr" , err);
+		message.error('Must be connect to use chat!');
+		navigate('/');
+		return;
+	})
+  }, []);
 
+
+
+console.log("currr user", currentUser);
   return (
-    <div style={{ color: 'white' }}>
-      <ChatHeader
-        token={token}
-        setToken={setToken}
-        setUsers={setUsers}
-        currUser={currUser}
-        setChannels={setChannels}
-        selectedChannel={selectedChannel}
-        isModalVisible={isChannelModalVisible}
-        openModal={() => setIsChannelModalVisible(true)}
-        closeModal={() => {
-          setIsChannelModalVisible(false);
-          setSelectedChannel(null);
-        }}
-      />
-      <ChannelManageUserModal
-        users={users}
-        channel={selectedChannel}
-        isOpen={isManageUserModalOpen}
-        handleCancel={() => {
-          setIsManageUserModalOpen(false);
-          setSelectedChannel(null);
-        }}
-        token={token}
-      />
-      <div style={{ display: 'flex' }}>
-        <ChatUserList users={users} setChatWith={setChatWith} />
-        <ChatWindow currUser={currUser} user={chatWith} token={token} sock={socket}/>
-        <ChannelsList channels={channels} setSelectedChannel={(channel: any, type: string) => {
-          setSelectedChannel(channel);
-          if (type === ChannelModalType.edit) {
-            setIsChannelModalVisible(true);
-          } else {
-            setIsManageUserModalOpen(true);
-          }
-        }} />
-      </div>
-    </div>
+    <>
+	{ok ?
+       (
+        <Layout style={{ width: '100%', height: '100%' }}>
+          <Header
+            style={{
+              backgroundColor: '#000',
+              color: '#fff',
+              fontWeight: 'bold',
+            }}>
+            <ChatHeader currentUser={currentUser} />
+          </Header>
+          <Layout style={{ width: '100%' }}>
+            <Sider
+              style={{ backgroundColor: '#1c1c1c', textAlign: 'center' }}
+              width={75}>
+              <ChatSiderButton chatType={chatType} setChatType={setChatType} />
+            </Sider>
+            <Sider style={{ backgroundColor: '#c9c9c9' }} width={200}>
+              <ChatSiderList
+                token={token}
+                chatType={chatType}
+                setSelectUser={(selectUser: any) => {
+                  setSelectUser(selectUser);
+                  setSelectedChannel(null);
+                }}
+                users={users}
+                currentUser={currentUser}
+                setChannels={setChannels}
+                channels={channels}
+                selectedChannel={selectedChannel}
+                setSelectedChannel={(selectedChannel: ChannelType) => {
+                  setSelectedChannel(selectedChannel);
+                  setSelectUser(null);
+                }}
+              />
+            </Sider>
+            <Content>
+              <ChatContentWindow
+                currentUser={currentUser}
+                selectUser={selectUser}
+                users={users}
+                token={token}
+                socket={socket}
+                selectedChannel={selectedChannel}
+              />
+            </Content>
+          </Layout>
+        </Layout>
+      ) : null}
+    </>
   );
 };
 

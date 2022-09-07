@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AuthenticatedGuard } from '../account/auth/guards';
 import { Chat } from './chat.entity';
 import { ChatService } from './chat.service';
 
@@ -23,7 +23,7 @@ export class ChatController {
   //   return this.service.getChats();
   // }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @Get(':anotherId')
   getChatHistoryWithAnotherUserById(
     @Request() req: any,
@@ -35,7 +35,15 @@ export class ChatController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
+  @Get('/channel/:channelId')
+  getChannelChatHistoryByChannelId(
+    @Param('channelId') channelId: string,
+  ): Promise<Chat[]> {
+    return this.service.getChannelChatHistoryByChannelId(channelId);
+  }
+
+  @UseGuards(AuthenticatedGuard)
   @Post(':anotherId')
   sendMessage(
     @Request() req: any,

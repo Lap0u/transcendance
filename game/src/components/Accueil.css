@@ -59,6 +59,16 @@
 	background-color: white;
 }
 
+.createUser-button {
+	z-index: 2;
+	position: absolute;
+	right: 250px;
+	top: 10px;
+	font-size: 0.6em;
+	color: black;
+	background-color: white;
+}
+
 .join-button{
 	width: 13vw;
 	height: 3vw;

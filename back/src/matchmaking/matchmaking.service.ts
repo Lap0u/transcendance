@@ -6,31 +6,29 @@ import { addUserMatchmakingList, gameStart } from './matchmakingUtils';
 
 @Injectable()
 export class MatchmakingService {
-	constructor(
-		private socketService: SocketService,
-		) {}
-	private  matchmakingList : matchmakingDto[] = []
-	private  currentMatches : matchesDto[] = []
-	getMatchmakingList() : matchmakingDto[] {
-		return this.matchmakingList
-	}
-	getMatchesList() : matchesDto[] {
-		return this.currentMatches
-	}
-	updatePosX(data: any, sender : string) : any {
-		if (data){
-			for (const elem of this.currentMatches) {
-				if (elem.playerOne.socket === sender) {
-					elem.playerOneY = data
-					return;
-				}
-				if (elem.playerTwo.socket === sender) {
-					elem.playerTwoY = data
-					return;
-				}
-			}
-		}
-	} 
+  constructor(private socketService: SocketService) {}
+  private matchmakingList: matchmakingDto[] = [];
+  private currentMatches: matchesDto[] = [];
+  getMatchmakingList(): matchmakingDto[] {
+    return this.matchmakingList;
+  }
+  getMatchesList(): matchesDto[] {
+    return this.currentMatches;
+  }
+  updatePosX(data: any, sender: string): any {
+    if (data) {
+      for (const elem of this.currentMatches) {
+        if (elem.playerOne.socket === sender) {
+          elem.playerOneY = data;
+          return;
+        }
+        if (elem.playerTwo.socket === sender) {
+          elem.playerTwoY = data;
+          return;
+        }
+      }
+    }
+  }
 
 	async joinMatchmaking(payload :joinMatchmakingDto): Promise<matchmakingDto> {
 		let newUserInMatchmaking = addUserMatchmakingList(payload, this.matchmakingList);
@@ -49,5 +47,18 @@ export class MatchmakingService {
         })
         this.matchmakingList = newMatchmakingList;
         return newMatchmakingList;
+
     }
+    return newUserInMatchmaking;
+  }
+
+  quitMatchmaking(userId: string): matchmakingDto[] {
+    const newMatchmakingList = this.matchmakingList.filter((user) => {
+      return user.socket != userId;
+    });
+
+    this.matchmakingList = newMatchmakingList;
+
+    return newMatchmakingList;
+  }
 }

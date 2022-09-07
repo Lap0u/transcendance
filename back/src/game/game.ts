@@ -5,9 +5,9 @@ import {
 } from './constants'
 import { checkGoal, createGameState, handleWallBounce } from './gameUtils';
 
-export function launchGame(playerOne: matchmakingDto, playerTwo : matchmakingDto, socket : any, game: any) {
-    const state = createGameState();
-    startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game);
+
+function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
 }
 
 function startGameInterval(playerOne: string, playerTwo : string, state: any, socket : any, curGame : any)  {
@@ -24,7 +24,20 @@ function startGameInterval(playerOne: string, playerTwo : string, state: any, so
 	}, 1000 / FRAME_RATE)// run FRAME_RATE times per second
 }
 
-function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket : any, curGames: any) : number {
+function gameLoop(
+  state: any,
+  playerOneId: string,
+  playerTwoId: string,
+  socket: any,
+  curGames: any,
+): number {
+  if (state.frameDelay > 0) {
+    state.frameDelay--;
+    return 1;
+  }
+  const ball = state.ball;
+  const playerOnePaddle = state.playerOne;
+  const playerTwoPaddle = state.playerTwo;
 
     if (state.frameDelay > 0){
         state.frameDelay--;
@@ -46,4 +59,3 @@ function gameLoop(state: any, playerOneId : string, playerTwoId : string, socket
     state.ball= checkGoal(ball, state)
     return 1
 }
-
