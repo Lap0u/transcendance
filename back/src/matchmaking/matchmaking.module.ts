@@ -5,6 +5,6 @@ import { MatchmakingService } from './matchmaking.service';
 @Module({
   controllers: [MatchmakingController],
   providers: [MatchmakingService],
-  exports: [MatchmakingService]
+  exports: [MatchmakingService],
 })
 export class MatchmakingModule {}

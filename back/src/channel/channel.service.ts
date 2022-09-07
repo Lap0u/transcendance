@@ -34,7 +34,7 @@ export class ChannelService {
     channelId: string,
     payload: UpdateChannelDto,
   ): Promise<Channel> {
-    let channel: Channel = await this.channelsRepository.findOneBy({
+    const channel: Channel = await this.channelsRepository.findOneBy({
       id: channelId,
     });
 

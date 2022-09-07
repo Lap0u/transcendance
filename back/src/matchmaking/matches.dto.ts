@@ -1,10 +1,9 @@
-import { matchmakingDto } from "./matchmaking.dto";
+import { matchmakingDto } from './matchmaking.dto';
 
 export class matchesDto {
-    gameId : string;
-    playerOne : matchmakingDto;
-    playerOneY : number;
-    playerTwo :  matchmakingDto;
-    playerTwoY : number;
-
+  gameId: string;
+  playerOne: matchmakingDto;
+  playerOneY: number;
+  playerTwo: matchmakingDto;
+  playerTwoY: number;
 }
