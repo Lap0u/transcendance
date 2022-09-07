@@ -36,15 +36,13 @@ const ChannelFormModal = ({
       let res = null;
       if (channel) {
         res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
-		  withCredentials:true, 
-          headers: { },
+          headers: { Authorization: `Bearer ${token}` },
         });
         message.success('Channel edited!');
         updateChannel(res.data);
       } else {
         res = await axios.post(`${BACK_URL}/channels`, values, {
-		  withCredentials:true,
-          headers: {},
+          headers: { Authorization: `Bearer ${token}` },
         });
         message.success('New channel created!');
         addNewChannel(res.data);
