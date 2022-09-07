@@ -32,7 +32,6 @@ const GameMenu = (props : any) => {
   const getMatchesList = async () => {
     try {
         const res = await axios.get(`${BACK_URL}/matchmaking/games`);
-        console.log('list', res);
         setGamesList(res.data)
       }
       catch(e) {
