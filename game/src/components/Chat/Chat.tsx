@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BACK_URL } from '../../global';
+import handleErrors from '../RequestErrors/handleErrors';
 import ChatContentWindow from './ChatContentWindow';
 import ChatHeader from './ChatHeader';
 import ChatSiderButton from './ChatSiderButton';
@@ -26,58 +27,47 @@ const Chat = ({ socket }: { socket: any }) => {
     null
   );
 
+  const getAllChannels = async () => {
+	try {
+	  const res = await axios.get(`${BACK_URL}/channels`, {withCredentials:true});
+	  setChannels(res.data);
+	} catch (error) {
+	  handleErrors(error);
+	}
+  };
+  
+  const getAllUsers = async () => {
+	try {
+	  const res = await axios.get(`${BACK_URL}/account/all`, {withCredentials:true });
+	res.data = res.data.map((data: any) => ({ ...data, key: data.id }));
+	setUsers(res.data);
+	console.log("reeees", res.data);
+	} catch (error) {
+		console.log(error);
+	  handleErrors(error);
+	}
+  };
+
   useEffect(() => {
-    const tempToken: any = localStorage.getItem('token');
-    if (!tempToken) {
-      message.error('Must be connect to use chat!');
-      navigate('/');
-      return;
-    }
-    const tempUser: any = jwt_decode(tempToken);
-    const currentTime = Date.now();
-    const expTime = tempUser.exp * 1000;
-    if (expTime < currentTime) {
-      message.error('Must be connect to use chat!');
-      navigate('/');
-      return;
-    }
-    setToken(tempToken);
-    setCurrentUser(tempUser);
+	axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
+	.then(() => {
+		getAllUsers();
+		getAllChannels();
+	})
+	.catch((err) => {
+		console.log("errrrrrr" , err);
+		message.error('Must be connect to use chat!');
+		navigate('/');
+		return;
+	})
   }, []);
 
-  useEffect(() => {
-    const getAllUsers = async () => {
-      try {
-        const res = await axios.get(`${BACK_URL}/users`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        res.data = res.data.map((data: any) => ({ ...data, key: data.id }));
-        setUsers(res.data);
-      } catch (e) {
-        message.error(`Une erreur s'est passé ${e}`);
-      }
-    };
 
-    const getAllChannels = async () => {
-      try {
-        const res = await axios.get(`${BACK_URL}/channels`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setChannels(res.data);
-      } catch (e) {
-        message.error(`Une erreur s'est passé ${e}`);
-      }
-    };
 
-    if (token) {
-      getAllUsers();
-      getAllChannels();
-    }
-  }, [token]);
 
   return (
     <>
-      {token ? (
+       (
         <Layout style={{ width: '100%', height: '100%' }}>
           <Header
             style={{
@@ -124,7 +114,7 @@ const Chat = ({ socket }: { socket: any }) => {
             </Content>
           </Layout>
         </Layout>
-      ) : null}
+      ) 
     </>
   );
 };

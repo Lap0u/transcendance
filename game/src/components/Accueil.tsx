@@ -67,7 +67,7 @@ function Accueil() {
 			{!isLoginActive &&
 				<div>
 					<Welcome />
-					<ButtonTemplate text="Login" onClick={loginClick} buttonClass={'login-button rightButton'} />
+					<ButtonTemplate text="Login" onClick={() => {window.location.href = 'http://localhost:4000/auth/login'}} buttonClass={'login-button rightButton'} />
 					<LoginButton nav={navigate} />
 					<ButtonTemplate text="Chat" onClick={() => navigate("/chat")} buttonClass={'chat-button'} />
 					<ButtonTemplate text="CreateUser" onClick={showModal} buttonClass={'createUser-button'} />
