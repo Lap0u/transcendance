@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
-import { addUserMatchmakingList, gameStart } from './utils';
+import { addUserMatchmakingList, gameStart } from './matchmakingUtils';
 
 @Injectable()
 export class MatchmakingService {
