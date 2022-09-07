@@ -60,7 +60,3 @@ type matchmakingDto = {
     id: string;
     socket: string;
 }
-
-type gameProps = {
-    gameId : string;
-}
