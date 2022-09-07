@@ -35,7 +35,8 @@ const ChannelManageUserModal = ({
     values.usersId = inChannelUsers;
     values.administratorsId = channelAdmins;
     const res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
-      headers: { Authorization: `Bearer ${token}` },
+	  withCredentials:true, 
+      headers: { },
     });
     handleCancel();
   };

@@ -21,6 +21,7 @@ const Chat = ({ socket }: { socket: any }) => {
   const [token, setToken] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectUser, setSelectUser] = useState(null);
+  const [ok, setOk] = useState(false);
   const [users, setUsers] = useState<any>([]);
   const [channels, setChannels] = useState<ChannelType[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<ChannelType | null>(
@@ -49,10 +50,14 @@ const Chat = ({ socket }: { socket: any }) => {
   };
 
   useEffect(() => {
-	axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
-	.then(() => {
+	  console.log("use efffect");
+	axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+	.then((res) => {
+		console.log("reeees ", res.data);
+		setCurrentUser(res.data)
 		getAllUsers();
 		getAllChannels();
+		setOk(true);
 	})
 	.catch((err) => {
 		console.log("errrrrrr" , err);
@@ -64,9 +69,10 @@ const Chat = ({ socket }: { socket: any }) => {
 
 
 
-
+console.log("currr user", currentUser);
   return (
     <>
+	{ok ?
        (
         <Layout style={{ width: '100%', height: '100%' }}>
           <Header
@@ -114,7 +120,7 @@ const Chat = ({ socket }: { socket: any }) => {
             </Content>
           </Layout>
         </Layout>
-      ) 
+      ) : null}
     </>
   );
 };

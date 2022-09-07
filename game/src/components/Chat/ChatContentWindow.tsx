@@ -62,9 +62,8 @@ const ChatContentWindow = ({
         const getHistoryUrl = isUser
           ? `${BACK_URL}/chat/${selectUser?.id}`
           : `${BACK_URL}/chat/channel/${selectedChannel?.id}`;
-        const res = await axios.get(getHistoryUrl, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(getHistoryUrl, {withCredentials:true },
+        );
         if (res.data) {
           setHistory(res.data);
           scrollToBottom();
@@ -109,7 +108,7 @@ const ChatContentWindow = ({
       const res = await axios.post(
         `${BACK_URL}/chat/${receiveId}`,
         { message: message },
-        { headers: { Authorization: `Bearer ${token}` } }
+		{withCredentials:true },
       );
       if (res.data) {
         setHistory([...history, res.data]);
