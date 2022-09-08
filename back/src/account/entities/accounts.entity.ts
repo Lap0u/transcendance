@@ -26,3 +26,4 @@ export class Accounts {
   })
   data: Uint8Array;
 }
+	

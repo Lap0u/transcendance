@@ -11,6 +11,7 @@ import AccountPage from './components/Account/AccountPage';
 import { LoginSuccess } from './components/Account/LoginSuccess';
 import Disconnected from './components/ErrorPage/Disconnected';
 import InternalError from './components/ErrorPage/InternalError';
+import WrongGameId from './components/ErrorPage/wrongGameId';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -32,6 +33,7 @@ function App() {
           />
 		  <Route path = "/error403" element={<Disconnected/>} />
 		  <Route path = "/error500" element={<InternalError/>} />
+		  <Route path = "/wrongGameId" element={<WrongGameId/>} />
 		  <Route path = "/login" element={<LoginSuccess/>} />
           {/* If no route match, then return 404 page */}
           <Route path="*" element={<Page404 />} />
