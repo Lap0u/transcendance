@@ -4,7 +4,7 @@ import {
   NO_NEW_FRAME,
   RECONNECTION_DELAY,
 } from './constants';
-import { checkGoal, createGameState, handleWallBounce } from './game.utils';
+import { checkGameEnd, checkGoal, createGameState, handleWallBounce } from './game.utils';
 
 export function launchGame(
   playerOne: matchmakingDto,
@@ -36,8 +36,8 @@ function startGameInterval(
 	const status: number = gameLoop(state, curGame);
 	if (status === 1) {
 	  socket.emit(curGame.gameId, state);
-	} else if (status !== NO_NEW_FRAME) {
-	  socket.emit('gameOver');
+	} else {
+	  socket.emit(`winner`, status);
 	  clearInterval(intervalId);
 	}
   }, 1000 / FRAME_RATE);
@@ -53,10 +53,10 @@ function gameLoop(
   }
   curGames.playerOne.pongReply++
   curGames.playerTwo.pongReply++
-  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY || 
-	curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY)
-	console.log('someone left');
-	
+  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) //playerOne left -> playerTWo won
+  	return -2
+  if(curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) //playerTwo left -> playerOne won
+ 	return -1 
   const ball = state.ball;
 
   const dirX = Math.sin(ball.angle * (Math.PI / 180));
@@ -68,5 +68,5 @@ function gameLoop(
   state.rightPlayer.pos.y = curGames.playerTwoY;
   handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y);
   state.ball = checkGoal(ball, state);
-  return 1;
+  return checkGameEnd(state)
 }

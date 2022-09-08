@@ -59,10 +59,16 @@ const SingleGame = (props : any) => {
     useEffect(() => {
         socket.on(gameSocket, handleGameState)
 		socket.on(`ping`, sendPong)
+		socket.on(`winner`, handleWinner)
         setNewState(newState)
     })
 	function sendPong() {
 		socket.emit(`pong`)
+	}
+	function handleWinner(status: number) {
+		let winner
+		status === -1? winner = "One" : winner = "Two"
+		console.log(`Player ${winner} won`)
 	}
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
