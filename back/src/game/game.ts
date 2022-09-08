@@ -2,8 +2,9 @@ import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
 import {
   FRAME_RATE,
   NO_NEW_FRAME,
+  RECONNECTION_DELAY,
 } from './constants';
-import { checkGoal, createGameState, handleWallBounce } from './game.utils';
+import { checkGameEnd, checkGoal, createGameState, handleWallBounce } from './game.utils';
 
 export function launchGame(
   playerOne: matchmakingDto,
@@ -22,19 +23,21 @@ function startGameInterval(
   socket: any,
   curGame: any,
 ) {
+  let pongCounter : number = FRAME_RATE
   const intervalId = setInterval(() => {
-	const status: number = gameLoop(
-	  state,
-	  playerOne,
-	  playerTwo,
-	  socket,
-	  curGame,
-	);
-
+	//check connection with client every second
+	pongCounter--
+	if (pongCounter === 0) {
+		socket.to(playerOne).emit(`ping`)
+		socket.to(playerTwo).emit(`ping`)
+		pongCounter = FRAME_RATE
+	}
+	//
+	const status: number = gameLoop(state, curGame);
 	if (status === 1) {
 	  socket.emit(curGame.gameId, state);
-	} else if (status !== NO_NEW_FRAME) {
-	  socket.emit('gameOver');
+	} else {
+	  socket.emit(`winner`, status);
 	  clearInterval(intervalId);
 	}
   }, 1000 / FRAME_RATE);
@@ -42,15 +45,18 @@ function startGameInterval(
 
 function gameLoop(
   state: any,
-  playerOneId: string,
-  playerTwoId: string,
-  socket: any,
   curGames: any,
 ): number {
   if (state.frameDelay > 0) {
     state.frameDelay--;
     return 1;
   }
+  curGames.playerOne.pongReply++
+  curGames.playerTwo.pongReply++
+  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) //playerOne left -> playerTWo won
+  	return -2
+  if(curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) //playerTwo left -> playerOne won
+ 	return -1 
   const ball = state.ball;
 
   const dirX = Math.sin(ball.angle * (Math.PI / 180));
@@ -62,5 +68,5 @@ function gameLoop(
   state.rightPlayer.pos.y = curGames.playerTwoY;
   handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y);
   state.ball = checkGoal(ball, state);
-  return 1;
+  return checkGameEnd(state)
 }

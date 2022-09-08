@@ -6,6 +6,7 @@ export class joinMatchmakingDto {
 export class matchmakingDto {
   id: string;
   socket: string;
+  pongReply: number;
 }
 
 export class quitMatchmakingDto {
