@@ -36,7 +36,7 @@
 	cursor: pointer;
 }
 
-.login{
+.loginButton{
 	position: absolute;
 	z-index: 3;
 	top: calc(40% + 3em);  

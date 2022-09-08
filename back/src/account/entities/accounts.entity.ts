@@ -1,8 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
+import DatabaseFile from './files.entity';
 
 @Entity({ name: 'Accounts' })
 export class Accounts {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   account_id: string;
 
   @Column({ unique: true, nullable: true })
@@ -17,13 +24,11 @@ export class Accounts {
   @Column({ unique: true, nullable: true })
   accountUsername: string;
 
-  @Column({ nullable: true })
-  filename: string;
-
-  @Column({
+  @JoinColumn({ name: 'avatar' })
+  @OneToOne(() => DatabaseFile, {
     nullable: true,
-    type: 'bytea',
   })
-  data: Uint8Array;
+  @Column({ nullable: true })
+  public avatar?: string;
 }
 	

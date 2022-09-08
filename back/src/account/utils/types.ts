@@ -5,12 +5,11 @@ export type IntraUserDetails = {
   username: string;
   name: string;
   accountUsername: string;
-  filename: string;
-  data: Uint8Array;
+  avatar: string;
 };
 
 export type DatabaseFile = {
-  id: number;
+  id: string;
   filename: string;
   data: Uint8Array;
 };

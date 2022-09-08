@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Req,
   Res,
@@ -18,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { Readable } from 'stream';
+import DatabaseFile from '../entities/files.entity';
 
 @Controller('account')
 export class AccountController {
@@ -48,23 +50,27 @@ export class AccountController {
     return this.usersService.changeAvatar(id, file.buffer, file.originalname);
   }
 
-  @Get('avatar/:v')
+  @Get('avatar/:id')
   @UseGuards(AuthenticatedGuard)
   async getAvatar(
-    @Req() req: Request,
+    @Param() params,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const session_info = req.session['passport'];
-    const { id } = session_info.user;
-    const user = await this.authService.findUser(id);
-    const stream = Readable.from(user.data);
-    const filename = user.filename.replace(/[^\x00-\x7F]/g, '?');
+    const id: string = params.id;
+    const avatar: DatabaseFile = await this.usersService.getAvatar(id);
+    const stream = Readable.from(avatar.data);
+    const filename = avatar.filename.replace(/[^\x00-\x7F]/g, '?');
     response.set({
       'Content-Disposition': `inline; filename="${filename}"`,
       'Content-Type': 'image',
     });
-
     return new StreamableFile(stream);
+  }
+
+  @Get('avatar')
+  @UseGuards(AuthenticatedGuard)
+  async getNullAvatar() {
+    return;
   }
 
   @Post('username')

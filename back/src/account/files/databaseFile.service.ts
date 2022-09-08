@@ -19,8 +19,16 @@ export class DatabaseFilesService {
     return newFile;
   }
 
-  async getFileById(id: number) {
+  async getFileById(id: string) {
     const file = await this.databaseFilesRepository.findOneBy({ id });
+    if (!file) {
+      throw new NotFoundException();
+    }
+    return file;
+  }
+
+  async getFileByName(filename: string) {
+    const file = await this.databaseFilesRepository.findOneBy({ filename });
     if (!file) {
       throw new NotFoundException();
     }
@@ -41,6 +49,6 @@ export class DatabaseFilesService {
       process.cwd() + '/src/account/avatar/loup.png',
     );
     console.log('buffffeeer', buffer);
-    this.uploadDatabaseFile(buffer, 'loup');
+    this.uploadDatabaseFile(buffer, 'default');
   }
 }

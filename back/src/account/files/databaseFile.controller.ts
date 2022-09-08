@@ -24,7 +24,7 @@ export default class DatabaseFilesController {
 
   @Get(':id')
   async getDatabaseFileById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Res({ passthrough: true }) response: Response,
   ) {
     const file = await this.databaseFilesService.getFileById(id);
