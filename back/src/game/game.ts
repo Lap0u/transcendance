@@ -2,6 +2,7 @@ import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
 import {
   FRAME_RATE,
   NO_NEW_FRAME,
+  RECONNECTION_DELAY,
 } from './constants';
 import { checkGoal, createGameState, handleWallBounce } from './game.utils';
 
@@ -24,13 +25,15 @@ function startGameInterval(
 ) {
   let pongCounter : number = FRAME_RATE
   const intervalId = setInterval(() => {
-	const status: number = gameLoop(state, playerOne, playerTwo, socket, curGame);
+	//check connection with client every second
 	pongCounter--
 	if (pongCounter === 0) {
 		socket.to(playerOne).emit(`ping`)
 		socket.to(playerTwo).emit(`ping`)
 		pongCounter = FRAME_RATE
 	}
+	//
+	const status: number = gameLoop(state, curGame);
 	if (status === 1) {
 	  socket.emit(curGame.gameId, state);
 	} else if (status !== NO_NEW_FRAME) {
@@ -42,15 +45,14 @@ function startGameInterval(
 
 function gameLoop(
   state: any,
-  playerOneId: string,
-  playerTwoId: string,
-  socket: any,
   curGames: any,
 ): number {
   if (state.frameDelay > 0) {
     state.frameDelay--;
     return 1;
   }
+  if (state.leftPlayer.pongReply >= FRAME_RATE * RECONNECTION_DELAY)
+  	console.log('someone left')
   const ball = state.ball;
 
   const dirX = Math.sin(ball.angle * (Math.PI / 180));

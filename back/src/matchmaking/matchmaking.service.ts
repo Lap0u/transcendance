@@ -31,7 +31,6 @@ export class MatchmakingService {
   }
   
   handlePong(sender: string) {
-	console.log(`gotPong`)
 	for (const elem of this.currentMatches) {
 		if (elem.playerOne.socket === sender) {
 		elem.playerOne.pongReply = 0;
