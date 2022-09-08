@@ -14,10 +14,14 @@ export class AccountService {
 
   async changeAvatar(id: string, imageBuffer: Buffer, filename: string) {
     const user = await this.usersRepository.findOneBy({ id });
+    const file = await this.databaseFilesService.uploadDatabaseFile(
+      imageBuffer,
+      filename,
+    );
+    const avatar = file.id;
     return this.usersRepository.save({
       ...user, // existing fields
-      filename,
-      data: imageBuffer,
+      avatar,
     });
   }
 
@@ -36,8 +40,12 @@ export class AccountService {
   }
 
   async getAllAccount() {
-	  const users = await this.usersRepository.find();
-	  console.log("all user", users);
+    const users = await this.usersRepository.find();
     return users;
+  }
+
+  async getAvatar(id: string) {
+    const avatar = await this.databaseFilesService.getFileById(id);
+    return avatar;
   }
 }

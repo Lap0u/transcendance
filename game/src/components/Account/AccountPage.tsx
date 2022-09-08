@@ -111,9 +111,9 @@ function ButtonChangeAvatar(props : any) {
 			headers: {}
 		})
 		.then(function (response) {
-		  console.log(response);
+		  console.log("newww aavvaaaatar", response);
 		  clickButton('none');
-		  props.refresh(props.avatar + 1);
+		  props.refresh(response.data.avatar);
 		  e.target.value= null;
 		})
 		.catch((error) => {
@@ -135,12 +135,12 @@ function ButtonChangeAvatar(props : any) {
 }
 
 const Avatar = (props : any) => {
-	console.log("avataaaaar", BACK_URL + 'account/avatar/v' + props.avatar);
+	console.log("avataaaaar", BACK_URL + 'account/avatar/' + props.avatar);
 
 
 	return(
 		<ul className='avatar'>
-			<img className='avatarImg' src={ BACK_URL + '/account/avatar/v' + props.avatar } alt={props.avatar}/>
+			<img className='avatarImg' src={ BACK_URL + '/account/avatar/' + props.avatar } alt={props.avatar}/>
 			<ButtonChangeAvatar refresh={props.updateAvatar} avatar={props.avatar}/>
 		</ul>
 	)
@@ -160,9 +160,10 @@ const UserName = (props : any) => {
 
 const AccountInfo = () => {
 
+	const [ok, setOk] = useState(false);
 	const [user, getUser] = useState({name : "", username: "", avatar: "", accountUsername:""});
 	const [username,  updateUsername] = useState('');
-	const [avatar, updateAvatar] = useState(0);
+	const [avatar, updateAvatar] = useState("");
 
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
@@ -170,7 +171,6 @@ const AccountInfo = () => {
 				console.log(response.data);
 				console.log("resssss", response.data);
 				getUser(response.data);
-				updateAvatar(avatar + 1);
 			})
 			.catch((error) => {
 				handleErrors(error)
@@ -178,7 +178,11 @@ const AccountInfo = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(() => { updateUsername(user.accountUsername) }, [user]);
+	useEffect(() => { 
+		updateUsername(user.accountUsername);
+		updateAvatar(user.avatar);
+		setOk(true);
+	}, [user]);
 
 	function isJson(str: string) {
 		try {
@@ -199,6 +203,7 @@ const AccountInfo = () => {
 
 
 	return (
+		ok ?
 		<div>
 		<div className='top-line'/>
 		<li className='account-info'>
@@ -215,6 +220,7 @@ const AccountInfo = () => {
 		</li>
 		<div className='bottom-line'/>
 		</div>
+		:null
 	)
 }
 

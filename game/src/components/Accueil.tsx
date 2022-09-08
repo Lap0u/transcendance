@@ -103,7 +103,7 @@ function Accueil() {
 function LoginButton(props: any) {
 	const nav = props.nav;
 	return (
-		<div className='login'>
+		<div className='loginButton'>
 			<h2 className='login-message'>
 				You have to login to play<br />
 			</h2>
