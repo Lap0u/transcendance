@@ -58,8 +58,12 @@ const SingleGame = (props : any) => {
 
     useEffect(() => {
         socket.on(gameSocket, handleGameState)
+		socket.on(`ping`, sendPong)
         setNewState(newState)
     })
+	function sendPong() {
+		socket.emit(`pong`)
+	}
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
     }

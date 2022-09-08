@@ -22,15 +22,15 @@ function startGameInterval(
   socket: any,
   curGame: any,
 ) {
+  let pongCounter : number = FRAME_RATE
   const intervalId = setInterval(() => {
-	const status: number = gameLoop(
-	  state,
-	  playerOne,
-	  playerTwo,
-	  socket,
-	  curGame,
-	);
-
+	const status: number = gameLoop(state, playerOne, playerTwo, socket, curGame);
+	pongCounter--
+	if (pongCounter === 0) {
+		socket.to(playerOne).emit(`ping`)
+		socket.to(playerTwo).emit(`ping`)
+		pongCounter = FRAME_RATE
+	}
 	if (status === 1) {
 	  socket.emit(curGame.gameId, state);
 	} else if (status !== NO_NEW_FRAME) {
