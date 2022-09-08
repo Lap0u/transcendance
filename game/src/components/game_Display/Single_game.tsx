@@ -25,9 +25,6 @@ const SingleGame = (props : any) => {
             canvas.style.width = "180vh";
             canvas.style.height = "90vh";
         }
-        
-        // console.log('fullCont', gameState);
-        
         const context : any = canvas.getContext('2d')
         drawBackground(context)
         drawPlayBar(context, gameState.leftPlayer)
@@ -45,7 +42,6 @@ const SingleGame = (props : any) => {
     return (
         <div>
             <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
-            {/* <canvas ref={canvasRef} id="mainWindow" onMouseMove={(event) => movePlayBar(getMousePosY(event, canvasRef.current))}> */}
                 There should be the canvas of the full game
             </canvas>
         </div>

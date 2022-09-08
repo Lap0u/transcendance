@@ -28,7 +28,6 @@ const OneGame = ({game} : singleGamesprops) => {
 }
 
 export const GameList = ({games} : gameslistprops) => {
-    console.log(`games`, games);
     const ListHeader = games.length === 0 ? "No games yet" : "Current games"
     const listItems = games.map((d) => <OneGame game={d} />) 
     return (
