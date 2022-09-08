@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GameList, game } from './GameList';
 import { BACK_URL } from '../constants';
+import handleErrors from '../RequestErrors/handleErrors';
 
 const GameMenu = (props : any) => {
   
@@ -16,27 +17,27 @@ const GameMenu = (props : any) => {
   }
   const quitMatchmakingList = async(userId: string) => {
     try {
-         await axios.delete(`${BACK_URL}/matchmaking/${userId}`);
+         await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
     } catch(e) {
-      alert(`Une erreur s'est passé ${e}`);
+      handleErrors(e);
     }
   }
 
   const joinMatchmakingList = async(userId: string) => {
     try {
-        await axios.post(`${BACK_URL}/matchmaking`, { id: userId});
+        await axios.post(`${BACK_URL}/matchmaking`, { id: userId}, {withCredentials:true});
     } catch(e) {
-      alert(`Une erreur s'est passé ${e}`);
+      handleErrors(e);
     }
   }
   const getMatchesList = async () => {
     try {
-        const res = await axios.get(`${BACK_URL}/matchmaking/games`);
+        const res = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
         console.log('list', res);
         setGamesList(res.data)
       }
       catch(e) {
-        alert(`Une erreur s'est passé ${e}`);
+        handleErrors(e);
     }
   }
   useEffect(() => {
