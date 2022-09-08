@@ -51,8 +51,12 @@ function gameLoop(
     state.frameDelay--;
     return 1;
   }
-  if (state.leftPlayer.pongReply >= FRAME_RATE * RECONNECTION_DELAY)
-  	console.log('someone left')
+  curGames.playerOne.pongReply++
+  curGames.playerTwo.pongReply++
+  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY || 
+	curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY)
+	console.log('someone left');
+	
   const ball = state.ball;
 
   const dirX = Math.sin(ball.angle * (Math.PI / 180));

@@ -82,12 +82,14 @@ function resetBall(side : number) {
 export function createGameState() {
     return {
         leftPlayer : {
+			pongReply: 0,
             pos: {
                 x: STARTINGPOS_LEFT_X,
                 y: BACK_WIN_HEIGHT / 2
             }
         },
         rightPlayer : {
+			pongReply: 0,
             pos: {
                 x: STARTINGPOS_RIGHT_X,
                 y: BACK_WIN_HEIGHT / 2
