@@ -1,19 +1,20 @@
+import { matchesDto } from 'src/matchmaking/matches.dto';
 import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
 import {
   FRAME_RATE,
-  NO_NEW_FRAME,
   RECONNECTION_DELAY,
 } from './constants';
-import { checkGameEnd, checkGoal, createGameState, handleEndGame, handlePing, handleWallBounce } from './game.utils';
+import { checkGameEnd, checkGoal, clearGame, createGameState, handleEndGame, handlePing, handleWallBounce } from './game.utils';
 
 export function launchGame(
   playerOne: matchmakingDto,
   playerTwo: matchmakingDto,
   socket: any,
   game: any,
+  allGames: matchesDto[]
 ) {
   const state = createGameState();
-  startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game);
+  startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames);
 }
 
 function startGameInterval(
@@ -22,6 +23,8 @@ function startGameInterval(
   state: any,
   socket: any,
   curGame: any,
+  allGames: matchesDto[]
+
 ) {
   let pongCounter : number = FRAME_RATE
   const intervalId = setInterval(() => {
@@ -34,9 +37,11 @@ function startGameInterval(
 	} else {
 	  console.log(status);
       handleEndGame(status, socket, playerOne, playerTwo)
+	//   clearGame(curGame.gameId, allGames) //enleve la game de la liste, pose des problemes avec le front pour l'instant
 	  clearInterval(intervalId);
 	}
   }, 1000 / FRAME_RATE);
+  return curGame.gameId
 }
 
 function gameLoop(

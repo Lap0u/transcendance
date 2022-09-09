@@ -82,7 +82,7 @@ const SingleGame = (props : any) => {
             <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
-			<p>Hello world, winner : {winner.current}</p>
+			{winner.current !== "" && <p>Hello world, winner : {winner.current}</p>}
         </div>
     )
 }

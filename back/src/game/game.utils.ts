@@ -1,10 +1,18 @@
-import { join } from "path";
-import { matchmakingDto } from "src/matchmaking/matchmaking.dto";
+import { matchesDto } from "src/matchmaking/matches.dto";
 import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 
 function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
   }
+
+export function clearGame(gameId : string, allGames : matchesDto[]) {
+	for (let i = 0; i < allGames.length; i++) {
+	if (allGames[i].gameId === gameId) {
+			allGames.splice(i, 1)
+			return
+		}
+	}
+}
 
 function paddleBounceLeft(ball: any, leftPosY: number) {
 const hitpos = ball.pos.y - leftPosY + PADDLE_HEIGHT / 2;
