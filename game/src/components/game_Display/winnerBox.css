@@ -1,0 +1,9 @@
+.container-box {
+	position: fixed;
+	top: 15vh;
+	bottom: 15vh;
+	right: 30vw;
+	left: 30vw;
+	border-color: white;
+	background-color: rebeccapurple;
+}

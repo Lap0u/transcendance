@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import handleErrors from "../RequestErrors/handleErrors";
 import axios from "axios";
 import { BACK_URL } from "../constants";
+import WinnerBox from "./WinnerBox";
 
 const SingleGame = (props : any) => {
     const canvasRef = useRef(null);
@@ -39,6 +40,10 @@ const SingleGame = (props : any) => {
 	  }
 	checkValidId()
     const socket = props.socket;
+	function handleResize() {
+        updateGame(newState)
+	}
+
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
@@ -77,12 +82,13 @@ const SingleGame = (props : any) => {
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
     }
+	window.addEventListener('resize', handleResize)
     return (
         <div>
             <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
-			{winner.current !== "" && <p>Hello world, winner : {winner.current}</p>}
+			{winner.current !== "" && < WinnerBox message={winner.current} />}
         </div>
     )
 }
