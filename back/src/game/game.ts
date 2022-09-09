@@ -4,7 +4,7 @@ import {
   NO_NEW_FRAME,
   RECONNECTION_DELAY,
 } from './constants';
-import { checkGameEnd, checkGoal, createGameState, handleWallBounce } from './game.utils';
+import { checkGameEnd, checkGoal, createGameState, handleEndGame, handlePing, handleWallBounce } from './game.utils';
 
 export function launchGame(
   playerOne: matchmakingDto,
@@ -26,18 +26,14 @@ function startGameInterval(
   let pongCounter : number = FRAME_RATE
   const intervalId = setInterval(() => {
 	//check connection with client every second
-	pongCounter--
-	if (pongCounter === 0) {
-		socket.to(playerOne).emit(`ping`)
-		socket.to(playerTwo).emit(`ping`)
-		pongCounter = FRAME_RATE
-	}
+	pongCounter = handlePing(pongCounter, socket, playerOne, playerTwo)
 	//
 	const status: number = gameLoop(state, curGame);
 	if (status === 1) {
 	  socket.emit(curGame.gameId, state);
 	} else {
-	  socket.emit(`winner`, status);
+	  console.log(status);
+      handleEndGame(status, socket, playerOne, playerTwo)
 	  clearInterval(intervalId);
 	}
   }, 1000 / FRAME_RATE);

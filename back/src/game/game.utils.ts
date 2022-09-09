@@ -1,5 +1,6 @@
+import { join } from "path";
 import { matchmakingDto } from "src/matchmaking/matchmaking.dto";
-import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
+import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 
 function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
@@ -85,6 +86,29 @@ function resetBall(side : number) {
         angle : angle,
     }
     return ball
+}
+
+export function handlePing(pongCounter : number, socket : any,  playerOne: string, playerTwo: string) {
+	pongCounter--
+	if (pongCounter === 0) {
+		socket.to(playerOne).emit(`ping`)
+		socket.to(playerTwo).emit(`ping`)
+		pongCounter = FRAME_RATE
+	}
+	return pongCounter
+}
+
+export function handleEndGame(gameStatus: number, socket : any, playerOne: string, playerTwo: string) {
+	if (gameStatus === -1) {
+		socket.to(playerOne).emit('winner', 'You won')
+		socket.to(playerTwo).emit('winner', 'You lost')
+		socket.emit('winner', `${playerOne} won`)
+	}
+	else if (gameStatus === -2) {
+		socket.to(playerOne).emit('winner', 'You lost')
+		socket.to(playerTwo).emit('winner', 'You won')
+		socket.emit('winner', `${playerTwo} won`)
+	}
 }
 
 export function createGameState() {

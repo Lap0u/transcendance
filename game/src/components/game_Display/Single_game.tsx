@@ -12,7 +12,9 @@ import { BACK_URL } from "../constants";
 const SingleGame = (props : any) => {
     const canvasRef = useRef(null);
     const [newState, setNewState] = useState();
-    const pageLocation = useLocation();
+	const [haveWinner, setHaveWinner] = useState(false)
+    const winner = useRef("")
+	const pageLocation = useLocation();
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
     const navigate = useNavigate();
@@ -62,13 +64,15 @@ const SingleGame = (props : any) => {
 		socket.on(`winner`, handleWinner)
         setNewState(newState)
     })
+
 	function sendPong() {
 		socket.emit(`pong`)
 	}
-	function handleWinner(status: number) {
-		let winner
-		status === -1? winner = "One" : winner = "Two"
-		console.log(`Player ${winner} won`)
+	function handleWinner(gameResult: string) {
+		if (winner.current === "") {
+			winner.current = gameResult
+			setHaveWinner(true)
+		}
 	}
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
@@ -78,6 +82,7 @@ const SingleGame = (props : any) => {
             <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
+			<p>Hello world, winner : {winner.current}</p>
         </div>
     )
 }
