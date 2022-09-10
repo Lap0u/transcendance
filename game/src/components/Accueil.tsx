@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Input, Modal } from 'antd';
 import { BACK_URL } from '../global';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { LogoutButton } from './Account/AccountPage';
 // import backgroundImage from '../assets/pong_wallpaper'
 
 const socket = io('http://localhost:3000');
@@ -16,98 +18,73 @@ function handleInit(msg: string) {
 	console.log(msg);
 }
 function Accueil() {
-	const [form] = Form.useForm();
-
-	const [isLoginActive, setIsLogin] = useState(false);
-	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const navigate = useNavigate();
+	const [isLoginActive, setIsLogin] = useState(false);
 
-	function loginClick() {
-		setIsLogin(!isLoginActive);
-	}
-
-	const showModal = () => {
-		setIsModalVisible(true);
-	}
-
-	const handleOk = async () => {
-		try {
-			const values = await form.validateFields();
-			createUser(values.username, values.password);
-		} catch (e) {
-			// If fields not valid then return
-			return;
-		};
-		handleCancel();
-	};
-
-	const handleCancel = () => {
-		setIsModalVisible(false);
-		form.resetFields();
-	};
-
-	const createUser = async (userName:string, passWord:string) => {
-    try {
-      const res = await axios.post(`${BACK_URL}/users`, { username: userName, password: passWord });
-      if (res.data) {
-        alert('Create user with success');
-      }
-    } catch(e) {
-      alert(`Une erreur s'est passé ${e}`);
-    }
-  };
-
+	useEffect(() => {
+		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
+			.then((response) => {
+				setIsLogin(true);
+			})
+			.catch((error) => {
+				console.log("errroooor", error.response.status)
+				if (error.response.status === 403)
+					setIsLogin(false);
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+  
 	return (
 		<div className='AccueilPage'>
 			<div>
 				<Background />
 			</div>
-			{isLoginActive && <LoginPopup isLog={isLoginActive} setLog={setIsLogin} />}
-			{!isLoginActive &&
 				<div>
 					<Welcome />
-					<ButtonTemplate text="Login" onClick={() => {window.location.href = 'http://localhost:4000/auth/login'}} buttonClass={'login-button rightButton'} />
-					<LoginButton nav={navigate} />
-					<ButtonTemplate text="Chat" onClick={() => navigate("/chat")} buttonClass={'chat-button'} />
-					<ButtonTemplate text="CreateUser" onClick={showModal} buttonClass={'createUser-button'} />
-					<Modal forceRender title="Create User" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} okText="create">
-						<Form
-							form={form}
-							name="basic"
-							autoComplete="off"
-						>
-							<Form.Item
-								label="Username"
-								name="username"
-								rules={[{ required: true, message: 'Please input your username!' }]}
-							>
-								<Input />
-							</Form.Item>
+					<LoginPlayButton isLoginActive={isLoginActive} />
+					<NavigationBarre nav={navigate} isLoginActive={isLoginActive}/>
 
-							<Form.Item
-								label="Password"
-								name="password"
-								rules={[{ required: true, message: 'Please input your password!' }]}
-							>
-								<Input.Password />
-							</Form.Item>
-						</Form>
-					</Modal>
 				</div>
-			}
 		</div>
 	)
 }
 
-function LoginButton(props: any) {
-	const nav = props.nav;
+
+
+
+function NavigationBarre(props : any) {
+	return(
+	<div>
+	{props.isLoginActive ?
+	<ul className='nav-barre'>
+  		<li className='onglet-nav'><a href="/account"> Account </a></li>
+  		<li className='onglet-nav'><a href="/chat"> Chat </a></li>
+  		<li className='onglet-nav'><a href="/logout"> Logout </a></li>
+	</ul>
+	: null}
+	</div>
+	)
+}
+function LoginPlayButton(props: any) {
+
+	const nav = useNavigate();
 	return (
-		<div className='loginButton'>
-			<h2 className='login-message'>
+		<div className='login-play-button'>
+			{!props.isLoginActive ? 
+			<h2 className='login-play-message'>
 				You have to login to play<br />
 			</h2>
-			<ButtonTemplate text="Enter game" onClick={() => nav("/menu")} buttonClass={'join-button'} />
+			: 
+			<h2 className='login-play-message'>
+			Click here to access play<br />
+			</h2>
+			}
+			{!props.isLoginActive ? 
+
+				<ButtonTemplate text="Login" onClick={() => window.location.href = 'http://localhost:4000/auth/login'} buttonClass={'login-button'} />
+			:
+			<ButtonTemplate  text="Enter game" onClick={() => nav("/menu")} buttonClass={'play-button'} />}
 		</div>
 	)
 }
