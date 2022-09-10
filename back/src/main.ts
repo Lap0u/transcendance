@@ -38,6 +38,16 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+ /* app.use(function (req, res, next) {
+	res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+	res.header('Expires', '-1');
+	res.header('Pragma', 'no-cache');
+	res.clearCookie('_intra_42_session_production', {domain: '.intra.42.fr', path: '/'});
+	next();
+  });*/
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const cookieParser = require('cookie-parser');
+  app.use(cookieParser());
   await app.listen(port, () => {
     console.log('[BACK] listen on port ', port);
   });

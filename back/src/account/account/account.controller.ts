@@ -44,7 +44,6 @@ export class AccountController {
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(file);
     const session_info = req.session['passport'];
     const { id } = session_info.user;
     return this.usersService.changeAvatar(id, file.buffer, file.originalname);

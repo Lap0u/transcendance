@@ -48,7 +48,6 @@ export class DatabaseFilesService {
     const buffer = await fs.readFileSync(
       process.cwd() + '/src/account/avatar/loup.png',
     );
-    console.log('buffffeeer', buffer);
     this.uploadDatabaseFile(buffer, 'default');
   }
 }

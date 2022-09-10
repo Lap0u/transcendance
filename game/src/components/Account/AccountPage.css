@@ -1,10 +1,9 @@
 
 #wholepage {
-	background-color: black;
+	background-color: #1e253b;
 	width: 100vw;
 	height: 100vh;
 	margin: none;
-	color: white;
 	padding: none;
 }
 
@@ -14,7 +13,7 @@
 }
 
 .account-info ul{
-	background-color: #1c1c1c;
+	background-color: #292f40;
 
 }
 
@@ -129,7 +128,7 @@
 	line-height: 100%;
 	left: 105px;
 	top: 9px;
-	background-color: dimgray;
+	background-color: #1b202e;
 }
 .username  .change-username{
 	text-align: center;
