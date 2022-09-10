@@ -36,7 +36,7 @@ function startGameInterval(
 	  socket.emit(curGame.gameId, state);
 	} else {
 	  console.log(status);
-      handleEndGame(status, socket, playerOne, playerTwo)
+      handleEndGame(status, socket, playerOne, playerTwo, state)
 	//   clearGame(curGame.gameId, allGames) //enleve la game de la liste, pose des problemes avec le front pour l'instant
 	  clearInterval(intervalId);
 	}

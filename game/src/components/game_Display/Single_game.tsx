@@ -48,6 +48,7 @@ const SingleGame = (props : any) => {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        canvas.style.margin = "auto "
         if (window.innerHeight * 2 > window.innerWidth) {
             canvas.style.width = "90vw";
             canvas.style.height = "45vw";
@@ -73,10 +74,11 @@ const SingleGame = (props : any) => {
 	function sendPong() {
 		socket.emit(`pong`)
 	}
-	function handleWinner(gameResult: string) {
-		if (winner.current === "") {
-			winner.current = gameResult
+	function handleWinner(answer: any) {       
+        if (winner.current === "") {
+			winner.current = answer.gameResult
 			setHaveWinner(true)
+            setNewState(answer.gameState)
 		}
 	}
     function handleGameState(gameState : any) {// any !

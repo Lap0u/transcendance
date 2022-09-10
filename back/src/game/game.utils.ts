@@ -106,16 +106,16 @@ export function handlePing(pongCounter : number, socket : any,  playerOne: strin
 	return pongCounter
 }
 
-export function handleEndGame(gameStatus: number, socket : any, playerOne: string, playerTwo: string) {
+export function handleEndGame(gameStatus: number, socket : any, playerOne: string, playerTwo: string, state: any) {
 	if (gameStatus === -1) {
-		socket.to(playerOne).emit('winner', 'You won')
-		socket.to(playerTwo).emit('winner', 'You lost')
-		socket.emit('winner', `${playerOne} won`)
+		socket.to(playerOne).emit('winner', {gameResult: 'You won', gameState: state})
+		socket.to(playerTwo).emit('winner', {gameResult: 'You lost', gameState: state})
+		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
 	}
 	else if (gameStatus === -2) {
-		socket.to(playerOne).emit('winner', 'You lost')
-		socket.to(playerTwo).emit('winner', 'You won')
-		socket.emit('winner', `${playerTwo} won`)
+		socket.to(playerOne).emit('winner', {gameResult: 'You lost', gameState: state})
+		socket.to(playerTwo).emit('winner', {gameResult: 'You won', gameState: state})
+		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
 	}
 }
 
