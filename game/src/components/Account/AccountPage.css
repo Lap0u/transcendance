@@ -1,10 +1,10 @@
+@import '../../colors.css';
 
 #wholepage {
-	background-color: black;
+	background-color: var(--background);
 	width: 100vw;
 	height: 100vh;
 	margin: none;
-	color: white;
 	padding: none;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .account-info ul{
-	background-color: #1c1c1c;
+	background-color: var(--mid-backgroud);
 
 }
 
@@ -44,7 +44,7 @@
 .account-info .info{
 	position: relative;
 	font-size: min(4vh, 20px);
-	color: cornflowerblue;
+	color: var(--text-1);
 	white-space: nowrap;
 	float:right;
 }
@@ -56,14 +56,14 @@
 	width: 120px;
 	height: max(2.2vh, 17px);
 	position: relative;
-	color:cornflowerblue;
+	color: var(--text-1);
 	bottom: 5px;
 	left: 130px;
 }
 
 .account-info .avatar {
 	position: relative;
-	background-color: #11ffee00;
+	background-color: var(--transparent);
 	text-align: center;
 	right: 10px;
 }
@@ -92,7 +92,7 @@
 	width: 120px;
 	height: max(2.2vh, 17px);
 	position: relative;
-	color:cornflowerblue;
+	color: var(--text-1);
 }
 
 .account-page .top-line{
@@ -129,7 +129,8 @@
 	line-height: 100%;
 	left: 105px;
 	top: 9px;
-	background-color: dimgray;
+	background-color: var(--light-grey);
+	color: white;
 }
 .username  .change-username{
 	text-align: center;
@@ -140,7 +141,7 @@
 	line-height: 4vh;
 	height: max(2.2vh, 17px);
 	width: 120px;
-	background-color: #1c1c1c; 
+	background-color: var(--light-grey); 
 	padding: 0;
 	bottom: 5px;
 	right: 140px;

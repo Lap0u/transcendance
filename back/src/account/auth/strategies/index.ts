@@ -18,7 +18,6 @@ export class Strategy42 extends PassportStrategy(Strategy){
 			scope : ['public'],
 		});
 		this.databaseFilesService.initDBFiles();
-//		console.log(super.clientID)
 	}
 
 	
@@ -28,7 +27,6 @@ export class Strategy42 extends PassportStrategy(Strategy){
 		const file = await this.databaseFilesService.getFileByName("default");
 		const avatar = file.id;
 		const details : IntraUserDetails = {id, username, name, accountUsername, avatar};
-//		console.log(id, username, name );
 		return this.authService.validateUser(details);
 	}
 }

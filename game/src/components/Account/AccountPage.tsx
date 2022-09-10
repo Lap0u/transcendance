@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { errorMonitor } from 'events';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -224,7 +223,7 @@ const AccountInfo = () => {
 	)
 }
 
-const LogoutButton = () =>{
+export const LogoutButton = () =>{
 
 	async function logout() {
 		await axios.get(`${BACK_URL}/auth/logout`, 
@@ -248,7 +247,6 @@ const AccountPage = () => {
 	return (
 		<div className='account-page'>
 			<AccountInfo/>
-			<LogoutButton/>
 			
 		</div>
 	);

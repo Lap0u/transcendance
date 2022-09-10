@@ -14,12 +14,10 @@ export class AuthService implements AuthentificationProvider {
   async validateUser(details: IntraUserDetails) {
     const { id } = details;
     const user = await this.userRepo.findOneBy({ id });
-    //  console.log(user);
     if (user) return user;
     return this.createUser(details);
   }
   createUser(details: IntraUserDetails) {
-    console.log('create user');
     const user = this.userRepo.create(details);
     return this.userRepo.save(user);
   }
