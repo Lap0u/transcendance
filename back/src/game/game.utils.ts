@@ -69,7 +69,7 @@ return ball;
 export function checkGameEnd(state: any) {
 	if (state.score.playerOne >= SCORE_LIMIT)
 		return -1
-	if (state.scale.playerTwo >= SCORE_LIMIT)
+	if (state.score.playerTwo >= SCORE_LIMIT)
 		return -2
 	return 1
 }
@@ -140,10 +140,6 @@ export function createGameState() {
         score :{
             playerOne: 0,
             playerTwo: 0,
-        },
-        scale : {
-            width: BACK_WIN_WIDTH,
-            heihgt: BACK_WIN_HEIGHT
         },
         frameDelay: 0
     }
