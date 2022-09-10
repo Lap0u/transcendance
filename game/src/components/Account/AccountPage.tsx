@@ -223,7 +223,7 @@ const AccountInfo = () => {
 	)
 }
 
-const LogoutButton = () =>{
+export const LogoutButton = () =>{
 
 	async function logout() {
 		await axios.get(`${BACK_URL}/auth/logout`, 
@@ -247,7 +247,6 @@ const AccountPage = () => {
 	return (
 		<div className='account-page'>
 			<AccountInfo/>
-			<LogoutButton/>
 			
 		</div>
 	);

@@ -11,6 +11,7 @@ import AccountPage from './components/Account/AccountPage';
 import { LoginSuccess } from './components/Account/LoginSuccess';
 import Disconnected from './components/ErrorPage/Disconnected';
 import InternalError from './components/ErrorPage/InternalError';
+import { Logout } from './components/Account/LogOut';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -20,10 +21,10 @@ function App() {
   return (
     <div id="wholepage">
       <BrowserRouter>
-        <span style={{ color: 'white' }}>This is single page application</span>
         <Routes>
           <Route path="/" element={<Accueil />} />
 		  <Route path = "/account" element={<AccountPage/>} />
+		  <Route path = "/logout" element={<Logout/>} />
           <Route path="/chat" element={<Chat socket={socket} />} />
           <Route path="/menu" element={<GameMenu socket={socket} />} />
           <Route
