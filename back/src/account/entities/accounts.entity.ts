@@ -31,3 +31,4 @@ export class Accounts {
   @Column({ nullable: true })
   public avatar?: string;
 }
+	

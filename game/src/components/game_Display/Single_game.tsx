@@ -4,7 +4,10 @@ import { drawBall } from "./draw_ball";
 import { drawPlayBar } from "./draw_paddle";
 import { drawScore } from "./draw_score";
 import { getMousePosY, sendNewBar } from "./draw_utils";
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
+import handleErrors from "../RequestErrors/handleErrors";
+import axios from "axios";
+import { BACK_URL } from "../constants";
 
 const SingleGame = (props : any) => {
     const canvasRef = useRef(null);
@@ -12,7 +15,27 @@ const SingleGame = (props : any) => {
     const pageLocation = useLocation();
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
+    const navigate = useNavigate();
     
+	function searchId(allGames : any){
+		for (const game of allGames) {
+			if (game.gameId === gameSocket)
+				return true
+		}
+		return false
+	}
+
+	const checkValidId = async () => {
+		try {
+			const gameSarray = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
+			if(searchId(gameSarray.data) === false)
+				navigate(`/wrongGameId`)
+		}
+		  catch(e) {
+			handleErrors(e);
+		}
+	  }
+	checkValidId()
     const socket = props.socket;
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
@@ -32,10 +55,21 @@ const SingleGame = (props : any) => {
         drawBall(context, gameState.ball)
         drawScore(context, gameState.score)
     }
+
     useEffect(() => {
         socket.on(gameSocket, handleGameState)
+		socket.on(`ping`, sendPong)
+		socket.on(`winner`, handleWinner)
         setNewState(newState)
     })
+	function sendPong() {
+		socket.emit(`pong`)
+	}
+	function handleWinner(status: number) {
+		let winner
+		status === -1? winner = "One" : winner = "Two"
+		console.log(`Player ${winner} won`)
+	}
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
     }

@@ -1,5 +1,5 @@
 import { matchmakingDto } from "src/matchmaking/matchmaking.dto";
-import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
+import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 
 function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
@@ -57,6 +57,14 @@ if (ball.pos.x <= 0) {
 return ball;
 }
 
+export function checkGameEnd(state: any) {
+	if (state.score.playerOne >= SCORE_LIMIT)
+		return -1
+	if (state.scale.playerTwo >= SCORE_LIMIT)
+		return -2
+	return 1
+}
+
 function resetBall(side : number) {
     
     var today = new Date()
@@ -82,12 +90,14 @@ function resetBall(side : number) {
 export function createGameState() {
     return {
         leftPlayer : {
+			pongReply: 0,
             pos: {
                 x: STARTINGPOS_LEFT_X,
                 y: BACK_WIN_HEIGHT / 2
             }
         },
         rightPlayer : {
+			pongReply: 0,
             pos: {
                 x: STARTINGPOS_RIGHT_X,
                 y: BACK_WIN_HEIGHT / 2

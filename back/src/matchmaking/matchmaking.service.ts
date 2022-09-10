@@ -29,6 +29,19 @@ export class MatchmakingService {
       }
     }
   }
+  
+  handlePong(sender: string) {
+	for (const elem of this.currentMatches) {
+		if (elem.playerOne.socket === sender) {
+		elem.playerOne.pongReply = 0;
+		return;
+		}
+		if (elem.playerTwo.socket === sender) {
+		elem.playerTwo.pongReply = 0;
+		return;
+		}
+	}
+}
 
   async joinMatchmaking(payload: joinMatchmakingDto): Promise<matchmakingDto> {
 	let newUserInMatchmaking = addUserMatchmakingList(payload, this.matchmakingList)

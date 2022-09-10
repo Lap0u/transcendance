@@ -42,4 +42,10 @@ export class SocketGateway
       
       return data;
     }
+
+  @SubscribeMessage(`pong`)
+  handlePong(
+    @ConnectedSocket() client: Socket): any {
+      this.matchmakingService.handlePong(client.id)
+    }
 }
