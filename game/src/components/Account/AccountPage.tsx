@@ -14,55 +14,24 @@ function ButtonChangeUsername(props : any) {
 	const [username, changeUsername] = useState("");
 
 
-	async function validateUsername() : Promise<boolean> {
-		console.log("verrif username");
-		if  (!/^[a-z0-9]/.test(username)){
-			alert("Your username must begin with a lowercase alphanumeric character.");
-			return false;
-		}
-		if  (!/^[a-z0-9._-]+$/.test(username)){
-			alert("Your username must contains only alphanumeric dot or hyphen and not contain uppercases.");
-			return false;
-		}
-		if (username.length < 4 || username.length > 11){
-			alert("Your username must contains  between 4 and 11 character");
-			return false;
-		}
-		console.log("prevvvvv", props.prevUsername)
-		if (username === props.prevUsername){
-			alert("Please provide an username differnent from your current one");
-			return false;
-		}
-		await axios.get(`${BACK_URL}/account/username/validate/${username}`,  {withCredentials:true })
-		.then((response) => {
-			if (response.data === false){
-				alert("Sorry this username is already use, please choose an other");
-				return false;
-			}
-		})
-		.catch((error) => {
-			handleErrors(error);
-		})
-		return true;
-	}
-
 	async function newUsername(e : any) {
 		changeUsername(e.target.value);
 		clearInput.current = e.target.value;
 	}
 	async function updateUsername() {
 
-		const isUsernameOk : boolean = await validateUsername();
-		if (!isUsernameOk)
-			return;
-		if (window.confirm("Change your username?") === false)
-			return;
-		await axios.post(`${BACK_URL}/account/username/`, {newUsername :username}, {
+		await axios.post(`${BACK_URL}/account/username/`, {newUsername :username, oldUsername: props.prevUsername}, {
 			withCredentials:true ,
 			method: "post",
 			headers: {}
 		})
 		.then(function (response) {
+			if (response.data.ok === false){
+				alert(response.data.msg);
+				return;
+			}
+			if (window.confirm("Change your username?") === false)
+				return;
 			props.refresh(username);
 			clearInput.current = "";
 		})

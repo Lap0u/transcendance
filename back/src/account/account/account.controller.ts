@@ -79,16 +79,20 @@ export class AccountController {
   @Post('username')
   @UseGuards(AuthenticatedGuard)
   async changeUsername(@Req() req: Request, @Body() data: any) {
-    const { newUsername } = data;
+    const { newUsername, oldUsername } = data;
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return this.usersService.changeUsername(id, newUsername);
-  }
-
-  @Get('username/validate/:username')
-  @UseGuards(AuthenticatedGuard)
-  async validateUsername(@Param() params) {
-    return this.usersService.checkDuplicateUsername(params.username);
+    const { ok1, msg1 } = await this.usersService.checkUsernameFormat(
+      newUsername,
+      oldUsername,
+    );
+    if (!ok1) return { ok: ok1, msg: msg1 };
+    const { ok2, msg2 } = await this.usersService.checkDuplicateUsername(
+      newUsername,
+    );
+    if (!ok2) return { ok: ok2, msg: msg2 };
+    await this.usersService.changeUsername(id, newUsername);
+    return { ok: true, msg: '' };
   }
 
   @Get('/all')

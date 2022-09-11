@@ -35,10 +35,44 @@ export class AccountService {
     });
   }
 
+  async checkUsernameFormat(username: string, prevUsername: string) {
+    if (username === prevUsername) {
+      return {
+        ok1: false,
+        msg1: 'Please provide a different username from your current one.',
+      };
+    }
+    if (!/^[a-z0-9]/.test(username)) {
+      return {
+        ok1: false,
+        msg1: 'Your username must begin with a lowercase alphanumeric character.',
+      };
+    }
+    if (!/^[a-z0-9._-]+$/.test(username)) {
+      return {
+        ok1: false,
+        msg1: 'Your username must contains only alphanumeric dot or hyphen and not contain uppercases.',
+      };
+    }
+    if (username.length < 4 || username.length > 11) {
+      return {
+        ok1: false,
+        msg1: 'Your username must contains  between 4 and 11 character',
+      };
+    }
+    return {
+      ok1: true,
+      msg1: '',
+    };
+  }
+
   async checkDuplicateUsername(accountUsername: string) {
     const user = await this.usersRepository.findOneBy({ accountUsername });
-    if (user == null) return true;
-    return false;
+    if (user == null) return { ok: true, msg: '' };
+    return {
+      ok2: false,
+      msg2: 'This username is already token please choose an other',
+    };
   }
 
   async getAllAccount() {
