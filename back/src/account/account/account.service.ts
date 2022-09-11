@@ -36,6 +36,7 @@ export class AccountService {
   }
 
   async checkUsernameFormat(username: string, prevUsername: string) {
+	  console.log("username", username, "old", prevUsername);
     if (username === prevUsername) {
       return {
         ok1: false,

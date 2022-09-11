@@ -42,8 +42,17 @@ export class AccountController {
   @UseInterceptors(FileInterceptor('file'))
   async changeAvatar(
     @Req() req: Request,
+    @Res() res: Response,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (
+      file.mimetype != 'image/jpg' &&
+      file.mimetype != 'image/jpeg' &&
+      file.mimetype != 'image/png'
+    ) {
+      res.sendStatus(400);
+      return;
+    }
     const session_info = req.session['passport'];
     const { id } = session_info.user;
     return await this.usersService.changeAvatar(
