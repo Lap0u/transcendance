@@ -46,7 +46,11 @@ export class AccountController {
   ) {
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return this.usersService.changeAvatar(id, file.buffer, file.originalname);
+    return await this.usersService.changeAvatar(
+      id,
+      file.buffer,
+      file.originalname,
+    );
   }
 
   @Get('avatar/:id')

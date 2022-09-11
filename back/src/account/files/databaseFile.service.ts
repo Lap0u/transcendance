@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { fileURLToPath } from 'url';
 import DatabaseFile from '../entities/files.entity';
 
 @Injectable()
@@ -10,10 +11,15 @@ export class DatabaseFilesService {
     private databaseFilesRepository: Repository<DatabaseFile>,
   ) {}
 
-  async uploadDatabaseFile(dataBuffer: Buffer, filename: string) {
+  async uploadDatabaseFile(
+    dataBuffer: Buffer,
+    filename: string,
+    isDefault = false,
+  ) {
     const newFile = await this.databaseFilesRepository.create({
       filename,
       data: dataBuffer,
+      isDefault,
     });
     await this.databaseFilesRepository.save(newFile);
     return newFile;
@@ -27,8 +33,9 @@ export class DatabaseFilesService {
     return file;
   }
 
-  async getFileByName(filename: string) {
-    const file = await this.databaseFilesRepository.findOneBy({ filename });
+  async getDefaultFile() {
+    const isDefault = true;
+    const file = await this.databaseFilesRepository.findOneBy({ isDefault });
     if (!file) {
       throw new NotFoundException();
     }
@@ -48,6 +55,16 @@ export class DatabaseFilesService {
     const buffer = await fs.readFileSync(
       process.cwd() + '/src/account/avatar/loup.png',
     );
-    this.uploadDatabaseFile(buffer, 'default');
+    this.uploadDatabaseFile(buffer, 'default', true);
+  }
+
+  async deleteFileById(id: string) {
+    const file = await this.databaseFilesRepository.findOneBy({ id });
+    if (!file) {
+      throw new NotFoundException();
+      return;
+    }
+    if (file.isDefault === true) return;
+    await this.databaseFilesRepository.delete({ id });
   }
 }

@@ -110,9 +110,9 @@ function ButtonChangeAvatar(props : any) {
 			headers: {}
 		})
 		.then(function (response) {
-		  console.log("newww aavvaaaatar", response);
 		  clickButton('none');
 		  props.refresh(response.data.avatar);
+		  console.log("refressshh avatar", response.data.avatar);
 		  e.target.value= null;
 		})
 		.catch((error) => {

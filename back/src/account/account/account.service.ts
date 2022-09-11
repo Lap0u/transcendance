@@ -11,18 +11,20 @@ export class AccountService {
     private usersRepository: Repository<Accounts>,
     private readonly databaseFilesService: DatabaseFilesService,
   ) {}
-
   async changeAvatar(id: string, imageBuffer: Buffer, filename: string) {
     const user = await this.usersRepository.findOneBy({ id });
+    const odlAvatarId = user.avatar;
     const file = await this.databaseFilesService.uploadDatabaseFile(
       imageBuffer,
       filename,
     );
     const avatar = file.id;
-    return this.usersRepository.save({
+    const updated_user = await this.usersRepository.save({
       ...user, // existing fields
       avatar,
     });
+    await this.databaseFilesService.deleteFileById(odlAvatarId);
+    return updated_user;
   }
 
   async changeUsername(id: string, username: string) {
