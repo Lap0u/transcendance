@@ -12,6 +12,7 @@ export type DatabaseFile = {
   id: string;
   filename: string;
   data: Uint8Array;
+  isDefault: boolean;
 };
 
 export type Done = (err: Error, user: Accounts) => void;
