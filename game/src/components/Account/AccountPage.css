@@ -54,10 +54,10 @@
 	text-align: center;
 	line-height: 0;
 	width: 120px;
-	height: max(2.2vh, 17px);
+	height: max(2.2vh, 15px);
 	position: relative;
 	color: var(--text-1);
-	bottom: 5px;
+	bottom: 0px;
 	left: 130px;
 }
 
@@ -139,11 +139,11 @@
 	z-index: 4;
 	position:relative;
 	line-height: 4vh;
-	height: max(2.2vh, 17px);
+	height: max(2.2vh, 10px);
 	width: 120px;
 	background-color: var(--light-grey); 
 	padding: 0;
-	bottom: 5px;
+	bottom: 0px;
 	right: 140px;
 
 }
