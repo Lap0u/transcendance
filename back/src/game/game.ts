@@ -54,10 +54,14 @@ function gameLoop(
   }
   curGames.playerOne.pongReply++
   curGames.playerTwo.pongReply++
-  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) //playerOne left -> playerTWo won
-  	return -2
-  if(curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) //playerTwo left -> playerOne won
- 	return -1 
+  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) { //playerOne left -> playerTWo won
+	console.log(curGames, 'ping2')
+	return -2
+  }
+  if(curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {//playerTwo left -> playerOne won
+  		console.log(curGames, 'ping1')
+ 		return -1
+	}
   const ball = state.ball;
 
   const dirX = Math.sin(ball.angle * (Math.PI / 180));

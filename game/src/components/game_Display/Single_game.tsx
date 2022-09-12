@@ -10,8 +10,10 @@ import axios from "axios";
 import { BACK_URL } from "../constants";
 import WinnerBox from "./WinnerBox";
 import './Single_game.css'
+import QuitBox from "./quitBox";
 
 const SingleGame = (props : any) => {
+	const [quitPressed, setQuitPressed] = useState(false);
     const canvasRef = useRef(null);
     const [newState, setNewState] = useState();
 	const [haveWinner, setHaveWinner] = useState(false)
@@ -84,12 +86,23 @@ const SingleGame = (props : any) => {
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
     }
+
 	window.addEventListener('resize', handleResize)
+	useEffect(() => {
+		window.addEventListener('keyup', function(event){
+			console.log("esc")
+			if (event.repeat || winner.current != "")
+				return
+			if (event.key === "Escape")
+				setQuitPressed(!quitPressed)
+		})
+	})
     return (
         <div className="canvas-div">
             <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
+			{quitPressed && <QuitBox setQuitPressed={setQuitPressed} quitPressed={quitPressed} />}
 			{winner.current !== "" && < WinnerBox message={winner.current} />}
         </div>
     )
