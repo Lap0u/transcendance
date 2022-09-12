@@ -9,6 +9,7 @@ import handleErrors from "../RequestErrors/handleErrors";
 import axios from "axios";
 import { BACK_URL } from "../constants";
 import WinnerBox from "./WinnerBox";
+import './Single_game.css'
 
 const SingleGame = (props : any) => {
     const canvasRef = useRef(null);
@@ -48,7 +49,6 @@ const SingleGame = (props : any) => {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        canvas.style.margin = "auto "
         if (window.innerHeight * 2 > window.innerWidth) {
             canvas.style.width = "90vw";
             canvas.style.height = "45vw";
@@ -86,8 +86,8 @@ const SingleGame = (props : any) => {
     }
 	window.addEventListener('resize', handleResize)
     return (
-        <div>
-            <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
+        <div className="canvas-div">
+            <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
 			{winner.current !== "" && < WinnerBox message={winner.current} />}

@@ -1,9 +1,32 @@
 .container-box {
-	position: fixed;
-	top: 15vh;
-	bottom: 15vh;
-	right: 30vw;
-	left: 30vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
 	border-color: white;
-	background-color: rebeccapurple;
+	/* background-color: rebeccapurple; */
+}
+
+@media screen and (max-aspect-ratio:2/1) {
+	.container-box {
+		background-color: aqua;
+		width: 40vw;
+		height: 20vw;
+		/* right: 30vw;
+		left: 30vw;
+		top: 10vw;
+		bottom: 10vw;  */
+	}
+}
+
+@media screen and (min-aspect-ratio:2/1) {
+	.container-box {
+		background-color: yellow;
+		/* right: 60vh; */
+		/* left: 60vh; */
+		width: 80vh;
+		height: 40vh;
+		/* top: 20vh; */
+		/* bottom: 20vh; */
+	}
 }
