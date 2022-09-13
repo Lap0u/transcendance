@@ -8,11 +8,17 @@ import { useLocation, useNavigate } from "react-router-dom"
 import handleErrors from "../RequestErrors/handleErrors";
 import axios from "axios";
 import { BACK_URL } from "../constants";
+import WinnerBox from "./WinnerBox";
+import './Single_game.css'
+import QuitBox from "./quitBox";
 
 const SingleGame = (props : any) => {
+	const [quitPressed, setQuitPressed] = useState(false);
     const canvasRef = useRef(null);
     const [newState, setNewState] = useState();
-    const pageLocation = useLocation();
+	const [haveWinner, setHaveWinner] = useState(false)
+    const winner = useRef("")
+	const pageLocation = useLocation();
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
     const navigate = useNavigate();
@@ -37,6 +43,10 @@ const SingleGame = (props : any) => {
 	  }
 	checkValidId()
     const socket = props.socket;
+	function handleResize() {
+        updateGame(newState)
+	}
+
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
         canvas.width = window.innerWidth;
@@ -62,22 +72,38 @@ const SingleGame = (props : any) => {
 		socket.on(`winner`, handleWinner)
         setNewState(newState)
     })
+
 	function sendPong() {
 		socket.emit(`pong`)
 	}
-	function handleWinner(status: number) {
-		let winner
-		status === -1? winner = "One" : winner = "Two"
-		console.log(`Player ${winner} won`)
+	function handleWinner(answer: any) {       
+        if (winner.current === "") {
+			winner.current = answer.gameResult
+			setHaveWinner(true)
+            setNewState(answer.gameState)
+		}
 	}
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
     }
+
+	window.addEventListener('resize', handleResize)
+	useEffect(() => {
+		window.addEventListener('keyup', function(event){
+			console.log("esc")
+			if (event.repeat || winner.current != "")
+				return
+			if (event.key === "Escape")
+				setQuitPressed(!quitPressed)
+		})
+	})
     return (
-        <div>
-            <canvas ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
+        <div className="canvas-div">
+            <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
+			{quitPressed && <QuitBox setQuitPressed={setQuitPressed} quitPressed={quitPressed} />}
+			{winner.current !== "" && < WinnerBox message={winner.current} />}
         </div>
     )
 }
