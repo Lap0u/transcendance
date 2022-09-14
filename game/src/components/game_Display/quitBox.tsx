@@ -10,7 +10,7 @@ const QuitBox = ({setQuitPressed, quitPressed} : quitBoxProps) => {
 	return (
 		<div className="container-box">
 			<Button type="link" onClick={() => setQuitPressed(!quitPressed)}>Resume game</Button>
-			<Button type="primary" danger onClick={() => navigate("/", {replace: true})}>Forfeit Game</Button>
+			<Button type="primary" danger onClick={() => navigate("/menu", {replace: true})}>Forfeit Game</Button>
 		</div>
 	)
 }

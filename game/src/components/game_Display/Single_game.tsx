@@ -49,6 +49,8 @@ const SingleGame = (props : any) => {
 
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
+		if (canvas === null)
+			return
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         if (window.innerHeight * 2 > window.innerWidth) {
@@ -71,6 +73,11 @@ const SingleGame = (props : any) => {
 		socket.on(`ping`, sendPong)
 		socket.on(`winner`, handleWinner)
         setNewState(newState)
+		return () => {
+			socket.off(gameSocket)
+			socket.off('ping')
+			socket.off('winner')
+		}
     })
 
 	function sendPong() {
