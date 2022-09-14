@@ -1,0 +1,8 @@
+.customization-grid {
+	background-color: aqua;
+	display: flex;
+	width: 20vw;
+	flex-direction: column;
+	margin-top: 3vh;
+	justify-content: space-between;
+}

@@ -22,9 +22,10 @@ const SingleGame = (props : any) => {
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
     const navigate = useNavigate();
-    
 	const socket = props.socket;
 
+	const gameCustomization	 : any = pageLocation.state
+	console.log('custom', gameCustomization)
 	function searchId(allGames : any){
 		for (const game of allGames) {
 			if (game.gameId === gameSocket)
@@ -83,15 +84,6 @@ const SingleGame = (props : any) => {
         updateGame(newState)
 	}
 	window.addEventListener('resize', handleResize)
-
-	//quitMenu
-	// function handleEscape(event: any) {
-	// 	console.log('keypress', event.key)
-	// 		if (event.repeat || winner.current !== "")
-	// 			return
-	// 		if (event.key === "Escape")
-	// 			setQuitPressed(!quitPressed)
-	// }
 
 	useEffect(() => {
 		const handleEscape = (event : any) => {

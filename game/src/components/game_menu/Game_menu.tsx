@@ -5,7 +5,10 @@ import axios from 'axios';
 import { GameList, game } from './GameList';
 import { BACK_URL } from '../constants';
 import handleErrors from '../RequestErrors/handleErrors';
+import { BlockPicker } from 'react-color';
+import Customization from '../customization/Customization';
 
+const customGameValues : any= {id: 'lol', color: 2}
 const GameMenu = (props : any) => {
   
   const [inMatchmaking, setMatchmaking] = useState(false);
@@ -33,7 +36,6 @@ const GameMenu = (props : any) => {
   const getMatchesList = async () => {
     try {
         const res = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
-        console.log('list', res);
         setGamesList(res.data)
       }
       catch(e) {
@@ -53,8 +55,7 @@ const GameMenu = (props : any) => {
     if (!inMatchmaking)
       quitMatchmakingList(socket.id)
     socket.on(`matchFound:`, (gameId : string) => {
-      console.log('gameId', gameId)
-      navigate(`/singleGame/${gameId}`);
+      navigate(`/singleGame/${gameId}`, {state: customGameValues});
     });
   }, [inMatchmaking, socket, navigate]);
 
@@ -65,6 +66,7 @@ const GameMenu = (props : any) => {
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
       </Space>
+	  <Customization />
       <GameList games={gamesList} />
     </div>
   );

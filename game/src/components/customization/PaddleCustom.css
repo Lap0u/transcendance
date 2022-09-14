@@ -1,0 +1,13 @@
+.paddle-container {
+	background-color: blueviolet;
+	display: flex;
+	justify-content: space-evenly;
+	border: 2px solid black;
+}
+
+.paddle {
+	background-color: white;
+	border: 0;
+	width: 30%;
+	height: 25px;
+}
