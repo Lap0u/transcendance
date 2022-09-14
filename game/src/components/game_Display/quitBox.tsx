@@ -1,16 +1,14 @@
 import { Button } from 'antd'
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './winnerBox.css'
 
 const QuitBox = ({setQuitPressed, quitPressed} : quitBoxProps) => {
     const navigate = useNavigate();
-	function disableQuitBox() {
-		setQuitPressed(!quitPressed);
-	}
 	return (
 		<div className="container-box">
 			<Button type="link" onClick={() => setQuitPressed(!quitPressed)}>Resume game</Button>
-			<Button type="primary" danger onClick={() => navigate("/", {replace: true})}>Forfeit Game</Button>
+			<Button type="primary" danger onClick={() => navigate("/menu", {replace: true})}>Forfeit Game</Button>
 		</div>
 	)
 }

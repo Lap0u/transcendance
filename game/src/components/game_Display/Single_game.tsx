@@ -23,14 +23,15 @@ const SingleGame = (props : any) => {
     const gameSocket = path[path.length - 1]
     const navigate = useNavigate();
     
+	const socket = props.socket;
+
 	function searchId(allGames : any){
 		for (const game of allGames) {
 			if (game.gameId === gameSocket)
-				return true
+			return true
 		}
 		return false
 	}
-
 	const checkValidId = async () => {
 		try {
 			const gameSarray = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
@@ -41,14 +42,14 @@ const SingleGame = (props : any) => {
 			handleErrors(e);
 		}
 	  }
+	
 	checkValidId()
-    const socket = props.socket;
-	function handleResize() {
-        updateGame(newState)
-	}
 
+	//Game Display
     function updateGame (gameState: any) {
         const canvas : any = canvasRef.current
+		if (canvas === null)
+			return
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         if (window.innerHeight * 2 > window.innerWidth) {
@@ -66,37 +67,61 @@ const SingleGame = (props : any) => {
         drawScore(context, gameState.score)
     }
 
-    useEffect(() => {
-        socket.on(gameSocket, handleGameState)
-		socket.on(`ping`, sendPong)
-		socket.on(`winner`, handleWinner)
-        setNewState(newState)
-    })
-
-	function sendPong() {
-		socket.emit(`pong`)
-	}
+	//winMenu
 	function handleWinner(answer: any) {       
         if (winner.current === "") {
 			winner.current = answer.gameResult
-			setHaveWinner(true)
+			setHaveWinner(!haveWinner)
             setNewState(answer.gameState)
 		}
 	}
     function handleGameState(gameState : any) {// any !
         requestAnimationFrame(() => updateGame(gameState))     
     }
-
+	//Resize
+	function handleResize() {
+        updateGame(newState)
+	}
 	window.addEventListener('resize', handleResize)
+
+	//quitMenu
+	// function handleEscape(event: any) {
+	// 	console.log('keypress', event.key)
+	// 		if (event.repeat || winner.current !== "")
+	// 			return
+	// 		if (event.key === "Escape")
+	// 			setQuitPressed(!quitPressed)
+	// }
+
 	useEffect(() => {
-		window.addEventListener('keyup', function(event){
-			console.log("esc")
-			if (event.repeat || winner.current != "")
+		const handleEscape = (event : any) => {
+			console.log('keypress', event.key)
+			if (event.repeat || winner.current !== "")
 				return
 			if (event.key === "Escape")
 				setQuitPressed(!quitPressed)
-		})
-	})
+		}
+		window.addEventListener('keyup', handleEscape)
+		return () => {
+			window.removeEventListener('keyup', handleEscape)
+		}
+	}, [quitPressed])
+
+
+	function sendPong() {
+		socket.emit(`pong`)
+	}
+	useEffect(() => {
+        socket.on(gameSocket, handleGameState)
+		socket.on(`ping`, sendPong)
+		socket.on(`winner`, handleWinner)
+		return () => {
+			socket.off(gameSocket)
+			socket.off('ping')
+			socket.off('winner')
+		}
+    })
+
     return (
         <div className="canvas-div">
             <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
