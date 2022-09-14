@@ -80,6 +80,13 @@ const SingleGame = (props : any) => {
 		}
     })
 
+	function handleEscape(event: any) {
+		console.log('keypress', event.key)
+			if (event.repeat || winner.current !== "")
+				return
+			if (event.key === "Escape")
+				setQuitPressed(!quitPressed)
+	}
 	function sendPong() {
 		socket.emit(`pong`)
 	}
@@ -96,15 +103,9 @@ const SingleGame = (props : any) => {
 
 	window.addEventListener('resize', handleResize)
 	useEffect(() => {
-		window.addEventListener('keyup', function(event) {
-			console.log('keypress', event.key)
-			if (event.repeat || winner.current !== "")
-				return
-			if (event.key === "Escape")
-				setQuitPressed(!quitPressed)
-		})
+		window.addEventListener('keyup', handleEscape)
 		return () => {
-			window.removeEventListener('keyup', function(event){})
+			window.removeEventListener('keyup', handleEscape)
 		}
 	}, [quitPressed])
     return (
