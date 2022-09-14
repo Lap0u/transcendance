@@ -96,14 +96,17 @@ const SingleGame = (props : any) => {
 
 	window.addEventListener('resize', handleResize)
 	useEffect(() => {
-		window.addEventListener('keyup', function(event){
-			console.log("esc")
-			if (event.repeat || winner.current != "")
+		window.addEventListener('keyup', function(event) {
+			console.log('keypress', event.key)
+			if (event.repeat || winner.current !== "")
 				return
 			if (event.key === "Escape")
 				setQuitPressed(!quitPressed)
 		})
-	})
+		return () => {
+			window.removeEventListener('keyup', function(event){})
+		}
+	}, [quitPressed])
     return (
         <div className="canvas-div">
             <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
