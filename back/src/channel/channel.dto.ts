@@ -13,3 +13,8 @@ export class UpdateChannelDto {
   administratorsId: string[];
   usersId: string[];
 }
+
+export class UpdateChannelUserDto {
+  type: ChannelType;
+  password: string;
+}

@@ -24,8 +24,8 @@ const MessageContent = ({
     return (
       <div className="chat-window-mymessage-wrapper">
         <div className="chat-window-mymessage-username">
-          <Avatar src={defaultAvatar} />
-          {findUser.username}:
+          <Avatar src={BACK_URL + '/account/avatar/' + findUser.avatar} />
+          {findUser.accountUsername}:
         </div>
         <div className="chat-window-mymessage-content">{item.message}</div>
       </div>
@@ -35,8 +35,8 @@ const MessageContent = ({
   return (
     <div className="chat-window-othermessage-wrapper">
       <div className="chat-window-othermessage-username">
-        <Avatar src={defaultAvatar} />
-        {findUser.username}:
+        <Avatar src={BACK_URL + '/account/avatar/' + findUser.avatar} />
+        {findUser.accountUsername}:
       </div>
       <div className="chat-window-othermessage-content">{item.message}</div>
     </div>
@@ -47,7 +47,6 @@ const ChatContentWindow = ({
   currentUser,
   selectUser,
   users,
-  token,
   socket,
   selectedChannel,
 }: ChatContentWindowProps) => {
@@ -62,8 +61,7 @@ const ChatContentWindow = ({
         const getHistoryUrl = isUser
           ? `${BACK_URL}/chat/${selectUser?.id}`
           : `${BACK_URL}/chat/channel/${selectedChannel?.id}`;
-        const res = await axios.get(getHistoryUrl, {withCredentials:true },
-        );
+        const res = await axios.get(getHistoryUrl, { withCredentials: true });
         if (res.data) {
           setHistory(res.data);
           scrollToBottom();
@@ -75,6 +73,8 @@ const ChatContentWindow = ({
 
     if (selectUser || selectedChannel) {
       getHistory();
+    } else {
+      setHistory([]);
     }
   }, [selectUser, selectedChannel]);
 
@@ -108,7 +108,7 @@ const ChatContentWindow = ({
       const res = await axios.post(
         `${BACK_URL}/chat/${receiveId}`,
         { message: message },
-		{withCredentials:true },
+        { withCredentials: true }
       );
       if (res.data) {
         setHistory([...history, res.data]);
@@ -132,8 +132,8 @@ const ChatContentWindow = ({
     if (isUser) {
       return (
         <>
-          <Avatar src={defaultAvatar} />
-          {selectUser.username}
+          <Avatar src={BACK_URL + '/account/avatar/' + selectUser.avatar} />
+          {selectUser.accountUsername}
         </>
       );
     } else {
@@ -181,7 +181,6 @@ type ChatContentWindowProps = {
   currentUser: any;
   selectUser: any | null;
   users: any;
-  token: any;
   socket: any;
   selectedChannel: ChannelType | null;
 };

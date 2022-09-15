@@ -10,7 +10,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthenticatedGuard } from '../account/auth/guards';
-import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
+import {
+  CreateChannelDto,
+  UpdateChannelDto,
+  UpdateChannelUserDto,
+} from './channel.dto';
 import { Channel } from './channel.entity';
 import { ChannelService } from './channel.service';
 
@@ -41,5 +45,15 @@ export class ChannelController {
     @Body() body: UpdateChannelDto,
   ): Promise<Channel> {
     return this.service.updateChannel(channelId, body);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Put(':channelId/:addUserId')
+  updateChannelUsers(
+    @Param('channelId') channelId: string,
+    @Param('addUserId') addUserId: string,
+    @Body() body: UpdateChannelUserDto,
+  ): Promise<Channel> {
+    return this.service.updateChannelUsers(channelId, addUserId, body);
   }
 }

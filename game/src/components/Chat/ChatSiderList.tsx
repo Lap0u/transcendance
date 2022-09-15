@@ -1,14 +1,18 @@
 import {
   EditOutlined,
+  ExclamationCircleOutlined,
   PlusSquareOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { Button, Avatar } from 'antd';
-import { useState } from 'react';
+import { Button, Avatar, Input, Modal, message } from 'antd';
+import { useRef, useState } from 'react';
 import ChannelFormModal from './ChannelFormModal';
-import { ChannelType, CHAT_TYPE } from './const';
-import defaultAvatar from '../../assets/default-avatar.png';
+import { ChannelType, CHAT_TYPE, CHANNEL_TYPE } from './const';
 import ChannelManageUserModal from './ChannelManageUserModal';
+import { BACK_URL } from '../../global';
+import axios from 'axios';
+
+const { confirm } = Modal;
 
 const UserListItem = ({ user, setSelectUser }: any) => {
   return (
@@ -25,7 +29,8 @@ const UserListItem = ({ user, setSelectUser }: any) => {
       }}
       onClick={() => setSelectUser(user)}>
       <div>
-        <Avatar src={defaultAvatar} /> {user.username}
+        <Avatar src={BACK_URL + '/account/avatar/' + user.avatar} />{' '}
+        {user.accountUsername}
       </div>
     </div>
   );
@@ -42,8 +47,10 @@ const ChannelListItem = ({
   openEditChannel: (channel: ChannelType) => void;
   openSettingChannel: (channel: ChannelType) => void;
   currentUser: any;
-  setSelectedChannel: (channel: ChannelType) => void;
+  setSelectedChannel: (channel: ChannelType | null) => void;
 }) => {
+  const passwordRef = useRef<string>('');
+
   const editClick = (e: any) => {
     e.stopPropagation();
     openEditChannel(channel);
@@ -54,9 +61,68 @@ const ChannelListItem = ({
     openSettingChannel(channel);
   };
 
-  const findUser = channel.administratorsId.find(
+  const findAdmUser = channel.administratorsId.find(
     (admId: string) => admId === currentUser.id
   );
+
+  const findUser = channel.usersId.find((user) => user === currentUser.id);
+
+  const text = 'Are you sure to join this channel?';
+
+  const content = (
+    <div>
+      {channel.type === CHANNEL_TYPE.protected && (
+        <div>
+          <p>Please enter the password</p>
+          <Input
+            placeholder="password"
+            onChange={(e) => {
+              passwordRef.current = e.target.value;
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+
+  const onOkHandler = async () => {
+    if (channel.type === CHANNEL_TYPE.protected) {
+      if (passwordRef.current !== channel.password) {
+        message.error('Password incorrect!');
+        return;
+      }
+    }
+
+    const values = { type: channel.type, password: passwordRef.current };
+    try {
+      await axios.put(
+        `${BACK_URL}/channels/${channel.id}/${currentUser.id}`,
+        values,
+        { withCredentials: true, headers: {} }
+      );
+      setSelectedChannel(channel);
+      message.success('Join to channel successeful!');
+    } catch (error) {
+      message.error('Fail to join the channel!');
+    }
+  };
+
+  const showConfirm = () => {
+    confirm({
+      title: text,
+      icon: <ExclamationCircleOutlined />,
+      content: content,
+      onOk() {
+        console.log('Ok', passwordRef.current);
+        onOkHandler();
+        passwordRef.current = '';
+      },
+      onCancel() {
+        console.log('Cancel');
+        passwordRef.current = '';
+      },
+    });
+  };
 
   return (
     <div
@@ -70,10 +136,16 @@ const ChannelListItem = ({
         margin: 10,
         // border: '1px solid red',
       }}
-      onClick={() => setSelectedChannel(channel)}>
+      onClick={() => {
+        if (findUser) {
+          setSelectedChannel(channel);
+        } else {
+          setSelectedChannel(null);
+        }
+      }}>
       <div>{channel.channelName}</div>
       <div>
-        {findUser && (
+        {findAdmUser && (
           <Button
             style={{ marginRight: 5 }}
             icon={<EditOutlined />}
@@ -85,12 +157,16 @@ const ChannelListItem = ({
           <Button icon={<SettingOutlined />} onClick={settingClick} />
         )}
       </div>
+      <div>
+        {!findUser && (
+          <Button icon={<PlusSquareOutlined />} onClick={showConfirm} />
+        )}
+      </div>
     </div>
   );
 };
 
 const ChatSiderList = ({
-  token,
   chatType,
   setSelectUser,
   users,
@@ -141,7 +217,6 @@ const ChatSiderList = ({
       <ChannelFormModal
         isModalVisible={isChannelModalVisible}
         closeModal={closeChannelModal}
-        token={token}
         addNewChannel={addNewChannel}
         updateChannel={updateChannel}
         channel={selectedChannel}
@@ -151,7 +226,6 @@ const ChatSiderList = ({
         channel={selectedChannel}
         isOpen={isSettingModalVisible}
         handleCancel={closeChannelModal}
-        token={token}
       />
       {chatType === CHAT_TYPE.user && (
         <div style={{ height: '100%', overflow: 'scroll' }}>
@@ -168,7 +242,10 @@ const ChatSiderList = ({
         <>
           <div>
             <Button
-              onClick={() => setIsChannelModalVisible(true)}
+              onClick={() => {
+                setSelectedChannel(false);
+                setIsChannelModalVisible(true);
+              }}
               icon={<PlusSquareOutlined />}>
               Create channel
             </Button>
@@ -192,7 +269,6 @@ const ChatSiderList = ({
 };
 
 type ChatSiderListProps = {
-  token: any;
   chatType: string;
   setSelectUser: (user: any) => void;
   users: any;
@@ -200,7 +276,7 @@ type ChatSiderListProps = {
   channels: any;
   setChannels: any;
   selectedChannel: ChannelType | null;
-  setSelectedChannel: (channel: any) => void;
+  setSelectedChannel: (channel: any | null) => void;
 };
 
 export default ChatSiderList;
