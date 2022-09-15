@@ -5,15 +5,18 @@ import { useState } from 'react'
 
 const PaddleCustom = ({owner} : myProps) => {
 	const [hidePicker, setHidePicker] = useState(false)
-	
+	const [pickedColor, setPickedColor] = useState("#37d67a")
+	function handleColorChange(color : any, event : any) {
+		setPickedColor(color.hex)
+	}
 	return (
-		<Row justify="center" align="top" className="paddle-row">
+		<Row justify="center" align="middle" className="paddle-row">
 			<Col className='paddle' span={12}>
 				{owner} paddle
 			</Col>
 			<Col className='paddle' span={12}>
-				<button onClick={() => setHidePicker(!hidePicker)} className='my-paddle'></button>
-				{hidePicker && <BlockPicker />}
+				<button style={{backgroundColor: pickedColor}} onClick={() => setHidePicker(!hidePicker)} id='my-paddle'></button>
+				{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={pickedColor} />}
 			</Col>
 		</Row>
 	)
