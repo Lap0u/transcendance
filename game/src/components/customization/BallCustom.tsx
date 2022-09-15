@@ -3,11 +3,10 @@ import { useState } from 'react';
 import { BlockPicker } from 'react-color'
 import './BallCustom.css'
 
-const BallCustom = () => {
+const BallCustom = ({color, setColor} : any) => {
 	const [hidePicker, setHidePicker] = useState(false)
-	const [pickedColor, setPickedColor] = useState("#37d67a")
 	function handleColorChange(color : any, event : any) {
-		setPickedColor(color.hex)
+		setColor(color.hex)
 	}
 	return (
 		<Row justify="center" align="middle" className="ball-row">
@@ -15,8 +14,8 @@ const BallCustom = () => {
 				BallCustom
 			</Col>
 			<Col className='ball-col' span={12}>
-				<button style={{backgroundColor: pickedColor}} onClick={() => setHidePicker(!hidePicker)} className='my-ball'></button>
-				{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={pickedColor} />}
+				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} className='my-ball'></button>
+				{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
 			</Col>
 		</Row>
 	)

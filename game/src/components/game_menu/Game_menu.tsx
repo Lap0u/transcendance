@@ -5,16 +5,26 @@ import axios from 'axios';
 import { GameList, game } from './GameList';
 import { BACK_URL } from '../constants';
 import handleErrors from '../RequestErrors/handleErrors';
-import { BlockPicker } from 'react-color';
 import Customization from '../customization/Customization';
 
-const customGameValues : any= {id: 'lol', color: 2}
 const GameMenu = (props : any) => {
-  
-  const [inMatchmaking, setMatchmaking] = useState(false);
-  const [gamesList, setGamesList] = useState<game[]>([]);
-  const socket = props.socket;
+	
+	const [ownPaddleColor, setOwnPaddleColor] = useState("#37d67a")
+	const [opponentPaddleColor, setOpponentPaddleColor] = useState("#37d67a")
+	const [ballColor, setBallColor] = useState("#37d67a")
+	const [gameBackground, setGameBackground] = useState("#37d67a")
+	const [inMatchmaking, setMatchmaking] = useState(false);
+	const [gamesList, setGamesList] = useState<game[]>([]);
+	const socket = props.socket;
 	const navigate = useNavigate();
+
+  const customGameValues : any= {
+	myColor: ownPaddleColor,
+	opponentColor: opponentPaddleColor,
+	ballColor: ballColor,
+	background: gameBackground
+  }
+  
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
@@ -66,7 +76,10 @@ const GameMenu = (props : any) => {
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
       </Space>
-	  <Customization />
+	  <Customization ownPaddleColor={ownPaddleColor} setOwnPaddleColor={setOwnPaddleColor}
+	 	 opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
+	 	 ballColor={ballColor} setBallColor={setBallColor}
+		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
       <GameList games={gamesList} />
     </div>
   );
