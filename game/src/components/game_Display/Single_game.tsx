@@ -25,7 +25,6 @@ const SingleGame = (props : any) => {
 	const socket = props.socket;
 
 	const gameCustomization	 : any = pageLocation.state
-	console.log('custom', gameCustomization)
 	function searchId(allGames : any){
 		for (const game of allGames) {
 			if (game.gameId === gameSocket)
@@ -61,10 +60,10 @@ const SingleGame = (props : any) => {
             canvas.style.height = "90vh";
         }
         const context : any = canvas.getContext('2d')
-        drawBackground(context)
-        drawPlayBar(context, gameState.leftPlayer)
-        drawPlayBar(context, gameState.rightPlayer)
-        drawBall(context, gameState.ball)
+        drawBackground(context, gameCustomization.background)
+        drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
+        drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
+        drawBall(context, gameState.ball, gameCustomization.ballColor)
         drawScore(context, gameState.score)
     }
 
