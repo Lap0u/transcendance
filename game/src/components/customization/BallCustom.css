@@ -1,7 +1,17 @@
-.ball-container {
+.ball-row {
 	background-color: brown;
-	display: flex;
-	justify-content: space-evenly;
-	border: 2px solid black;
+}
+.ball-col {
+	background-color: white;
+	border: 2px solid pink;
+	text-align: center;
+	height: 3vw;
+}
 
+.my-ball {
+	width: 2.5vw;
+	height: 2.5vw;
+	border: 0;
+	border-radius: 100%;
+	background-color: blue;
 }

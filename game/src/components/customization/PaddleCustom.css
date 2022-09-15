@@ -1,13 +1,21 @@
-.paddle-container {
+.paddle-row {
 	background-color: blueviolet;
-	display: flex;
-	justify-content: space-evenly;
-	border: 2px solid black;
+	margin-bottom: 1.5vh;
 }
 
 .paddle {
 	background-color: white;
+	border: 2px solid pink;
+	text-align: center;
+	position: ;
+}
+
+.my-paddle {
+	width: 60%;
+	background-color: green;
+	height: 2vh;
 	border: 0;
-	width: 30%;
-	height: 25px;
+	position:relative;
+    top:50%;
+	bottom: 50%; 
 }

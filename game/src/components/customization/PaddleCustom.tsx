@@ -1,11 +1,21 @@
+import { Col, Row } from 'antd'
 import './PaddleCustom.css'
+import { BlockPicker } from 'react-color'
+import { useState } from 'react'
 
 const PaddleCustom = ({owner} : myProps) => {
+	const [hidePicker, setHidePicker] = useState(false)
+	
 	return (
-		<div className="paddle-container">
-			<p>{owner} paddle</p>
-			<button className='paddle'></button>
-		</div>
+		<Row justify="center" align="top" className="paddle-row">
+			<Col className='paddle' span={12}>
+				{owner} paddle
+			</Col>
+			<Col className='paddle' span={12}>
+				<button onClick={() => setHidePicker(!hidePicker)} className='my-paddle'></button>
+				{hidePicker && <BlockPicker />}
+			</Col>
+		</Row>
 	)
 }
 
