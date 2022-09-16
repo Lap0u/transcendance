@@ -14,8 +14,10 @@ const PaddleCustom = ({owner, color, setColor} : myProps) => {
 				{owner} paddle
 			</Col>
 			<Col className='paddle' span={12}>
-				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} id='my-paddle'></button>
-				{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
+				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} className='paddle-button'></button>
+				<div className='picker-div'>
+					{hidePicker && <BlockPicker className='my-picker' onChangeComplete={handleColorChange} color={color} />}
+				</div>
 			</Col>
 		</Row>
 	)

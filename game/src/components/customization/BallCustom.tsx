@@ -15,7 +15,9 @@ const BallCustom = ({color, setColor} : any) => {
 			</Col>
 			<Col className='ball-col' span={12}>
 				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} className='my-ball'></button>
-				{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
+				<div className='picker-div'>
+					{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
+				</div>
 			</Col>
 		</Row>
 	)

@@ -15,7 +15,9 @@ const BackgroundCustom = ({color, setColor} : myProps) => {
 			</Col>
 			<Col className='background' span={12}>
 				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} id='my-background'></button>
-				{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
+				<div className='picker-div'>
+					{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
+				</div>
 			</Col>
 		</Row>
 	)

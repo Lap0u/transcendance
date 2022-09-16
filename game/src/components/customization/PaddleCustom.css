@@ -9,11 +9,21 @@
 	text-align: center;
 }
 
-#my-paddle {
+.paddle-button {
 	width: 60%;
 	height: 2vh;
 	border: 0;
 	position:relative;
     top:50%;
 	bottom: 50%; 
+}
+
+.picker-div {
+	position: absolute;
+	z-index: 1;
+	left: 0; 
+	right: 0; 
+	margin-left: auto; 
+	margin-right: auto; 
+	width: 170px;
 }
