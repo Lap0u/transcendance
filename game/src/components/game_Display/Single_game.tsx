@@ -86,7 +86,6 @@ const SingleGame = (props : any) => {
 
 	useEffect(() => {
 		const handleEscape = (event : any) => {
-			console.log('keypress', event.key)
 			if (event.repeat || winner.current !== "")
 				return
 			if (event.key === "Escape")

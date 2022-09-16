@@ -1,10 +1,26 @@
 import { Col, Row } from 'antd'
 import './BackgroundCustom.css'
 import { BlockPicker } from 'react-color'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const BackgroundCustom = ({color, setColor} : myProps) => {
 	const [hidePicker, setHidePicker] = useState(false)
+
+
+	useEffect(() => {
+		const handleEscape = (event : any) => {
+			if (event.repeat)
+				return
+			if (event.key === "Escape")
+				setHidePicker(false)
+		}
+		window.addEventListener('keyup', handleEscape)
+		return () => {
+			window.removeEventListener('keyup', handleEscape)
+		}
+	}, [hidePicker])
+
+
 	function handleColorChange(color : any, event : any) {
 		setColor(color.hex)
 	}

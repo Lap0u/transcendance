@@ -1,12 +1,31 @@
 import { Col, Row } from 'antd'
 import './PaddleCustom.css'
 import { BlockPicker } from 'react-color'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const PaddleCustom = ({owner, color, setColor} : myProps) => {
-	const [hidePicker, setHidePicker] = useState(false)
+const PaddleCustom = ({others, compPicker, setCompPicker, owner, color, setColor} : myProps) => {
+
+	useEffect(() => {
+		const handleEscape = (event : any) => {
+			if (event.repeat)
+				return
+			if (event.key === "Escape")
+				setCompPicker(false)
+		}
+		window.addEventListener('keyup', handleEscape)
+		return () => {
+			window.removeEventListener('keyup', handleEscape)
+		}
+	}, [compPicker])
+
 	function handleColorChange(color : any, event : any) {
 		setColor(color.hex)
+	}
+	function updatePicker() {
+		console.log('other', others)
+		if (others === false){
+			setCompPicker(!compPicker)
+		}
 	}
 	return (
 		<Row justify="center" align="middle" className="paddle-row">
@@ -14,9 +33,9 @@ const PaddleCustom = ({owner, color, setColor} : myProps) => {
 				{owner} paddle
 			</Col>
 			<Col className='paddle' span={12}>
-				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} className='paddle-button'></button>
+				<button style={{backgroundColor: color}} onClick={() => updatePicker()} className='paddle-button'></button>
 				<div className='picker-div'>
-					{hidePicker && <BlockPicker className='my-picker' onChangeComplete={handleColorChange} color={color} />}
+					{compPicker && <BlockPicker className='my-picker' onChangeComplete={handleColorChange} color={color} />}
 				</div>
 			</Col>
 		</Row>
@@ -24,6 +43,9 @@ const PaddleCustom = ({owner, color, setColor} : myProps) => {
 }
 
 type myProps = {
+	others: boolean,
+	compPicker: boolean,
+	setCompPicker: any,
 	owner: string,
 	color: string,
 	setColor: any

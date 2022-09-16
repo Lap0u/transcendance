@@ -1,10 +1,24 @@
 import { Col, Row } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BlockPicker } from 'react-color'
 import './BallCustom.css'
 
 const BallCustom = ({color, setColor} : any) => {
 	const [hidePicker, setHidePicker] = useState(false)
+
+	useEffect(() => {
+		const handleEscape = (event : any) => {
+			if (event.repeat)
+				return
+			if (event.key === "Escape")
+				setHidePicker(false)
+		}
+		window.addEventListener('keyup', handleEscape)
+		return () => {
+			window.removeEventListener('keyup', handleEscape)
+		}
+	}, [hidePicker])
+
 	function handleColorChange(color : any, event : any) {
 		setColor(color.hex)
 	}
