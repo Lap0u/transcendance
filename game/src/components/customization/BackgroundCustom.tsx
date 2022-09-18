@@ -1,28 +1,31 @@
 import { Col, Row } from 'antd'
 import './BackgroundCustom.css'
 import { BlockPicker } from 'react-color'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-const BackgroundCustom = ({color, setColor} : myProps) => {
-	const [hidePicker, setHidePicker] = useState(false)
-
+const BackgroundCustom = ({others, compPicker, setCompPicker, color, setColor} : myProps) => {
 
 	useEffect(() => {
 		const handleEscape = (event : any) => {
 			if (event.repeat)
 				return
 			if (event.key === "Escape")
-				setHidePicker(false)
+				setCompPicker(false)
 		}
 		window.addEventListener('keyup', handleEscape)
 		return () => {
 			window.removeEventListener('keyup', handleEscape)
 		}
-	}, [hidePicker])
-
+	}, [compPicker])
 
 	function handleColorChange(color : any, event : any) {
 		setColor(color.hex)
+	}
+	function updatePicker() {
+		console.log('other', others)
+		if (others === true){
+			setCompPicker(!compPicker)
+		}
 	}
 	return (
 		<Row justify="center" align="middle" className="background-row">
@@ -30,9 +33,9 @@ const BackgroundCustom = ({color, setColor} : myProps) => {
 				Background
 			</Col>
 			<Col className='background' span={12}>
-				<button style={{backgroundColor: color}} onClick={() => setHidePicker(!hidePicker)} id='my-background'></button>
+				<button style={{backgroundColor: color}} onClick={() => updatePicker()} className='my-background'></button>
 				<div className='picker-div'>
-					{hidePicker && <BlockPicker onChangeComplete={handleColorChange} color={color} />}
+					{compPicker && <BlockPicker className='my-picker' onChangeComplete={handleColorChange} color={color} />}
 				</div>
 			</Col>
 		</Row>
@@ -40,8 +43,10 @@ const BackgroundCustom = ({color, setColor} : myProps) => {
 }
 
 type myProps = {
+	others: boolean,
+	compPicker: boolean,
+	setCompPicker: any,
 	color: string,
 	setColor: any
 }
-
 export default BackgroundCustom

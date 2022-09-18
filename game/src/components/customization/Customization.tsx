@@ -14,10 +14,10 @@ ballColor, setBallColor, gameBackground, setGameBackground} : customProps) => {
 	console.log("opp", opponentPicker)
 	return (
 		<div className="customization-grid">
-			<PaddleCustom others={!opponentPicker && !ballPicker && backgroundPicker} compPicker={ownPicker} setCompPicker={setOwnPicker} owner={'Your'} color={ownPaddleColor} setColor={setOwnPaddleColor}/>
-			<PaddleCustom others={!ownPicker && !ballPicker && backgroundPicker} compPicker={opponentPicker} setCompPicker={setOpponentPicker} owner={'Enemy'} color={opponentPaddleColor} setColor={setOpponentPaddleColor}/>
-			<BallCustom color={ballColor} setColor={setBallColor}/>
-			<BackgroundCustom color={gameBackground} setColor={setGameBackground} />
+			<PaddleCustom others={!opponentPicker && !ballPicker && !backgroundPicker} compPicker={ownPicker} setCompPicker={setOwnPicker} owner={'Your'} color={ownPaddleColor} setColor={setOwnPaddleColor}/>
+			<PaddleCustom others={!ownPicker && !ballPicker && !backgroundPicker} compPicker={opponentPicker} setCompPicker={setOpponentPicker} owner={'Enemy'} color={opponentPaddleColor} setColor={setOpponentPaddleColor}/>
+			<BallCustom others={!ownPicker && !opponentPicker && !backgroundPicker} compPicker={ballPicker} setCompPicker={setBallPicker} color={ballColor} setColor={setBallColor}/>
+			<BackgroundCustom others={!ownPicker && !opponentPicker && !ballPicker} compPicker={backgroundPicker} setCompPicker={setBackgroundPicker} color={gameBackground} setColor={setGameBackground} />
 		</div>
 	)
 }

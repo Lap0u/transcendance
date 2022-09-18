@@ -1,7 +1,7 @@
 import { Col, Row } from 'antd'
 import './PaddleCustom.css'
 import { BlockPicker } from 'react-color'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 const PaddleCustom = ({others, compPicker, setCompPicker, owner, color, setColor} : myProps) => {
 
@@ -23,7 +23,7 @@ const PaddleCustom = ({others, compPicker, setCompPicker, owner, color, setColor
 	}
 	function updatePicker() {
 		console.log('other', others)
-		if (others === false){
+		if (others === true){
 			setCompPicker(!compPicker)
 		}
 	}
