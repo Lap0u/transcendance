@@ -1,0 +1,9 @@
+.canvas-div {
+	margin-right: 50vw;
+	margin-top: 21vh;
+	position: relative;
+}
+
+.myCanvas {
+	background-color: red;
+}

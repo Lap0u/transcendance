@@ -22,9 +22,9 @@ const SingleGame = (props : any) => {
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
     const navigate = useNavigate();
-    
 	const socket = props.socket;
 
+	const gameCustomization	 : any = pageLocation.state
 	function searchId(allGames : any){
 		for (const game of allGames) {
 			if (game.gameId === gameSocket)
@@ -60,10 +60,10 @@ const SingleGame = (props : any) => {
             canvas.style.height = "90vh";
         }
         const context : any = canvas.getContext('2d')
-        drawBackground(context)
-        drawPlayBar(context, gameState.leftPlayer)
-        drawPlayBar(context, gameState.rightPlayer)
-        drawBall(context, gameState.ball)
+        drawBackground(context, gameCustomization.background)
+        drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
+        drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
+        drawBall(context, gameState.ball, gameCustomization.ballColor)
         drawScore(context, gameState.score)
     }
 
@@ -84,18 +84,8 @@ const SingleGame = (props : any) => {
 	}
 	window.addEventListener('resize', handleResize)
 
-	//quitMenu
-	// function handleEscape(event: any) {
-	// 	console.log('keypress', event.key)
-	// 		if (event.repeat || winner.current !== "")
-	// 			return
-	// 		if (event.key === "Escape")
-	// 			setQuitPressed(!quitPressed)
-	// }
-
 	useEffect(() => {
 		const handleEscape = (event : any) => {
-			console.log('keypress', event.key)
 			if (event.repeat || winner.current !== "")
 				return
 			if (event.key === "Escape")
