@@ -7,6 +7,7 @@ import { BACK_URL } from '../constants';
 import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
 import GamePreview from './GamePreview';
+import './Game_menu.css'
 
 const GameMenu = (props : any) => {
 	
@@ -82,8 +83,11 @@ const GameMenu = (props : any) => {
 	 	 ballColor={ballColor} setBallColor={setBallColor}
 		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
       <GameList games={gamesList} />
-	  <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
-	   ballColor={ballColor} backgroundColor ={gameBackground} />
+      <div className='preview-box'>
+        <div>Live game preview</div>
+	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
+        ballColor={ballColor} backgroundColor ={gameBackground} />
+      </div>
     </div>
   );
 };
