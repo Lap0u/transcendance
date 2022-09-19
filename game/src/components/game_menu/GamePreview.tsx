@@ -36,8 +36,8 @@ const GamePreview = ({ownColor, opponentColor, ballColor, backgroundColor} : pre
 	window.addEventListener('resize', handleResize)
 
 	return (
-		<div className="canvas-div">
-			<canvas className="myCanvas" ref={canvasRef} >
+		<div className="prev-canvas-div">
+			<canvas className="prev-canvas" ref={canvasRef} >
 				There should be the canvas of the full game
 			</canvas>
 		</div>

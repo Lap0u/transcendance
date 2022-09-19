@@ -1,9 +1,14 @@
-.canvas-div {
+.prev-canvas-div {
 	margin-right: 50vw;
 	margin-top: 21vh;
 	position: relative;
 }
 
-.myCanvas {
+.prev-canvas {
 	background-color: red;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
 }
+
