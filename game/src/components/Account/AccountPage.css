@@ -8,9 +8,9 @@
 	padding: none;
 }
 
-.account-page{
-	text-align: center;
-
+.home-button {
+	position: relative;
+	margin: 10px;
 }
 
 .account-info ul{
@@ -145,5 +145,34 @@
 	padding: 0;
 	bottom: 5px;
 	right: 140px;
+
+}
+
+.two-auth .two-auth-form{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+	z-index: 5;
+	background-color:rgb(201, 199, 199);
+	text-align: center;
+	color:white;
+	width: 250px;
+	height: 120px;
+}
+.two-auth .two-auth-form button{
+	color:var(--text-1);
+}
+.two-auth .button-activate-two-auth{
+	color:var(--text-1);
+	float:right;
+	position: relative;
+	bottom: 27px;
+	line-height: 2vh;
+}
+.two-auth .input-email{
+	background-color: white;
+	color: black;
+	line-height: 2.5vh;
 
 }

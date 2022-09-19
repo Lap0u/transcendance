@@ -22,6 +22,7 @@ import { AccountModule } from './account/account/account.module';
 import { HttpModule } from '@nestjs/axios';
 import DatabaseFile from './account/entities/files.entity';
 import { DatabaseFileModule } from './account/files/databaseFile.module';
+import { twoFactorAuthModule } from './account/auth/twoFactorAuth/twoFactorAuth.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { DatabaseFileModule } from './account/files/databaseFile.module';
     }),
     AuthModule,
     ChatModule,
+    twoFactorAuthModule,
     SocketModule,
     ChannelModule,
     MatchmakingModule,
