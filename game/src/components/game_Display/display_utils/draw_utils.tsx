@@ -1,6 +1,6 @@
 import {
     BACK_WIN_HEIGHT,
-} from '../constants'
+} from '../../constants'
 
 export function getMousePosY(event: any, canvas: any) {
     var rect = canvas.getBoundingClientRect();

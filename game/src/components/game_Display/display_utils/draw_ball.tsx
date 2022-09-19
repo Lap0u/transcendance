@@ -2,7 +2,7 @@ import {
     BACK_WIN_WIDTH,
     BACK_WIN_HEIGHT,
     BACK_BALL_SIZE,
-} from '../constants'
+} from '../../constants'
 import { ballType } from './game.dto'
 
 export const drawBall = (context: any, ball : ballType, color: string) => {

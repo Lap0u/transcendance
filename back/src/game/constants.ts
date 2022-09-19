@@ -1,6 +1,6 @@
 export const BACK_WIN_WIDTH = 1000;
 export const BACK_WIN_HEIGHT = 500;
-export const FRAME_RATE = 400; //data sent FRAME_RATE time per second
+export const FRAME_RATE = 10; //data sent FRAME_RATE time per second
 export const GOAL_DELAY = FRAME_RATE / 2;
 export const BACK_BALL_SIZE = 6;
 export const DEFAULT_BALL_SPEED = 1;

@@ -1,7 +1,7 @@
 import {
     BACK_WIN_WIDTH,
     BACK_WIN_HEIGHT,
-} from '../constants'
+} from '../../constants'
 import { playerType } from './game.dto'
 
 export function drawPlayBar (context: any, player: playerType, color: string) {

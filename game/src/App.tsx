@@ -19,7 +19,7 @@ const BACK_URL = 'http://localhost:4000';
 const socket = io(BACK_URL).connect();
 
 function App() {
-  return (
+	return (
     <div id="wholepage">
       <BrowserRouter>
         <Routes>
@@ -30,7 +30,7 @@ function App() {
           <Route path="/menu" element={<GameMenu socket={socket} />} />
           <Route
             path="/singleGame/:id"
-            element={<SingleGame socket={socket} />}
+            element={<SingleGame socket={socket}/>}
           />
 		  <Route path = "/error403" element={<Disconnected/>} />
 		  <Route path = "/error500" element={<InternalError/>} />

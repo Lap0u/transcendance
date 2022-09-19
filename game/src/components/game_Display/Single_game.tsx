@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { drawBackground } from "./draw_background";
-import { drawBall } from "./draw_ball";
-import { drawPlayBar } from "./draw_paddle";
-import { drawScore } from "./draw_score";
-import { getMousePosY, sendNewBar } from "./draw_utils";
+import { drawBackground } from "./display_utils/draw_background";
+import { drawBall } from "./display_utils/draw_ball";
+import { drawPlayBar } from "./display_utils/draw_paddle";
+import { drawScore } from "./display_utils/draw_score";
+import { getMousePosY, sendNewBar } from "./display_utils/draw_utils";
 import { useLocation, useNavigate } from "react-router-dom"
 import handleErrors from "../RequestErrors/handleErrors";
 import axios from "axios";
@@ -11,6 +11,7 @@ import { BACK_URL } from "../constants";
 import WinnerBox from "./WinnerBox";
 import './Single_game.css'
 import QuitBox from "./quitBox";
+import { drawPowerup } from "./powerups/displayPowerup";
 
 const SingleGame = (props : any) => {
 	const [quitPressed, setQuitPressed] = useState(false);
@@ -24,6 +25,7 @@ const SingleGame = (props : any) => {
     const navigate = useNavigate();
 	const socket = props.socket;
 
+	console.log('updated')
 	const gameCustomization	 : any = pageLocation.state
 	function searchId(allGames : any){
 		for (const game of allGames) {
@@ -65,6 +67,7 @@ const SingleGame = (props : any) => {
         drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
         drawBall(context, gameState.ball, gameCustomization.ballColor)
         drawScore(context, gameState.score)
+		drawPowerup(context)
     }
 
 	//winMenu
