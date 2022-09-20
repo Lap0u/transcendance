@@ -2,8 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import handleErrors from "../RequestErrors/handleErrors";
-
-
+import './TwoFactorAuth.css'
 const BACK_URL = "http://localhost:4000";
 
 
@@ -50,18 +49,16 @@ export function EmailConfirm() {
 
 
 	return (
-		<div>
-            <h2 className="title">Your have to confirm your Email to validate your account</h2>
-               <div className="card-body">
+		<div className='two-auth'>
+            <h3 className="two-auth-title">Your have to confirm your Email to validate your account</h3>
+               <div >
                    <form method="POST" id="form">
-                           <div className="name">Please provide the confirmation code you received on your email adress.
-                               <input className="input--style-6" type="text" id="code" onChange={(e) => newCode(e)} 
+                           <div className="two-auth-info">Please provide the confirmation code you received on your email adress.
+						   <br/><input className="two-fa-input-email" type='text' id="code" onChange={(e) => newCode(e)} 
 							    value={clearInput.current}/>
+								   <button className="confirm-button" type="submit" onClick={() => codeForm()} >Confirm</button>
                            </div>
                    </form>
-               <div className="card-footer">
-                   <button className="btn btn--radius-2 btn--blue-2" type="submit" onClick={() => codeForm()} >Confirm</button>
-               </div>
            </div>
        </div>
 	)

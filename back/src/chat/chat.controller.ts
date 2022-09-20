@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from '../account/auth/guards';
+import { AuthenticatedGuard, JwtTwoFactorGuard } from '../account/auth/guards';
 import { Chat } from './chat.entity';
 import { ChatService } from './chat.service';
 
@@ -24,6 +24,7 @@ export class ChatController {
   // }
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Get(':anotherId')
   getChatHistoryWithAnotherUserById(
     @Request() req: any,
@@ -36,6 +37,7 @@ export class ChatController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Get('/channel/:channelId')
   getChannelChatHistoryByChannelId(
     @Param('channelId') channelId: string,
@@ -44,6 +46,7 @@ export class ChatController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Post(':anotherId')
   sendMessage(
     @Request() req: any,
