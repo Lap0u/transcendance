@@ -176,3 +176,8 @@
 	line-height: 2.5vh;
 
 }
+
+.email .info{
+	font-size: min(4vh, 15px);
+	bottom: 26px;
+}

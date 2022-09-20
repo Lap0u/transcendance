@@ -1,10 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Next, Req, Res, UseGuards } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { Response, Request, NextFunction, response, request} from "express";
-import { IntraUserDetails } from '../utils/types';
-import { Auth42Guard, AuthenticatedGuard, JwtTwoFactorGuard, NotAuthenticatedGuard} from './guards/index';
+import { Response, Request, NextFunction} from "express";
+import { Auth42Guard, AuthenticatedGuard, JwtTwoFactorGuard} from './guards/index';
 import { TwoFactorAuthenticationService } from './twoFactorAuth/twoFactorAuth.service';
 
 @Controller('auth')

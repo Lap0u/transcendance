@@ -12,18 +12,6 @@ export class AccountService {
     private readonly databaseFilesService: DatabaseFilesService,
   ) {}
 
-/*  async setTwoFactorAuthenticationSecret(secret: string, id: string) {
-    return this.usersRepository.update(id, {
-      twoFactorAuthenticationSecret: secret,
-    });
-  }
-
-  async turnOnTwoFactorAuthentication(userId: string) {
-    return this.usersRepository.update(userId, {
-      isTwoFactorAuthenticationEnabled: true,
-    });
-  }*/
-
   async changeAvatar(id: string, imageBuffer: Buffer, filename: string) {
     const user = await this.usersRepository.findOneBy({ id });
     const odlAvatarId = user.avatar;

@@ -11,7 +11,7 @@ import {
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import { Request, response, Response } from 'express';
+import { Request, Response } from 'express';
 import { TwoFactorAuthenticationService } from './twoFactorAuth.service';
 import {
   AuthenticatedGuard,
@@ -82,7 +82,7 @@ export class TwoFactorAuthenticationController {
     const user = await this.authService.findUser(id);
     const twoFactorAuthenticationCode = data.twoFactorAuthenticationCode;
     const isCodeValid =
-      this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+      await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
         twoFactorAuthenticationCode,
         user,
       );

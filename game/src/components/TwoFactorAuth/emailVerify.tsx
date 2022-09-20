@@ -5,9 +5,6 @@ import handleErrors from "../RequestErrors/handleErrors";
 
 
 const BACK_URL = "http://localhost:4000";
-const FRONT_URL = "http://localhost:3000";
-
-
 
 
 export function EmailConfirm() {
@@ -37,11 +34,12 @@ export function EmailConfirm() {
 			headers: {"Content-type": "application/json"}
 		})
 		.then(res => {
+			console.log("confirm",res);
 			   if (res.data.status === 401) {
 					 alert(res.data.message)
 				} else {
-					alert( "Your account has been verified, proceed to the signin page");
-					nav('/2fa');
+					alert( "Your account has been verified, two factor authentification activated");
+					nav('/')
 			   }
 		   })
 		.catch((error) => {

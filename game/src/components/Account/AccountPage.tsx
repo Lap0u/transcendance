@@ -150,11 +150,11 @@ function TwoAuth(props: any){
 
 
 	return(
+		<div>
 		<ul className="two-auth">
 			<i className='info-type'>Two-auth factor </i>
 			{props.isActivate ?
 			<div>
-			<i className='info'>{props.email}</i>
 			<button className='button-activate-two-auth' onClick={() => turnOffTwoAth()}>Desactivate</button>
 			</div>
 			:
@@ -164,6 +164,13 @@ function TwoAuth(props: any){
 			</div>
 			}
 		</ul>
+		{props.isActivate ?
+		<ul className = 'email'>
+			<i className='info-type'>Email</i>
+			<i className='info'>{props.email}</i>
+		</ul>
+		: null}
+		</div>
 	)
 }
 const AccountInfo = () => {

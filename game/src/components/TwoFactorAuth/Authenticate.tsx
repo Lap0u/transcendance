@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import handleErrors from "../RequestErrors/handleErrors";
 
 const BACK_URL = "http://localhost:4000";
-const FRONT_URL = "http://localhost:3000";
 
 export function TwoAuthAutenticatePage(){
 	const nav = useNavigate(); 
