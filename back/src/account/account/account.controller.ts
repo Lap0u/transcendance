@@ -12,7 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from '../auth/guards';
+import { AuthenticatedGuard, JwtTwoFactorGuard } from '../auth/guards';
 import { Response, Request } from 'express';
 import { AccountService } from './account.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -30,6 +30,7 @@ export class AccountController {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   getAccountInfo(@Req() req: Request) {
     const session_info = req.session['passport'];
     const user_info = session_info.user;
@@ -39,6 +40,7 @@ export class AccountController {
 
   @Post('avatar')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @UseInterceptors(FileInterceptor('file'))
   async changeAvatar(
     @Req() req: Request,
@@ -55,15 +57,18 @@ export class AccountController {
     }
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return await this.usersService.changeAvatar(
+    const body = await this.usersService.changeAvatar(
       id,
       file.buffer,
       file.originalname,
     );
+    res.send(body);
+    return body;
   }
 
   @Get('avatar/:id')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getAvatar(
     @Param() params,
     @Res({ passthrough: true }) response: Response,
@@ -81,12 +86,14 @@ export class AccountController {
 
   @Get('avatar')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getNullAvatar() {
     return;
   }
 
   @Post('username')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async changeUsername(@Req() req: Request, @Body() data: any) {
     const { newUsername, oldUsername } = data;
     const session_info = req.session['passport'];
@@ -106,6 +113,7 @@ export class AccountController {
 
   @Get('/all')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getAllAccounts() {
     const users = await this.usersService.getAllAccount();
     return users;

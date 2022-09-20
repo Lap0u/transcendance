@@ -11,6 +11,19 @@ export class AccountService {
     private usersRepository: Repository<Accounts>,
     private readonly databaseFilesService: DatabaseFilesService,
   ) {}
+
+/*  async setTwoFactorAuthenticationSecret(secret: string, id: string) {
+    return this.usersRepository.update(id, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
+  async turnOnTwoFactorAuthentication(userId: string) {
+    return this.usersRepository.update(userId, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
+  }*/
+
   async changeAvatar(id: string, imageBuffer: Buffer, filename: string) {
     const user = await this.usersRepository.findOneBy({ id });
     const odlAvatarId = user.avatar;
@@ -24,7 +37,7 @@ export class AccountService {
       avatar,
     });
     await this.databaseFilesService.deleteFileById(odlAvatarId);
-    return updated_user;
+    return await updated_user;
   }
 
   async changeUsername(id: string, username: string) {
@@ -36,7 +49,6 @@ export class AccountService {
   }
 
   async checkUsernameFormat(username: string, prevUsername: string) {
-	  console.log("username", username, "old", prevUsername);
     if (username === prevUsername) {
       return {
         ok1: false,
