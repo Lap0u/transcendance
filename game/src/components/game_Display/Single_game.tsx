@@ -20,7 +20,6 @@ const SingleGame = (props : any) => {
     const [newState, setNewState] = useState();
 	const [haveWinner, setHaveWinner] = useState(false)
     const winner = useRef("")
-	const image = useRef(false)
 	const pageLocation = useLocation();
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
@@ -28,10 +27,9 @@ const SingleGame = (props : any) => {
 	const socket = props.socket;
 
 	const powerupSprite = new Image();
-	powerupSprite.onload = () => {
-		console.log('image loaded')
-		image.current = true
-	}
+	// powerupSprite.onload = () => {
+	// 	console.log('image loaded')
+	// }
 	powerupSprite.src = myImg
 	
 	console.log('updated')
@@ -76,7 +74,7 @@ const SingleGame = (props : any) => {
         drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
         drawBall(context, gameState.ball, gameCustomization.ballColor)
         drawScore(context, gameState.score)
-		drawPowerup(context, powerupSprite)
+		drawPowerup(context, powerupSprite, gameState.powerup)
     }
 
 	//winMenu
