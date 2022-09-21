@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import handleErrors from "../RequestErrors/handleErrors";
 
 const BACK_URL = "http://localhost:4000";
-const FRONT_URL = "http://localhost:3000";
 
 export function TwoAuthAutenticatePage(){
 	const nav = useNavigate(); 
@@ -24,7 +23,9 @@ export function TwoAuthAutenticatePage(){
 		clearInput.current = e.target.value;
 	}
 
-	async function codeForm() {
+	async function codeForm(e : any) {
+
+		e.preventDefault();
 
 		await axios.post(`${BACK_URL}/2fa/authenticate`, {twoFactorAuthenticationCode : code}, {
 			withCredentials:true ,
@@ -67,20 +68,18 @@ export function TwoAuthAutenticatePage(){
 
 
 	return (
-		<div>
-            <h2 className="title">A code has been send to your email adress, please provide the code you received to authenticate</h2>
+		<div className='two-auth'>
+            <h2 className="two-auth-title">Your have to validate your authentification</h2>
                <div className="card-body">
-                   <form method="POST" id="form">
-                           <div className="name">Code
-                               <input className="input--style-6" type="text" id="code" onChange={(e) => newCode(e)} 
+                   <form  onSubmit={(e) => codeForm(e)} id="form">
+                           <div className="two-auth-info">Please provide the code your reseived on your email adress.
+                               <br/><input className="two-fa-input-email" type="text" id="code" onChange={(e) => newCode(e)} 
 							    value={clearInput.current}/>
+								 <button className="confirm-button" type="submit" >Confirm</button>
                            </div>
                    </form>
-               <div >
-                   <button className="btn btn--radius-2 btn--blue-2" type="submit" onClick={() => codeForm()} >Confirm</button>
-               </div>
-			   <div>
-				   <p>If you did not receive any cide click here to resend mail (this might take few minuts to receive the mail, don't forget to check your spam)</p>
+			   <div className='resend'>
+				   <i >If you did not receive any code click here to resend mail (this might take few minuts to receive the mail, don't forget to check your spam)   </i>
                    <button className="btn btn--radius-2 btn--blue-2" type="submit" onClick={() => resend()} >Resend</button>
                </div>
            </div>
