@@ -12,6 +12,7 @@ import WinnerBox from "./WinnerBox";
 import './Single_game.css'
 import QuitBox from "./quitBox";
 import { drawPowerup } from "./powerups/displayPowerup";
+import myImg from '../../assets/spreadsheet.png';
 
 const SingleGame = (props : any) => {
 	const [quitPressed, setQuitPressed] = useState(false);
@@ -19,12 +20,20 @@ const SingleGame = (props : any) => {
     const [newState, setNewState] = useState();
 	const [haveWinner, setHaveWinner] = useState(false)
     const winner = useRef("")
+	const image = useRef(false)
 	const pageLocation = useLocation();
     const path = pageLocation.pathname.split('/')
     const gameSocket = path[path.length - 1]
     const navigate = useNavigate();
 	const socket = props.socket;
 
+	const powerupSprite = new Image();
+	powerupSprite.onload = () => {
+		console.log('image loaded')
+		image.current = true
+	}
+	powerupSprite.src = myImg
+	
 	console.log('updated')
 	const gameCustomization	 : any = pageLocation.state
 	function searchId(allGames : any){
@@ -67,7 +76,7 @@ const SingleGame = (props : any) => {
         drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
         drawBall(context, gameState.ball, gameCustomization.ballColor)
         drawScore(context, gameState.score)
-		drawPowerup(context)
+		drawPowerup(context, powerupSprite)
     }
 
 	//winMenu
