@@ -17,7 +17,7 @@ export function resetPowerup() {
     return {
         value: -1, //crash si on essaye de le draw
         status: 0,
-        delay: 200,
+        delay: 10,
         target: 0,
         pos: {
             x: 0,
@@ -43,10 +43,14 @@ function handleDelay(powerup: any) {
 const checkCollision = (p1x : number, p1y : number, r1 : number, p2x : number, p2y : number, r2 : number) => {
     return ((r1 + r2) ** 2 > (p1x - p2x) ** 2 + (p1y - p2y) ** 2)
 }
+
 function handlePickUp(ball: any, powerup : any) {
-    if (checkCollision(ball.pos.x, ball.pos.y, BACK_BALL_SIZE, 
-        powerup.pos.x, powerup.pos.y, POWERUPSCALE))
-        exit()
+    if (checkCollision(ball.pos.x, ball.pos.y, BACK_BALL_SIZE / 2.5, 
+        powerup.pos.x, powerup.pos.y, POWERUPSCALE / 2.5)) {
+            console.log(ball);
+            console.log(powerup);
+            exit()
+        }
 }
 
 export function handlePowerUp(ball: any, powerup: any) {

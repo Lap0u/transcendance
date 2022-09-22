@@ -15,5 +15,5 @@ export const SCORE_LIMIT = 20;
 export const RECONNECTION_DELAY = 2 //seconds
 export const POWERUPDELAY = FRAME_RATE * 7 // un nouveau powerup apparait toutes les 7 secondes
 export const POWERUPDURATION = FRAME_RATE * 5 //temps actif d'un powerup
-export const POWERUPSCALE = 23
+export const POWERUPSCALE = 34
 export const STOPWATCHSCALE = 12
