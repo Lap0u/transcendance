@@ -70,11 +70,11 @@ const SingleGame = (props : any) => {
         }
         const context : any = canvas.getContext('2d')
         drawBackground(context, gameCustomization.background)
+        drawScore(context, gameState.score)
+		drawPowerup(context, powerupSprite, gameState.powerup)
         drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
         drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
         drawBall(context, gameState.ball, gameCustomization.ballColor)
-        drawScore(context, gameState.score)
-		drawPowerup(context, powerupSprite, gameState.powerup)
     }
 
 	//winMenu
