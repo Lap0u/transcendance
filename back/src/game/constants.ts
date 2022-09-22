@@ -1,3 +1,5 @@
+export const BACK_URL = "http://localhost:4000";
+
 export const BACK_WIN_WIDTH = 1000;
 export const BACK_WIN_HEIGHT = 500;
 export const FRAME_RATE = 400; //data sent FRAME_RATE time per second
@@ -13,3 +15,5 @@ export const SCORE_LIMIT = 20;
 export const RECONNECTION_DELAY = 2 //seconds
 export const POWERUPDELAY = FRAME_RATE * 7 // un nouveau powerup apparait toutes les 7 secondes
 export const POWERUPDURATION = FRAME_RATE * 5 //temps actif d'un powerup
+export const POWERUPSCALE = 23
+export const STOPWATCHSCALE = 12

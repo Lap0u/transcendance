@@ -1,5 +1,6 @@
 import { matchesDto } from "src/matchmaking/matches.dto";
 import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, POWERUPDELAY, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
+import { resetPowerup } from "./powerUp";
 
 function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
@@ -121,16 +122,7 @@ export function handleEndGame(gameStatus: number, socket : any, playerOne: strin
 
 export function createGameState() {
     return {
-        powerup : {
-            value: 0,
-            status: 0,
-            delay: 200,
-            target: 0,
-            pos: {
-                x: 0,
-                y: 0,
-            }
-        },
+        powerup : resetPowerup(),
         leftPlayer : {
             scale: 1,
 			pongReply: 0,

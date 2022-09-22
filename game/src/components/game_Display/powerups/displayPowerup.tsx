@@ -1,9 +1,7 @@
-import { BACK_WIN_HEIGHT, BACK_WIN_WIDTH } from "../../constants"
+import { BACK_WIN_HEIGHT, BACK_WIN_WIDTH, POWERUPSCALE, STOPWATCHSCALE } from "../../constants"
 
-const POWERUPSCALE = 23
-const STOPWATCHSCALE = 12
 function drawStopwatch(context : any, sprite: ImageBitmap, target : number) {
-	const puwidth = context.canvas.width / (STOPWATCHSCALE * 2	)
+	const puwidth = context.canvas.width / (STOPWATCHSCALE * 2)
 	const puheight = context.canvas.height / STOPWATCHSCALE
 	let xpos = 0
 	if (target === 0) { //left player has power up
@@ -17,8 +15,8 @@ function drawStopwatch(context : any, sprite: ImageBitmap, target : number) {
 }
 
 export function drawPowerup(context : any, powerupSprite : any, powerState : any) {
-	const puwidth = context.canvas.width / (POWERUPSCALE * 2)
-	const puheight = context.canvas.height / POWERUPSCALE
+	const puwidth = POWERUPSCALE * context.canvas.width / BACK_WIN_WIDTH
+	const puheight = POWERUPSCALE * context.canvas.height / BACK_WIN_HEIGHT
 	const puX = powerState.pos.x * context.canvas.width / BACK_WIN_WIDTH - puwidth / 2
 	const puY = powerState.pos.y * context.canvas.height / BACK_WIN_HEIGHT - puheight / 2
 	if (powerState.status === 1)
