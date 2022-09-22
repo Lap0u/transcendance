@@ -74,7 +74,9 @@ function NavigationBarre(props : any) {
 	<ul className='nav-barre'>
   		<li className='onglet-nav'><a href="/account"> Account </a></li>
   		<li className='onglet-nav'><a href="/chat"> Chat </a></li>
+		<li className='onglet-nav'><a href="/scores"> Score </a></li>
   		<li className='onglet-nav'><a href="/logout"> Logout </a></li>
+		
 	</ul>
 	: null}
 	</div>

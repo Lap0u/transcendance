@@ -25,8 +25,9 @@ export function EmailConfirm() {
 		clearInput.current = e.target.value;
 	}
 
-	async function codeForm() {
+	async function codeForm(e :any) {
 
+		e.preventDefault();
 		await axios.post(`${BACK_URL}/2fa/verify`, {code : code}, {
 			withCredentials:true ,
 			method: "post",
@@ -52,14 +53,14 @@ export function EmailConfirm() {
 		<div className='two-auth'>
             <h3 className="two-auth-title">Your have to confirm your Email to validate your account</h3>
                <div >
-                   <form method="POST" id="form">
+                   <form onSubmit={(e) => codeForm(e)} id="form">
                            <div className="two-auth-info">Please provide the confirmation code you received on your email adress.
 						   <br/><input className="two-fa-input-email" type='text' id="code" onChange={(e) => newCode(e)} 
 							    value={clearInput.current}/>
-								   <button className="confirm-button" type="submit" onClick={() => codeForm()} >Confirm</button>
+								   <button className="confirm-button" type="submit" >Confirm</button>
                            </div>
                    </form>
            </div>
        </div>
 	)
-}		
+}	

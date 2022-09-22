@@ -27,7 +27,6 @@ export class ScoresService {
   }
 
   async addScore(scores: ScoresDto) {
-	  console.log("scoooore", scores);
     const newScore = this.scoresRepo.create(scores);
     return this.scoresRepo.save(newScore);
   }

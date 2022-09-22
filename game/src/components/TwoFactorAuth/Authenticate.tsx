@@ -23,7 +23,9 @@ export function TwoAuthAutenticatePage(){
 		clearInput.current = e.target.value;
 	}
 
-	async function codeForm() {
+	async function codeForm(e : any) {
+
+		e.preventDefault();
 
 		await axios.post(`${BACK_URL}/2fa/authenticate`, {twoFactorAuthenticationCode : code}, {
 			withCredentials:true ,
@@ -69,11 +71,11 @@ export function TwoAuthAutenticatePage(){
 		<div className='two-auth'>
             <h2 className="two-auth-title">Your have to validate your authentification</h2>
                <div className="card-body">
-                   <form method="POST" id="form">
+                   <form  onSubmit={(e) => codeForm(e)} id="form">
                            <div className="two-auth-info">Please provide the code your reseived on your email adress.
                                <br/><input className="two-fa-input-email" type="text" id="code" onChange={(e) => newCode(e)} 
 							    value={clearInput.current}/>
-								 <button className="confirm-button" type="submit" onClick={() => codeForm()} >Confirm</button>
+								 <button className="confirm-button" type="submit" >Confirm</button>
                            </div>
                    </form>
 			   <div className='resend'>
