@@ -9,7 +9,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class TwoFactorAuthenticationService {

@@ -5,13 +5,28 @@ import axios from 'axios';
 import { GameList, game } from './GameList';
 import { BACK_URL } from '../constants';
 import handleErrors from '../RequestErrors/handleErrors';
+import Customization from '../customization/Customization';
+import GamePreview from './GamePreview';
+import './Game_menu.css'
 
 const GameMenu = (props : any) => {
-  
-  const [inMatchmaking, setMatchmaking] = useState(false);
-  const [gamesList, setGamesList] = useState<game[]>([]);
-  const socket = props.socket;
+	
+	const [ownPaddleColor, setOwnPaddleColor] = useState("#ffffff")
+	const [opponentPaddleColor, setOpponentPaddleColor] = useState("#ffffff")
+	const [ballColor, setBallColor] = useState("#ffffff")
+	const [gameBackground, setGameBackground] = useState("#000000")
+	const [inMatchmaking, setMatchmaking] = useState(false);
+	const [gamesList, setGamesList] = useState<game[]>([]);
+	const socket = props.socket;
 	const navigate = useNavigate();
+
+  const customGameValues : any= {
+	myColor: ownPaddleColor,
+	opponentColor: opponentPaddleColor,
+	ballColor: ballColor,
+	background: gameBackground
+  }
+  
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
@@ -33,7 +48,6 @@ const GameMenu = (props : any) => {
   const getMatchesList = async () => {
     try {
         const res = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
-        console.log('list', res);
         setGamesList(res.data)
       }
       catch(e) {
@@ -53,8 +67,7 @@ const GameMenu = (props : any) => {
     if (!inMatchmaking)
       quitMatchmakingList(socket.id)
     socket.on(`matchFound:`, (gameId : string) => {
-      console.log('gameId', gameId)
-      navigate(`/singleGame/${gameId}`);
+      navigate(`/singleGame/${gameId}`, {state: customGameValues});
     });
   }, [inMatchmaking, socket, navigate]);
 
@@ -65,7 +78,16 @@ const GameMenu = (props : any) => {
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
       </Space>
+	  <Customization ownPaddleColor={ownPaddleColor} setOwnPaddleColor={setOwnPaddleColor}
+	 	 opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
+	 	 ballColor={ballColor} setBallColor={setBallColor}
+		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
       <GameList games={gamesList} />
+      <div className='preview-box'>
+        <div>Live game preview</div>
+	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
+        ballColor={ballColor} backgroundColor ={gameBackground} />
+      </div>
     </div>
   );
 };

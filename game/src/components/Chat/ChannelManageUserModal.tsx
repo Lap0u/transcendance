@@ -13,7 +13,6 @@ const ChannelManageUserModal = ({
   channel,
   isOpen,
   handleCancel,
-  token,
 }: ChannelManageUserProps) => {
   const [inChannelUsers, setInChannelUsers] = useState<string[]>([]);
   const [channelAdmins, setChannelAdmins] = useState<string[]>([]);
@@ -35,8 +34,8 @@ const ChannelManageUserModal = ({
     values.usersId = inChannelUsers;
     values.administratorsId = channelAdmins;
     const res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
-	  withCredentials:true, 
-      headers: { },
+      withCredentials: true,
+      headers: {},
     });
     handleCancel();
   };
@@ -132,7 +131,6 @@ type ChannelManageUserProps = {
   channel: ChannelType | null;
   isOpen: boolean;
   handleCancel: () => void;
-  token: string | null;
 };
 
 export default ChannelManageUserModal;

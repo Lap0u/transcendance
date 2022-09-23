@@ -7,7 +7,6 @@ import { BACK_URL } from '../../global';
 const ChannelFormModal = ({
   isModalVisible,
   closeModal,
-  token,
   addNewChannel,
   updateChannel,
   channel = null,
@@ -36,18 +35,18 @@ const ChannelFormModal = ({
       let res = null;
       if (channel) {
         res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
-		  withCredentials:true, 
-          headers: { },
+          withCredentials: true,
+          headers: {},
         });
         message.success('Channel edited!');
-        updateChannel(res.data);
+        // updateChannel(res.data);
       } else {
         res = await axios.post(`${BACK_URL}/channels`, values, {
-		  withCredentials:true,
+          withCredentials: true,
           headers: {},
         });
         message.success('New channel created!');
-        addNewChannel(res.data);
+        // addNewChannel(res.data);
       }
     } catch (e) {
       message.error(`Une erreur s'est passé ${e}`);
@@ -119,7 +118,6 @@ const ChannelFormModal = ({
 type channelForModalProps = {
   isModalVisible: boolean;
   closeModal: () => void;
-  token: string;
   addNewChannel: (newChannel: ChannelType) => void;
   updateChannel: (channel: ChannelType) => void;
   channel?: ChannelType | null;

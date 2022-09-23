@@ -23,7 +23,6 @@ function Accueil() {
 	const [isLoginActive, setIsLogin] = useState(false);
 	const [ok, setOk] = useState(false);
 	const [user, setUser] = useState({account_id: ""});
-
 	useEffect(() => {
 		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })

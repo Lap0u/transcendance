@@ -1,7 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SocketService } from 'src/socket/socket.service';
 import { Repository, ArrayContains } from 'typeorm';
-import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
+import {
+  CreateChannelDto,
+  UpdateChannelDto,
+  UpdateChannelUserDto,
+} from './channel.dto';
 import { Channel, ChannelType } from './channel.entity';
 
 @Injectable()
@@ -9,15 +14,23 @@ export class ChannelService {
   constructor(
     @InjectRepository(Channel)
     private channelsRepository: Repository<Channel>,
+    private socketService: SocketService,
   ) {}
 
   getChannelsById(userId: string): Promise<Channel[]> {
-    return this.channelsRepository.findBy({
-      usersId: ArrayContains([userId]),
+    return this.channelsRepository.find({
+      where: [
+        { usersId: ArrayContains([userId]) },
+        { type: ChannelType.PUBLIC },
+        { type: ChannelType.PROTECTED },
+      ],
     });
   }
 
-  createChannel(userId: string, payload: CreateChannelDto): Promise<Channel> {
+  async createChannel(
+    userId: string,
+    payload: CreateChannelDto,
+  ): Promise<Channel> {
     const newChannel: Channel = new Channel();
 
     newChannel.type = payload.type;
@@ -27,7 +40,11 @@ export class ChannelService {
     newChannel.administratorsId = [userId];
     newChannel.usersId = [userId];
 
-    return this.channelsRepository.save(newChannel);
+    const saveNewChannel = await this.channelsRepository.save(newChannel);
+
+    this.socketService.socket.emit('createChannel', newChannel);
+
+    return saveNewChannel;
   }
 
   async updateChannel(
@@ -56,6 +73,42 @@ export class ChannelService {
       channel.usersId = payload.usersId;
     }
 
-    return this.channelsRepository.save(channel);
+    const saveChannel = this.channelsRepository.save(channel);
+
+    this.socketService.socket.emit('updateChannel', channel);
+
+    return saveChannel;
+  }
+
+  async updateChannelUsers(
+    channelId: string,
+    addUserId: string,
+    payload: UpdateChannelUserDto,
+  ): Promise<Channel> {
+    const channel: Channel = await this.channelsRepository.findOneBy({
+      id: channelId,
+    });
+
+    if (!channel) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (
+      payload.type === ChannelType.PROTECTED &&
+      payload.password !== channel.password
+    ) {
+      throw new HttpException('Invalid password', HttpStatus.FORBIDDEN);
+    }
+
+    const findUserId = channel.usersId.find((element) => element === addUserId);
+    if (!findUserId) {
+      channel.usersId = [...channel.usersId, addUserId];
+    }
+
+    const saveChannel = this.channelsRepository.save(channel);
+
+    this.socketService.socket.emit('updateChannel', channel);
+
+    return saveChannel;
   }
 }

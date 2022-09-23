@@ -1,5 +1,5 @@
-export const drawBackground = (context : any) => {
-	context.fillStyle = '#000055'
+export const drawBackground = (context : any, color: string) => {
+	context.fillStyle = color
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height)
     drawDashedLine(context)
     drawMidLine(context)//line rouge horizontale

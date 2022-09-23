@@ -1,9 +1,18 @@
-import { matchmakingDto } from "src/matchmaking/matchmaking.dto";
-import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
+import { matchesDto } from "src/matchmaking/matches.dto";
+import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 
 function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
   }
+
+export function clearGame(gameId : string, allGames : matchesDto[]) {
+	for (let i = 0; i < allGames.length; i++) {
+	if (allGames[i].gameId === gameId) {
+			allGames.splice(i, 1)
+			return
+		}
+	}
+}
 
 function paddleBounceLeft(ball: any, leftPosY: number) {
 const hitpos = ball.pos.y - leftPosY + PADDLE_HEIGHT / 2;
@@ -60,7 +69,7 @@ return ball;
 export function checkGameEnd(state: any) {
 	if (state.score.playerOne >= SCORE_LIMIT)
 		return -1
-	if (state.scale.playerTwo >= SCORE_LIMIT)
+	if (state.score.playerTwo >= SCORE_LIMIT)
 		return -2
 	return 1
 }
@@ -87,6 +96,29 @@ function resetBall(side : number) {
     return ball
 }
 
+export function handlePing(pongCounter : number, socket : any,  playerOne: string, playerTwo: string) {
+	pongCounter--
+	if (pongCounter === 0) {
+		socket.to(playerOne).emit(`ping`)
+		socket.to(playerTwo).emit(`ping`)
+		pongCounter = FRAME_RATE
+	}
+	return pongCounter
+}
+
+export function handleEndGame(gameStatus: number, socket : any, playerOne: string, playerTwo: string, state: any) {
+	if (gameStatus === -1) {
+		socket.to(playerOne).emit('winner', {gameResult: 'You won', gameState: state})
+		socket.to(playerTwo).emit('winner', {gameResult: 'You lost', gameState: state})
+		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
+	}
+	else if (gameStatus === -2) {
+		socket.to(playerOne).emit('winner', {gameResult: 'You lost', gameState: state})
+		socket.to(playerTwo).emit('winner', {gameResult: 'You won', gameState: state})
+		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
+	}
+}
+
 export function createGameState() {
     return {
         leftPlayer : {
@@ -108,10 +140,6 @@ export function createGameState() {
         score :{
             playerOne: 0,
             playerTwo: 0,
-        },
-        scale : {
-            width: BACK_WIN_WIDTH,
-            heihgt: BACK_WIN_HEIGHT
         },
         frameDelay: 0
     }

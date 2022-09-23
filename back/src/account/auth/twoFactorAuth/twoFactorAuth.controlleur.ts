@@ -26,6 +26,7 @@ export class TwoFactorAuthenticationController {
     private readonly authService: AuthService,
   ) {}
 
+
   @Get('/status')
   @UseGuards(JwtTwoFactorGuard)
   // @UseGuards(AuthenticatedGuard)

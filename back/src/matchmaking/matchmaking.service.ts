@@ -20,11 +20,11 @@ export class MatchmakingService {
       for (const elem of this.currentMatches) {
         if (elem.playerOne.socket === sender) {
           elem.playerOneY = data;
-          return;
+        //   return; //remettre les return quand on pourra supprimer la game quand elle est finie
         }
         if (elem.playerTwo.socket === sender) {
           elem.playerTwoY = data;
-          return;
+        //   return;
         }
       }
     }
@@ -34,11 +34,11 @@ export class MatchmakingService {
 	for (const elem of this.currentMatches) {
 		if (elem.playerOne.socket === sender) {
 		elem.playerOne.pongReply = 0;
-		return;
+		// return;
 		}
 		if (elem.playerTwo.socket === sender) {
 		elem.playerTwo.pongReply = 0;
-		return;
+		// return;
 		}
 	}
 }

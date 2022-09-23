@@ -45,4 +45,14 @@ export class ChannelController {
   ): Promise<Channel> {
     return this.service.updateChannel(channelId, body);
   }
+
+  @UseGuards(AuthenticatedGuard)
+  @Put(':channelId/:addUserId')
+  updateChannelUsers(
+    @Param('channelId') channelId: string,
+    @Param('addUserId') addUserId: string,
+    @Body() body: UpdateChannelUserDto,
+  ): Promise<Channel> {
+    return this.service.updateChannelUsers(channelId, addUserId, body);
+  }
 }

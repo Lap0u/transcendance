@@ -1,7 +1,7 @@
 import { HomeOutlined } from '@ant-design/icons';
 import { Button, Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import defaultAvatar from '../../assets/default-avatar.png';
+import { BACK_URL } from '../../global';
 
 const ChatHeader = ({ currentUser }: ChatHeaderProps) => {
   const navigate = useNavigate();
@@ -22,7 +22,8 @@ const ChatHeader = ({ currentUser }: ChatHeaderProps) => {
       </div>
       <div>Welcome to chat</div>
       <div>
-        <Avatar src={defaultAvatar} /> {currentUser.username}
+        <Avatar src={BACK_URL + '/account/avatar/' + currentUser.avatar} />
+        {currentUser.accountUsername}
       </div>
     </div>
   );

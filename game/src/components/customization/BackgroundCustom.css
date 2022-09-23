@@ -1,0 +1,29 @@
+.background-row {
+	background-color: blueviolet;
+	margin-bottom: 1.5vh;
+}
+
+.background {
+	background-color: rgb(137, 223, 215);
+	border: 2px solid pink;
+	text-align: center;
+}
+
+.my-background {
+	width: 60%;
+	height: 2vh;
+	border: 0;
+	position:relative;
+    top:50%;
+	bottom: 50%; 
+}
+
+.picker-div {
+	position: absolute;
+	z-index: 1;
+	left: 0; 
+	right: 0; 
+	margin-left: auto; 
+	margin-right: auto; 
+	width: 170px;
+}
