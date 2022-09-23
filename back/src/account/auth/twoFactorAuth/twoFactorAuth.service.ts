@@ -186,6 +186,8 @@ export class TwoFactorAuthenticationService {
     return {
       twoFaEnabled: user.isTwoFactorAuthenticationEnabled,
       emailVerified: user.isVerified,
+      account_id: user.account_id,
+      id: user.id,
     };
   }
 

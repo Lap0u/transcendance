@@ -24,7 +24,7 @@ export class ScoresController {
     private readonly authService: AuthService,
   ) {}
 
-  @Get('/history')
+  @Get('/allhistory')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
   async history() {
@@ -35,15 +35,28 @@ export class ScoresController {
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
   async playerHistory(@Param() param) {
-    return await this.scoresService.histotyById(param.id);
+    return await this.scoresService.historyById(param.id);
+  }
+
+  @Get('history/')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async ownHistory(@Req() request: Request) {
+    const id = request.session['passport'].id;
+    return await this.scoresService.historyById(id);
   }
 
   @Post()
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
   async addScore(@Req() req: Request, @Body() body: ScoresDto) {
-    // const id = req.session['passport'].id;
-    //  const user = await this.authService.findUser(id);
     return await this.scoresService.addScore(body);
+  }
+
+  @Get('/stats/:id')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async getStats(@Req() req: Request, @Param() param) {
+    return await this.scoresService.statsById(param.id);
   }
 }

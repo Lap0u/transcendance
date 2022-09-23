@@ -16,7 +16,7 @@ export class ScoresService {
     return await this.scoresRepo.find();
   }
 
-  async histotyById(account_id: string) {
+  async historyById(account_id: string) {
     const player1 = await this.scoresRepo.find({
       where: { idWinner: account_id },
     });
@@ -29,5 +29,11 @@ export class ScoresService {
   async addScore(scores: ScoresDto) {
     const newScore = this.scoresRepo.create(scores);
     return this.scoresRepo.save(newScore);
+  }
+
+  async statsById(id: string) {
+    const gameWon = await this.scoresRepo.countBy({ idWinner: id });
+    const gameLost = await this.scoresRepo.countBy({ idLoser: id });
+    return { gameWon: gameWon, gameLost: gameLost };
   }
 }

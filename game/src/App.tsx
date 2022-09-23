@@ -24,6 +24,7 @@ const BACK_URL = 'http://localhost:4000';
 const socket = io(BACK_URL).connect();
 
 function App() {
+
   return (
     <div id="wholepage">
       <BrowserRouter>
@@ -43,7 +44,7 @@ function App() {
 		  <Route path = "/login" element={<LoginSuccess/>} />
 		  <Route path = "/emailverify" element={<EmailConfirm/>} />
 		  <Route path = "/2fa" element={<TwoAuthAutenticatePage/>} />
-		  <Route path = "/scores" element={<ScoresHistory/>} />
+		  <Route path = "/scores/:id" element={<ScoresHistory/>} />
 		  <Route path = "/forbidden" element={<Forrbidden/>} />
           {/* If no route match, then return 404 page */}
           <Route path="*" element={<Page404 />} />

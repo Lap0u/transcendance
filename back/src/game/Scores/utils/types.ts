@@ -6,3 +6,8 @@ export type ScoresDto = {
   ScorePlayer1: number;
   ScorePlayer2: number;
 };
+
+export type StatsDto = {
+  gameWon: number;
+  gameLost: number;
+};
