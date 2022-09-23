@@ -6,7 +6,7 @@ function drawStopwatch(context : any, sprite: ImageBitmap, target : number) {
 	let xpos = 0
 	if (target === 0) { //left player has power up
 			xpos = context.canvas.width / 12
-	} else if (target === 0) {
+	} else if (target === 1) {
 			xpos = context.canvas.width / 12 * 11 - puwidth
 	}
 	context.drawImage(sprite, 128 * 4, 0, 128, 128,

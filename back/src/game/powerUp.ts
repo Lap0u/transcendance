@@ -2,31 +2,24 @@
 //status 0 = in_delay / 1 = on_field 2 = active 
 //target 0 = leftplayer 1 = rightPlayer
 
-import { exit } from "process";
-import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, POWERUPDELAY, POWERUPMARGIN, POWERUPSCALE } from "./constants";
+import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, POWERUPDELAY, POWERUPDURATION, POWERUPMARGIN, POWERUPSCALE } from "./constants";
 import { getRandomArbitrary } from "./game.utils";
 
 function placePowerup(powerup: any) {
-    powerup.value = Math.round(getRandomArbitrary(0, 3));// randomise it
+    powerup.value = Math.round(getRandomArbitrary(0, 3));
 	
 	powerup.status = 1;
     powerup.pos.x = Math.round(getRandomArbitrary(POWERUPMARGIN, BACK_WIN_WIDTH - POWERUPMARGIN));
     powerup.pos.y = Math.round(getRandomArbitrary(POWERUPMARGIN / 2, BACK_WIN_HEIGHT - POWERUPMARGIN / 2));
-	console.log('x', powerup.pos.x)
-	console.log('y', powerup.pos.y)
 }
 
-export function resetPowerup() {
-    return {
-        value: -1, //crash si on essaye de le draw
-        status: 0,
-        delay: 10,
-        target: 0,
-        pos: {
-            x: 0,
-            y: 0,
-        }
-    }
+export function resetPowerup(powerup: any) {	
+	powerup.value = -1;
+	powerup.status = 0;
+	powerup.delay = POWERUPDELAY;
+	powerup.target = 0;
+	powerup.pos.x = 0;
+	powerup.pos.y = 0;
 }
 
 function handleDelay(powerup: any) {
@@ -36,9 +29,11 @@ function handleDelay(powerup: any) {
             placePowerup(powerup)
     }
     else if (powerup.status === 2) {
+		console.log(powerup);
+		
         powerup.delay--;
-        if (powerup.delay === 0)
-            resetPowerup()
+        if (powerup.delay < 0)
+            resetPowerup(powerup)
     }
 
 }
@@ -47,11 +42,20 @@ const checkCollision = (p1x : number, p1y : number, r1 : number, p2x : number, p
     return ((r1 + r2) ** 2 > (p1x - p2x) ** 2 + (p1y - p2y) ** 2)
 }
 
+function playerCaughtPowerup(ballAngle: number, powerup : any) {
+	if (ballAngle < 180) {
+		powerup.target = 0
+	} else {
+		powerup.target = 1
+	}
+	powerup.status = 2
+	powerup.delay = POWERUPDURATION
+}
+
 function handlePickUp(ball: any, powerup : any) {
     if (checkCollision(ball.pos.x, ball.pos.y, BACK_BALL_SIZE / 2.5, 
         powerup.pos.x, powerup.pos.y, POWERUPSCALE / 2.5)) {
-            console.log(ball);
-            console.log(powerup);
+            playerCaughtPowerup(ball.angle, powerup)
         }
 }
 

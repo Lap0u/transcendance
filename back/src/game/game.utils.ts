@@ -119,10 +119,22 @@ export function handleEndGame(gameStatus: number, socket : any, playerOne: strin
 		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
 	}
 }
+function createPowerup(){
+	return {
+		value: -1, //crash si on essaye de le draw
+		status: 0,
+		delay: POWERUPDELAY,
+		target: 0,
+		pos: {
+			x: 0,
+			y: 0,
+		}
+	}
+}
 
 export function createGameState() {
     return {
-        powerup : resetPowerup(),
+        powerup : createPowerup(),
         leftPlayer : {
             scale: 1,
 			pongReply: 0,
