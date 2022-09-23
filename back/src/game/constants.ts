@@ -17,3 +17,4 @@ export const POWERUPDELAY = FRAME_RATE * 7 // un nouveau powerup apparait toutes
 export const POWERUPDURATION = FRAME_RATE * 5 //temps actif d'un powerup
 export const POWERUPSCALE = 34
 export const STOPWATCHSCALE = 12
+export const POWERUPMARGIN = 100

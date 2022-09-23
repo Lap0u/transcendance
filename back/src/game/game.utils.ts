@@ -2,7 +2,7 @@ import { matchesDto } from "src/matchmaking/matches.dto";
 import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, POWERUPDELAY, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 import { resetPowerup } from "./powerUp";
 
-function getRandomArbitrary(min : number, max : number) {
+export function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
   }
 
@@ -81,11 +81,11 @@ function resetBall(side : number) {
 
     let angle = 0
     if (side === 0) //right start
-        angle = getRandomArbitrary(20, 160)
+        angle = Math.round(getRandomArbitrary(20, 160))
     else if (side === 1) // eft start
-        angle = getRandomArbitrary(200, 340)
+        angle = Math.round(getRandomArbitrary(200, 340))
     else if (side === 2) // random start
-        angle = today.getMilliseconds() % 2 ? getRandomArbitrary(20, 160) : getRandomArbitrary(200, 340)
+        angle = Math.round(today.getMilliseconds() % 2 ? getRandomArbitrary(20, 160) : getRandomArbitrary(200, 340))
     let ball = {
         pos: {
             x: BACK_WIN_WIDTH / 2,

@@ -3,14 +3,17 @@
 //target 0 = leftplayer 1 = rightPlayer
 
 import { exit } from "process";
-import { BACK_BALL_SIZE, POWERUPDELAY, POWERUPSCALE } from "./constants";
+import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, POWERUPDELAY, POWERUPMARGIN, POWERUPSCALE } from "./constants";
+import { getRandomArbitrary } from "./game.utils";
 
 function placePowerup(powerup: any) {
-    powerup.value = 1;// randomise it
-    powerup.status = 1;
-    powerup.pos.x = 300;// randomise it
-    powerup.pos.y = 150;// randomise it
-
+    powerup.value = Math.round(getRandomArbitrary(0, 3));// randomise it
+	
+	powerup.status = 1;
+    powerup.pos.x = Math.round(getRandomArbitrary(POWERUPMARGIN, BACK_WIN_WIDTH - POWERUPMARGIN));
+    powerup.pos.y = Math.round(getRandomArbitrary(POWERUPMARGIN / 2, BACK_WIN_HEIGHT - POWERUPMARGIN / 2));
+	console.log('x', powerup.pos.x)
+	console.log('y', powerup.pos.y)
 }
 
 export function resetPowerup() {
@@ -49,7 +52,6 @@ function handlePickUp(ball: any, powerup : any) {
         powerup.pos.x, powerup.pos.y, POWERUPSCALE / 2.5)) {
             console.log(ball);
             console.log(powerup);
-            exit()
         }
 }
 
