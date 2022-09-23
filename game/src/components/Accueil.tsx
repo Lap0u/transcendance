@@ -19,11 +19,10 @@ function handleInit(msg: string) {
 	console.log(msg);
 }
 function Accueil() {
-
 	const navigate = useNavigate();
 	const [isLoginActive, setIsLogin] = useState(false);
 	const [ok, setOk] = useState(false);
-
+	const [user, setUser] = useState({account_id: ""});
 	useEffect(() => {
 		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
@@ -31,6 +30,9 @@ function Accueil() {
 				setOk(true);
 				axios.get(`${BACK_URL}/2fa/status`, {
 					withCredentials:true ,
+				})
+				.then((res) => {
+					setUser(res.data)
 				})
 				.catch(error => {
 					handleErrors(error)
@@ -56,7 +58,7 @@ function Accueil() {
 				<div>
 					<Welcome />
 					<LoginPlayButton isLoginActive={isLoginActive} />
-					<NavigationBarre nav={navigate} isLoginActive={isLoginActive}/>
+					<NavigationBarre nav={navigate} isLoginActive={isLoginActive} userId={user.account_id}/>
 
 				</div>
 		</div>
@@ -72,9 +74,11 @@ function NavigationBarre(props : any) {
 	<div>
 	{props.isLoginActive ?
 	<ul className='nav-barre'>
-  		<li className='onglet-nav'><a href="/account"> Account </a></li>
+  		<li className='onglet-nav'><a href="/account"> Profil </a></li>
   		<li className='onglet-nav'><a href="/chat"> Chat </a></li>
-  		<li className='onglet-nav'><a href="/logout"> Logout </a></li>
+		<li className='onglet-nav'><a href={`/scores/${props.userId}`}> Scores </a></li>
+  		<li className='onglet-nav'><a href='/logout'> Logout </a></li>
+		
 	</ul>
 	: null}
 	</div>
@@ -116,3 +120,7 @@ function Welcome() {
 }
 
 export default Accueil;
+function useQuery() {
+	throw new Error('Function not implemented.');
+}
+

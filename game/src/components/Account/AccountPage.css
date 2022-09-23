@@ -139,7 +139,7 @@
 	z-index: 4;
 	position:relative;
 	line-height: 4vh;
-	height: max(2.2vh, 10px);
+	height: max(2.2vh, 12px);
 	width: 120px;
 	background-color: var(--light-grey); 
 	padding: 0;
@@ -152,7 +152,7 @@
 	position: absolute;
 	top: 50%;
     left: 50%;
-    transform: translate(-50%, -60%);
+    transform: translate(-50%, -100%);
 	z-index: 5;
 	background-color:rgb(201, 199, 199);
 	text-align: center;
@@ -164,15 +164,24 @@
 	color:var(--text-1);
 }
 .two-auth .button-activate-two-auth{
+	font-size: 13px;
 	color:var(--text-1);
 	float:right;
 	position: relative;
-	bottom: 27px;
+	bottom: 20px;
 	line-height: 2vh;
+	height: max(2.2vh, 15px);
 }
+
 .two-auth .input-email{
 	background-color: white;
 	color: black;
 	line-height: 2.5vh;
 
+}
+
+
+.email .info{
+	font-size: min(4vh, 15px);
+	
 }

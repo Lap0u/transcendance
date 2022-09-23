@@ -1,0 +1,54 @@
+.score-page{
+	position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	font-size: 3vw;
+	text-align: center;
+	color: white;
+}
+
+.score-tab{
+	width: 90vw;
+}
+
+.score-tab  .raw{
+	list-style-type: none;
+	display:inline-table;
+	background-color: var(--mid-backgroud);
+
+}
+
+ .data{
+	width: 100%;
+	padding-left:3vw;
+	padding-right: 3vw;
+	padding-top:1vw;
+	padding-bottom: 1vw;
+	display:table;
+	border: 2px solid var(--text-1);
+	background-color: var(--light-grey);
+ }
+
+
+.data .score{
+	padding: 2vw;
+  }
+
+  .data .vl{
+	  padding: 0px;
+	  margin: 0px;
+	  position:relative;
+	  height: 7vw;
+	  bottom: 0px;
+	border-left: 3px solid var(--text-1);
+  }
+
+  .stats{
+	  color: white;
+	  position: relative;
+  }
+  .home-button {
+	position: relative;
+	margin: 10px;
+}

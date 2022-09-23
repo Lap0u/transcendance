@@ -3,7 +3,6 @@ import axios from "axios";
 export default async function handleErrors(error : any)
 {
 	const BACK_URL = "http://localhost:4000";
-	const FRONT_URL = "http://localhost:3000";
 
 	console.log("errror", error);
 

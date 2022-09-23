@@ -21,7 +21,7 @@ export class TwoFactorAuthenticationService {
     private readonly configService: ConfigService,
     private mailerService: MailerService,
   ) {
-    this.code = Math.floor(10000 + Math.random() * 90000);
+    this.code = Math.floor(10000 + Math.random() * 90000).toString();
   }
   async sendConfirmedEmail(user: Accounts) {
     const { email, name } = user;
@@ -67,10 +67,10 @@ export class TwoFactorAuthenticationService {
 
   async verifyAccount(code: string, req: Request): Promise<any> {
     try {
-      const user = await this.userRepository.findOneBy({
-        authConfirmToken: code,
-      });
-      if (!user) {
+      const id = req.session['passport'].user.id;
+      const user = await this.authService.findUser(id);
+      const isMatch = await bcrypt.compare(code, user.authConfirmToken);
+      if (!isMatch) {
         return new HttpException(
           'Verification code has expired or not found',
           HttpStatus.UNAUTHORIZED,
@@ -97,21 +97,25 @@ export class TwoFactorAuthenticationService {
 
   async saveEmail(email: string, id: string) {
     const user = await this.userRepository.findOneBy({ id });
+    this.hashCode(this.code);
     await this.userRepository.save({
       ...user, // existing fields
       email: email,
       isTwoFactorAuthenticationEnabled: true,
-      authConfirmToken: this.code,
+      authConfirmToken: await this.hashCode(this.code),
     });
     await this.sendConfirmationEmail(user.id);
     return user;
   }
 
-  public isTwoFactorAuthenticationCodeValid(
+  public async isTwoFactorAuthenticationCodeValid(
     twoFactorAuthenticationCode: string,
     user: Accounts,
   ) {
-    return twoFactorAuthenticationCode === user.twoFactorAuthenticationSecret;
+    return await bcrypt.compare(
+      twoFactorAuthenticationCode,
+      user.twoFactorAuthenticationSecret,
+    );
   }
 
   public getCookieWithJwtAccessToken(
@@ -135,9 +139,6 @@ export class TwoFactorAuthenticationService {
     res: Response,
   ) {
     const secret = authenticator.generateSecret(5);
-
-    //  const otpauthUrl = authenticator.keyuri(user.email, 'hihi', secret);
-
     return await this.setTwoFactorAuthenticationSecret(
       user,
       secret,
@@ -162,10 +163,9 @@ export class TwoFactorAuthenticationService {
       res.status(401).send('Please verify your account');
       return;
     }
-   // this.sendVerifCodeEmaiil(user, secret);
-   console.log("secreerretttt",secret);
+    this.sendVerifCodeEmaiil(user, secret);
     return this.userRepository.update(account_id, {
-      twoFactorAuthenticationSecret: secret,
+      twoFactorAuthenticationSecret: await this.hashCode(secret),
     });
   }
 
@@ -185,7 +185,15 @@ export class TwoFactorAuthenticationService {
     return {
       twoFaEnabled: user.isTwoFactorAuthenticationEnabled,
       emailVerified: user.isVerified,
+      account_id: user.account_id,
+      id: user.id,
     };
+  }
+
+  async hashCode(code: string) {
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(code, salt);
+    return hash;
   }
 }
 

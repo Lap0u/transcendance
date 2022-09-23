@@ -23,6 +23,8 @@ import { HttpModule } from '@nestjs/axios';
 import DatabaseFile from './account/entities/files.entity';
 import { DatabaseFileModule } from './account/files/databaseFile.module';
 import { twoFactorAuthModule } from './account/auth/twoFactorAuth/twoFactorAuth.module';
+import { ScoresModule } from './game/Scores/scores.module';
+import { Scores } from './game/Scores/entities/scores.entities';
 
 @Module({
   imports: [
@@ -36,9 +38,10 @@ import { twoFactorAuthModule } from './account/auth/twoFactorAuth/twoFactorAuth.
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [Chat, Channel, Accounts, TypeOrmSession, DatabaseFile],
+      entities: [Chat, Channel, Accounts, TypeOrmSession, DatabaseFile, Scores],
       synchronize: true,
     }),
+    ScoresModule,
     AuthModule,
     ChatModule,
     twoFactorAuthModule,

@@ -9,12 +9,8 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from '../account/auth/guards';
-import {
-  CreateChannelDto,
-  UpdateChannelDto,
-  UpdateChannelUserDto,
-} from './channel.dto';
+import { AuthenticatedGuard, JwtTwoFactorGuard } from '../account/auth/guards';
+import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
 import { Channel } from './channel.entity';
 import { ChannelService } from './channel.service';
 
@@ -24,12 +20,14 @@ export class ChannelController {
   private readonly service: ChannelService;
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Get()
   getUserChannels(@Request() req: any): Promise<Channel[]> {
     return this.service.getChannelsById(req.user.id);
   }
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Post()
   createChannel(
     @Request() req: any,
@@ -39,6 +37,7 @@ export class ChannelController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Put(':channelId')
   updateChannel(
     @Param('channelId') channelId: string,
