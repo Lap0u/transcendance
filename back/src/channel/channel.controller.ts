@@ -10,7 +10,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthenticatedGuard, JwtTwoFactorGuard } from '../account/auth/guards';
-import { CreateChannelDto, UpdateChannelDto } from './channel.dto';
+import {
+  CreateChannelDto,
+  UpdateChannelDto,
+  UpdateChannelUserDto,
+} from './channel.dto';
 import { Channel } from './channel.entity';
 import { ChannelService } from './channel.service';
 
