@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SocketService } from 'src/socket/socket.service';
 import { Repository } from 'typeorm';
 import { Accounts } from '../entities/accounts.entity';
 import { DatabaseFilesService } from '../files/databaseFile.service';
@@ -10,9 +11,10 @@ export class AccountService {
     @InjectRepository(Accounts)
     private usersRepository: Repository<Accounts>,
     private readonly databaseFilesService: DatabaseFilesService,
+    private socketService: SocketService,
   ) {}
 
-/*  async setTwoFactorAuthenticationSecret(secret: string, id: string) {
+  /*  async setTwoFactorAuthenticationSecret(secret: string, id: string) {
     return this.usersRepository.update(id, {
       twoFactorAuthenticationSecret: secret,
     });
@@ -96,5 +98,21 @@ export class AccountService {
   async getAvatar(id: string) {
     const avatar = await this.databaseFilesService.getFileById(id);
     return avatar;
+  }
+
+  async updateBlacklist(userId: string, newBlacklist: string[]) {
+    const account = await this.usersRepository.findOneBy({
+      id: userId,
+    });
+    if (!account) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+    account.blacklist = newBlacklist;
+
+    const saveAccount = this.usersRepository.save(account);
+
+    this.socketService.socket.emit('userUpdate', account);
+
+    return saveAccount;
   }
 }

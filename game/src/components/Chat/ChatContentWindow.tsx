@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './Chat.css';
 import { Avatar, Button, Input, message as antdMessage } from 'antd';
-import defaultAvatar from '../../assets/default-avatar.png';
 import { SendOutlined } from '@ant-design/icons';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
+import ChatAvatar from './ChatAvatar';
 
 const MessageContent = ({
   item,
@@ -17,7 +18,7 @@ const MessageContent = ({
   currentUser: any;
 }) => {
   const findUser = users.find((user: any) => user.id === item.senderId);
-  if (!findUser) {
+  if (!findUser || currentUser.blacklist.includes(findUser.id)) {
     return null;
   }
   if (findUser.id === currentUser.id) {
@@ -35,7 +36,7 @@ const MessageContent = ({
   return (
     <div className="chat-window-othermessage-wrapper">
       <div className="chat-window-othermessage-username">
-        <Avatar src={BACK_URL + '/account/avatar/' + findUser.avatar} />
+        <ChatAvatar currentUser={currentUser} user={findUser} />
         {findUser.accountUsername}:
       </div>
       <div className="chat-window-othermessage-content">{item.message}</div>
@@ -63,7 +64,8 @@ const ChatContentWindow = ({
           : `${BACK_URL}/chat/channel/${selectedChannel?.id}`;
         const res = await axios.get(getHistoryUrl, { withCredentials: true });
         if (res.data) {
-          setHistory(res.data);
+          const history = res.data.filter((obj: any) => !currentUser.blacklist.includes(obj.senderId));
+          setHistory(history);
           scrollToBottom();
         }
       } catch (e) {
@@ -76,7 +78,7 @@ const ChatContentWindow = ({
     } else {
       setHistory([]);
     }
-  }, [selectUser, selectedChannel]);
+  }, [currentUser, selectUser, selectedChannel]);
 
   useEffect(() => {
     if (!currentUser || (!selectUser && !selectedChannel)) {
@@ -88,6 +90,9 @@ const ChatContentWindow = ({
       : `receiveMessage:${selectedChannel?.id}`;
 
     socket.on(socketMessage, (message: any) => {
+      if (currentUser.blacklist.includes(message.senderId)) {
+        return;
+      }
       setHistory((oldHistory: any) => [...oldHistory, message]);
       scrollToBottom();
     });
