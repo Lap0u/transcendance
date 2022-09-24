@@ -26,7 +26,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-	width: 300px;
+	width: 350px;
 	line-height: 4vh;
 	display: inline-block;
 	white-space: nowrap;
@@ -117,7 +117,7 @@
 	line-height: 100%;
 	font-size: 10px;
 	position: relative;
-	left: 80px;
+	left: 107px;
 	top: 3px;
 	margin: 0;
 	padding: 0;
@@ -127,7 +127,7 @@
 	position: relative;
 	font-size: 12px;
 	line-height: 100%;
-	left: 105px;
+	left: 130px;
 	top: 9px;
 	background-color: var(--light-grey);
 	color: white;

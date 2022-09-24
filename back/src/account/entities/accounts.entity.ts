@@ -3,7 +3,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
-  OneToOne,
+  OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import DatabaseFile from './files.entity';
 
@@ -30,17 +31,17 @@ export class Accounts {
   @Column({ default: null })
   public email: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   public authConfirmToken?: string;
 
-  @Column({ unique: true, default: false })
+  @Column({ default: false })
   public isVerified?: boolean;
 
   @Column({ nullable: true })
   public twoFactorAuthenticationSecret?: string;
 
   @JoinColumn({ name: 'avatar' })
-  @OneToOne(() => DatabaseFile, {
+  @ManyToOne(() => DatabaseFile, {
     nullable: true,
   })
   @Column({ nullable: true })

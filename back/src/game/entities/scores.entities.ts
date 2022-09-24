@@ -5,7 +5,7 @@ export class Accounts {
   @PrimaryGeneratedColumn('uuid')
   key: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   idWinner: string;
 
   @Column({ nullable: true })
