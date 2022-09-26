@@ -86,14 +86,15 @@ const GameMenu = (props : any) => {
 
 	});
   useEffect(() => {
-		console.log('my user', currentUser);
-		if (inMatchmaking)
-		joinMatchmakingList(currentUser.username) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
-		if (!inMatchmaking)
-		quitMatchmakingList(currentUser.username)
-			return () => {
-				quitMatchmakingList(currentUser.username)
-	}
+		if (currentUser) {
+      if (inMatchmaking)
+        joinMatchmakingList(currentUser.username) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+      if (!inMatchmaking)
+        quitMatchmakingList(currentUser.username)
+        return () => {
+          quitMatchmakingList(currentUser.username)
+	  }
+  }
   }, [inMatchmaking, currentUser]);
 
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
