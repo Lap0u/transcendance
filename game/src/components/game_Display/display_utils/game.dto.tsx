@@ -2,7 +2,8 @@ export type playerType = {
     pos: {
         x: number;
         y: number;
-    }
+    },
+	scale: number,
 }
 
 export type ballType = {
