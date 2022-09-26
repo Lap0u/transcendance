@@ -18,6 +18,7 @@ const GameMenu = (props : any) => {
 	const [inMatchmaking, setMatchmaking] = useState(false);
 	const [gamesList, setGamesList] = useState<game[]>([]);
 	const socket = props.socket;
+  const [currentUser, setCurrentUser] = useState<any>(null);
 	const navigate = useNavigate();
 
   const customGameValues : any= {
@@ -27,6 +28,21 @@ const GameMenu = (props : any) => {
 	background: gameBackground
   }
   
+  useEffect(() => {
+    const initData = async () => {
+      try {
+        const res = await axios.get(`${BACK_URL}/account`, {
+          withCredentials: true,
+        });
+        setCurrentUser(res.data);
+      } catch {
+        console.log('Must be connect to use chat!');
+        navigate('/');
+      }
+    };
+    initData();
+  }, [navigate]);
+
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
@@ -70,15 +86,15 @@ const GameMenu = (props : any) => {
 
 	});
   useEffect(() => {
-  
-    if (inMatchmaking)
-      joinMatchmakingList(socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
-    if (!inMatchmaking)
-      quitMatchmakingList(socket.id)
-		return () => {
-			quitMatchmakingList(socket.id)
-		}
-  }, [inMatchmaking, socket]);
+		console.log('my user', currentUser);
+		if (inMatchmaking)
+		joinMatchmakingList(currentUser.username) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+		if (!inMatchmaking)
+		quitMatchmakingList(currentUser.username)
+			return () => {
+				quitMatchmakingList(currentUser.username)
+	}
+  }, [inMatchmaking, currentUser]);
 
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (
