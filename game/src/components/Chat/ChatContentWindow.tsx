@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
 
+
 const MessageContent = ({
   item,
   users,
@@ -54,6 +55,7 @@ const ChatContentWindow = ({
   const [history, setHistory] = useState<any>([]);
   const historyEndRef: any = useRef(null);
   const isUser: boolean = !!selectUser;
+  const [clickProfile, dispayClickProfile] = useState("none")
 
   useEffect(() => {
     const getHistory = async () => {
@@ -133,7 +135,8 @@ const ChatContentWindow = ({
       return (
         <>
           <Avatar src={BACK_URL + '/account/avatar/' + selectUser.avatar} />
-          {selectUser.accountUsername}
+          <div className='chat-username' onMouseEnter={() => dispayClickProfile("block")}>{selectUser.accountUsername}</div>
+		  <div className="click-profile" style={{display:clickProfile}}>Click to see the player profil</div>
         </>
       );
     } else {
