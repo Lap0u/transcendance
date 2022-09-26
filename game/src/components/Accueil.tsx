@@ -26,7 +26,8 @@ function Accueil() {
 	useEffect(() => {
 		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
-			.then(() => {
+			.then((res) => {
+				console.log("ress acceuirl", res);
 				setOk(true);
 				axios.get(`${BACK_URL}/2fa/status`, {
 					withCredentials:true ,

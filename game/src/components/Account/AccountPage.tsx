@@ -185,14 +185,13 @@ const AccountInfo = () => {
 		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
 			.then((response) => {
 				console.log(response.data);
-				console.log("resssss", response.data);
+				console.log("ressss", response.data);
 				getUser(response.data);
 			})
 			.catch((error) => {
 				//console.log("eerrroor", error);
 				handleErrors(error)
 			})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => { 

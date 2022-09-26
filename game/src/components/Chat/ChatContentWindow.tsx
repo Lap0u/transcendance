@@ -1,11 +1,13 @@
 import './Chat.css';
 import { Avatar, Button, Input, message as antdMessage } from 'antd';
-import defaultAvatar from '../../assets/default-avatar.png';
 import { SendOutlined } from '@ant-design/icons';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
+import './ProfilPlayer.css'
+import PublicInfo from '../Account/PublicAccount';
+
 
 
 const MessageContent = ({
@@ -55,7 +57,8 @@ const ChatContentWindow = ({
   const [history, setHistory] = useState<any>([]);
   const historyEndRef: any = useRef(null);
   const isUser: boolean = !!selectUser;
-  const [clickProfile, dispayClickProfile] = useState("none")
+  const [clickProfile, dispayClickProfile] = useState({display : "none", mouseX: 0, mouseY: 0})
+  const [profile, dispayProfile] = useState("none");
 
   useEffect(() => {
     const getHistory = async () => {
@@ -135,8 +138,11 @@ const ChatContentWindow = ({
       return (
         <>
           <Avatar src={BACK_URL + '/account/avatar/' + selectUser.avatar} />
-          <div className='chat-username' onMouseEnter={() => dispayClickProfile("block")}>{selectUser.accountUsername}</div>
-		  <div className="click-profile" style={{display:clickProfile}}>Click to see the player profil</div>
+          <div className='chat-username' onMouseEnter={(e) => dispayClickProfile({display:"block", mouseX: e.pageX, mouseY:e.pageY})}
+			onMouseLeave={() =>dispayClickProfile({display:"none", mouseX: 0, mouseY:0})} onClick={()=> dispayProfile("block")}>
+			{selectUser.accountUsername} </div>
+		  <ClickPlayerMsg clickProfile={clickProfile}/>
+		  <PublicInfo userId={selectUser.id} display={profile}/>
         </>
       );
     } else {
@@ -188,4 +194,11 @@ type ChatContentWindowProps = {
   selectedChannel: ChannelType | null;
 };
 
+function ClickPlayerMsg(props: any){
+	console.log("mouseX", props.clickProfile.mouseX);
+	console.log("mouseY", props.clickProfile.mouseY);
+	return (
+		<div className="click-profile" style={{display: props.clickProfile.display, /*"top": props.clickProfile.mouseY + "px", "left": props.clickProfile.mouseX + "px"*/}}>Click to see the player profil</div>
+	)
+}
 export default ChatContentWindow;

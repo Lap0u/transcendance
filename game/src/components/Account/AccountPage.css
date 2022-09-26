@@ -169,7 +169,7 @@
 	float:right;
 	position: relative;
 	bottom: 20px;
-	line-height: 2vh;
+	line-height: 0;
 	height: max(2.2vh, 15px);
 }
 

@@ -37,6 +37,13 @@ export class AccountController {
     return this.authService.findUser(id);
   }
 
+  @Get('/:id')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  getAccountInfoById(@Param() param) {
+    return this.authService.findUser(param.id);
+  }
+
   @Post('avatar')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
