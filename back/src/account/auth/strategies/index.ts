@@ -24,9 +24,13 @@ export class Strategy42 extends PassportStrategy(Strategy){
 	async validate(accessToken: string, refreshToken: string, profile: Profile){
 		const  { id, username, name} = profile;
 		const accountUsername = username;
-		const file = await this.databaseFilesService.getFileByName("default");
+		const file = await this.databaseFilesService.getDefaultFile();
 		const avatar = file.id;
-		const details : IntraUserDetails = {id, username, name, accountUsername, avatar};
+		const isTwoFactorAuthenticationEnabled = false;
+		const email: string = null;
+		const details : IntraUserDetails = {id, username, name, accountUsername, isTwoFactorAuthenticationEnabled, email, avatar};
 		return this.authService.validateUser(details);
 	}
 }
+
+

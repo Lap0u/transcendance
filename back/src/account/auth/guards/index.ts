@@ -16,15 +16,19 @@ export class AuthenticatedGuard implements CanActivate{
 	async canActivate(context : ExecutionContext) : Promise<boolean>{
 		const req = context.switchToHttp().getRequest();
 		return req.isAuthenticated();
-	}
+}
 }
 
 @Injectable()
 export class NotAuthenticatedGuard implements CanActivate{
 	async canActivate(context : ExecutionContext) : Promise<boolean>{
 		const req = context.switchToHttp().getRequest();
-		console.log("NOOOOOOT AUTH", !req.isAuthenticated());
-		return !req.isAuthenticated();
-	}
+		return req.isUnauthenticated()
 }
+}
+ 
+@Injectable()
+export class JwtTwoFactorGuard extends AuthGuard('jwt-two-factor'){}
 
+@Injectable()
+export class NotJwtTwoFactorGuard extends AuthGuard('not-jwt-two-factor'){}

@@ -9,6 +9,7 @@ import { BACK_URL } from '../global';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { LogoutButton } from './Account/AccountPage';
+import handleErrors from './RequestErrors/handleErrors';
 // import backgroundImage from '../assets/pong_wallpaper'
 
 const socket = io('http://localhost:3000');
@@ -18,24 +19,38 @@ function handleInit(msg: string) {
 	console.log(msg);
 }
 function Accueil() {
-
 	const navigate = useNavigate();
 	const [isLoginActive, setIsLogin] = useState(false);
-
+	const [ok, setOk] = useState(false);
+	const [user, setUser] = useState({account_id: ""});
 	useEffect(() => {
+		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
-			.then((response) => {
+			.then(() => {
+				setOk(true);
+				axios.get(`${BACK_URL}/2fa/status`, {
+					withCredentials:true ,
+				})
+				.then((res) => {
+					setUser(res.data)
+				})
+				.catch(error => {
+					handleErrors(error)
+				})
 				setIsLogin(true);
 			})
 			.catch((error) => {
-				console.log("errroooor", error.response.status)
 				if (error.response.status === 403)
 					setIsLogin(false);
-			})
+				else
+					handleErrors(error);
+				setOk(true);
+		})	
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
   
 	return (
+		ok ?
 		<div className='AccueilPage'>
 			<div>
 				<Background />
@@ -43,10 +58,11 @@ function Accueil() {
 				<div>
 					<Welcome />
 					<LoginPlayButton isLoginActive={isLoginActive} />
-					<NavigationBarre nav={navigate} isLoginActive={isLoginActive}/>
+					<NavigationBarre nav={navigate} isLoginActive={isLoginActive} userId={user.account_id}/>
 
 				</div>
 		</div>
+		: null
 	)
 }
 
@@ -58,9 +74,11 @@ function NavigationBarre(props : any) {
 	<div>
 	{props.isLoginActive ?
 	<ul className='nav-barre'>
-  		<li className='onglet-nav'><a href="/account"> Account </a></li>
+  		<li className='onglet-nav'><a href="/account"> Profil </a></li>
   		<li className='onglet-nav'><a href="/chat"> Chat </a></li>
-  		<li className='onglet-nav'><a href="/logout"> Logout </a></li>
+		<li className='onglet-nav'><a href={`/scores/${props.userId}`}> Scores </a></li>
+  		<li className='onglet-nav'><a href='/logout'> Logout </a></li>
+		
 	</ul>
 	: null}
 	</div>
@@ -102,3 +120,7 @@ function Welcome() {
 }
 
 export default Accueil;
+function useQuery() {
+	throw new Error('Function not implemented.');
+}
+

@@ -4,17 +4,18 @@ import {
   PlusSquareOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { Button, Avatar, Input, Modal, message } from 'antd';
+import { Button, Input, Modal, message } from 'antd';
 import { useRef, useState } from 'react';
 import ChannelFormModal from './ChannelFormModal';
 import { ChannelType, CHAT_TYPE, CHANNEL_TYPE } from './const';
 import ChannelManageUserModal from './ChannelManageUserModal';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
+import ChatAvatar from './ChatAvatar';
 
 const { confirm } = Modal;
 
-const UserListItem = ({ user, setSelectUser }: any) => {
+const UserListItem = ({ user, currentUser, setSelectUser }: any) => {
   return (
     <div
       style={{
@@ -29,7 +30,7 @@ const UserListItem = ({ user, setSelectUser }: any) => {
       }}
       onClick={() => setSelectUser(user)}>
       <div>
-        <Avatar src={BACK_URL + '/account/avatar/' + user.avatar} />{' '}
+        <ChatAvatar currentUser={currentUser} user={user} />{' '}
         {user.accountUsername}
       </div>
     </div>
@@ -229,13 +230,21 @@ const ChatSiderList = ({
       />
       {chatType === CHAT_TYPE.user && (
         <div style={{ height: '100%', overflow: 'scroll' }}>
-          {users.map((user: any) => (
-            <UserListItem
-              key={user.id}
-              user={user}
-              setSelectUser={setSelectUser}
-            />
-          ))}
+          {users.map((user: any) => {
+            if (currentUser.id === user.id) {
+              return null;
+            }
+
+            return (
+              <UserListItem
+                key={user.id}
+                user={user}
+                currentUser={currentUser}
+                setSelectUser={setSelectUser}
+              />
+            )
+          }
+          )}
         </div>
       )}
       {chatType === CHAT_TYPE.channel && (

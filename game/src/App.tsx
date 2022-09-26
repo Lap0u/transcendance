@@ -13,13 +13,19 @@ import Disconnected from './components/ErrorPage/Disconnected';
 import InternalError from './components/ErrorPage/InternalError';
 import { Logout } from './components/Account/LogOut';
 import WrongGameId from './components/ErrorPage/wrongGameId';
+import { EmailConfirm } from './components/TwoFactorAuth/emailVerify';
+import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate';
+import { ActivateTwoAuth } from './components/TwoFactorAuth/TwoAuthActivate';
+import Forrbidden from './components/ErrorPage/Forbidden';
+import { ScoresHistory } from './components/Scores/ScoresHistory';
 
 const BACK_URL = 'http://localhost:4000';
 
 const socket = io(BACK_URL).connect();
 
 function App() {
-	return (
+
+  return (
     <div id="wholepage">
       <BrowserRouter>
         <Routes>
@@ -36,6 +42,10 @@ function App() {
 		  <Route path = "/error500" element={<InternalError/>} />
 		  <Route path = "/wrongGameId" element={<WrongGameId/>} />
 		  <Route path = "/login" element={<LoginSuccess/>} />
+		  <Route path = "/emailverify" element={<EmailConfirm/>} />
+		  <Route path = "/2fa" element={<TwoAuthAutenticatePage/>} />
+		  <Route path = "/scores/:id" element={<ScoresHistory/>} />
+		  <Route path = "/forbidden" element={<Forrbidden/>} />
           {/* If no route match, then return 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>

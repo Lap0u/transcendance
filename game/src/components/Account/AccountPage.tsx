@@ -1,8 +1,12 @@
+import { HomeOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import axios from 'axios';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import handleErrors from '../RequestErrors/handleErrors';
+import { ActivateTwoAuth } from '../TwoFactorAuth/TwoAuthActivate';
 import './AccountPage.css'
 
 const BACK_URL = "http://localhost:4000";
@@ -14,55 +18,24 @@ function ButtonChangeUsername(props : any) {
 	const [username, changeUsername] = useState("");
 
 
-	async function validateUsername() : Promise<boolean> {
-		console.log("verrif username");
-		if  (!/^[a-z0-9]/.test(username)){
-			alert("Your username must begin with a lowercase alphanumeric character.");
-			return false;
-		}
-		if  (!/^[a-z0-9._-]+$/.test(username)){
-			alert("Your username must contains only alphanumeric dot or hyphen and not contain uppercases.");
-			return false;
-		}
-		if (username.length < 4 || username.length > 11){
-			alert("Your username must contains  between 4 and 11 character");
-			return false;
-		}
-		console.log("prevvvvv", props.prevUsername)
-		if (username === props.prevUsername){
-			alert("Please provide an username differnent from your current one");
-			return false;
-		}
-		await axios.get(`${BACK_URL}/account/username/validate/${username}`,  {withCredentials:true })
-		.then((response) => {
-			if (response.data === false){
-				alert("Sorry this username is already use, please choose an other");
-				return false;
-			}
-		})
-		.catch((error) => {
-			handleErrors(error);
-		})
-		return true;
-	}
-
 	async function newUsername(e : any) {
 		changeUsername(e.target.value);
 		clearInput.current = e.target.value;
 	}
 	async function updateUsername() {
 
-		const isUsernameOk : boolean = await validateUsername();
-		if (!isUsernameOk)
-			return;
-		if (window.confirm("Change your username?") === false)
-			return;
-		await axios.post(`${BACK_URL}/account/username/`, {newUsername :username}, {
+		await axios.post(`${BACK_URL}/account/username/`, {newUsername :username, oldUsername: props.prevUsername}, {
 			withCredentials:true ,
 			method: "post",
 			headers: {}
 		})
 		.then(function (response) {
+			if (response.data.ok === false){
+				alert(response.data.msg);
+				return;
+			}
+			if (window.confirm("Change your username?") === false)
+				return;
 			props.refresh(username);
 			clearInput.current = "";
 		})
@@ -98,26 +71,29 @@ function ButtonChangeAvatar(props : any) {
 
 	async function handleSubmission(e : any)  {
 	
-		if (window.confirm("Change your avatar?") === false)
+		if (window.confirm("Change your avatar ?") === false)
 			return;
 		var FormData = require("form-data");
 		const formData = new FormData();
 		formData.append("file", selectedFile);
   		formData.append("type", "avatar");
+		  console.log("ooooooooo");
 		await axios.post(`${BACK_URL}/account/avatar`, formData, {
 			withCredentials:true ,
 			method: "post",
 			headers: {}
 		})
-		.then(function (response) {
-		  console.log("newww aavvaaaatar", response);
+		.then( (response) => {
+			console.log("eeeeeeeee");
 		  clickButton('none');
 		  props.refresh(response.data.avatar);
+		  console.log("refressshh avatar", response.data.avatar);
 		  e.target.value= null;
 		})
 		.catch((error) => {
 			handleErrors(error)
 		});
+		console.log("hiiiiiiiii");
 	}
 	  
 	return (
@@ -157,12 +133,53 @@ const UserName = (props : any) => {
 	)
 }
 
+function TwoAuth(props: any){
+	const [displayForm, display] = useState("none");
+
+	function turnOffTwoAth(){
+		if (window.confirm("Desactivate the two factor authentification?") === false)
+				return;
+		axios.get(`${BACK_URL}/2fa/turnoff`,  {withCredentials:true })
+		.then((response) => {
+			props.turnTwoAuth(false)
+		})
+		.catch((error) => {
+			handleErrors(error)
+		})
+	}
+
+
+	return(
+		<div>
+		<ul className="two-auth">
+			<i className='info-type'>Two-auth factor </i>
+			{props.isActivate ?
+			<div>
+			<button className='button-activate-two-auth' onClick={() => turnOffTwoAth()}>Desactivate</button>
+			</div>
+			:
+			<div>
+			<button className='button-activate-two-auth' onClick={() => display(displayForm === "none"? "block" : "none")}>Activate</button>
+			<div className='two-auth-form' style={{display:displayForm}}><ActivateTwoAuth display={display}/></div>
+			</div>
+			}
+		</ul>
+		{props.isActivate ?
+		<ul className = 'email'>
+			<i className='info-type'>Email</i>
+			<i className='info'>{props.email}</i>
+		</ul>
+		: null}
+		</div>
+	)
+}
 const AccountInfo = () => {
 
 	const [ok, setOk] = useState(false);
-	const [user, getUser] = useState({name : "", username: "", avatar: "", accountUsername:""});
+	const [user, getUser] = useState({name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
 	const [username,  updateUsername] = useState('');
 	const [avatar, updateAvatar] = useState("");
+	const [twoAuth, turnTwoAuth] = useState(false);
 
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
@@ -172,6 +189,7 @@ const AccountInfo = () => {
 				getUser(response.data);
 			})
 			.catch((error) => {
+				//console.log("eerrroor", error);
 				handleErrors(error)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,6 +198,7 @@ const AccountInfo = () => {
 	useEffect(() => { 
 		updateUsername(user.accountUsername);
 		updateAvatar(user.avatar);
+		turnTwoAuth(user.isTwoFactorAuthenticationEnabled);
 		setOk(true);
 	}, [user]);
 
@@ -216,6 +235,7 @@ const AccountInfo = () => {
 				<i className='info-type'>Login </i>
 				<i className='info'>{user.username} </i>
 			</ul>
+			<TwoAuth isActivate={twoAuth} turnTwoAuth={turnTwoAuth} email={user.email}/>
 		</li>
 		<div className='bottom-line'/>
 		</div>
@@ -244,10 +264,12 @@ export const LogoutButton = () =>{
 	)
 }
 const AccountPage = () => {
+
+	const nav = useNavigate();
 	return (
 		<div className='account-page'>
-			<AccountInfo/>
-			
+			<Button className='home-button' shape="circle" icon={<HomeOutlined />} onClick={() => nav('/')} />
+			<AccountInfo />		
 		</div>
 	);
 }

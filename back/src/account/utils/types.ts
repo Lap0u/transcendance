@@ -5,6 +5,11 @@ export type IntraUserDetails = {
   username: string;
   name: string;
   accountUsername: string;
+  isTwoFactorAuthenticationEnabled: boolean;
+  authConfirmToken?: string;
+  isVerified?: boolean;
+  twoFactorAuthenticationSecret?: string;
+  email: string;
   avatar: string;
 };
 
@@ -12,6 +17,12 @@ export type DatabaseFile = {
   id: string;
   filename: string;
   data: Uint8Array;
+  isDefault: boolean;
+};
+
+export type TokenPayload = {
+  id: string;
+  isSecondFactorAuthenticated: boolean;
 };
 
 export type Done = (err: Error, user: Accounts) => void;

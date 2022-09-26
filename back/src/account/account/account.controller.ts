@@ -3,8 +3,8 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
+  Put,
   Req,
   Res,
   StreamableFile,
@@ -12,7 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from '../auth/guards';
+import { AuthenticatedGuard, JwtTwoFactorGuard } from '../auth/guards';
 import { Response, Request } from 'express';
 import { AccountService } from './account.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -30,6 +30,7 @@ export class AccountController {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   getAccountInfo(@Req() req: Request) {
     const session_info = req.session['passport'];
     const user_info = session_info.user;
@@ -39,18 +40,35 @@ export class AccountController {
 
   @Post('avatar')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @UseInterceptors(FileInterceptor('file'))
   async changeAvatar(
     @Req() req: Request,
+    @Res() res: Response,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (
+      file.mimetype != 'image/jpg' &&
+      file.mimetype != 'image/jpeg' &&
+      file.mimetype != 'image/png'
+    ) {
+      res.sendStatus(400);
+      return;
+    }
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return this.usersService.changeAvatar(id, file.buffer, file.originalname);
+    const body = await this.usersService.changeAvatar(
+      id,
+      file.buffer,
+      file.originalname,
+    );
+    res.send(body);
+    return body;
   }
 
   @Get('avatar/:id')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getAvatar(
     @Param() params,
     @Res({ passthrough: true }) response: Response,
@@ -68,27 +86,44 @@ export class AccountController {
 
   @Get('avatar')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getNullAvatar() {
     return;
   }
 
   @Post('username')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async changeUsername(@Req() req: Request, @Body() data: any) {
-    const { newUsername } = data;
+    const { newUsername, oldUsername } = data;
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return this.usersService.changeUsername(id, newUsername);
+    const { ok1, msg1 } = await this.usersService.checkUsernameFormat(
+      newUsername,
+      oldUsername,
+    );
+    if (!ok1) return { ok: ok1, msg: msg1 };
+    const { ok2, msg2 } = await this.usersService.checkDuplicateUsername(
+      newUsername,
+    );
+    if (!ok2) return { ok: ok2, msg: msg2 };
+    await this.usersService.changeUsername(id, newUsername);
+    return { ok: true, msg: '' };
   }
 
-  @Get('username/validate/:username')
+  @Put('blacklist')
   @UseGuards(AuthenticatedGuard)
-  async validateUsername(@Param() params) {
-    return this.usersService.checkDuplicateUsername(params.username);
+  @UseGuards(JwtTwoFactorGuard)
+  async updateBlacklist(@Req() req: Request, @Body() data: any) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    const { newBlacklist } = data;
+    return this.usersService.updateBlacklist(id, newBlacklist);
   }
 
   @Get('/all')
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getAllAccounts() {
     const users = await this.usersService.getAllAccount();
     return users;

@@ -8,9 +8,9 @@
 	padding: none;
 }
 
-.account-page{
-	text-align: center;
-
+.home-button {
+	position: relative;
+	margin: 10px;
 }
 
 .account-info ul{
@@ -26,7 +26,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-	width: 300px;
+	width: 350px;
 	line-height: 4vh;
 	display: inline-block;
 	white-space: nowrap;
@@ -117,7 +117,7 @@
 	line-height: 100%;
 	font-size: 10px;
 	position: relative;
-	left: 80px;
+	left: 107px;
 	top: 3px;
 	margin: 0;
 	padding: 0;
@@ -127,7 +127,7 @@
 	position: relative;
 	font-size: 12px;
 	line-height: 100%;
-	left: 105px;
+	left: 130px;
 	top: 9px;
 	background-color: var(--light-grey);
 	color: white;
@@ -139,11 +139,49 @@
 	z-index: 4;
 	position:relative;
 	line-height: 4vh;
-	height: max(2.2vh, 10px);
+	height: max(2.2vh, 12px);
 	width: 120px;
 	background-color: var(--light-grey); 
 	padding: 0;
 	bottom: 0px;
 	right: 140px;
 
+}
+
+.two-auth .two-auth-form{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+	z-index: 5;
+	background-color:rgb(201, 199, 199);
+	text-align: center;
+	color:white;
+	width: 250px;
+	height: 120px;
+}
+.two-auth .two-auth-form button{
+	color:var(--text-1);
+}
+.two-auth .button-activate-two-auth{
+	font-size: 13px;
+	color:var(--text-1);
+	float:right;
+	position: relative;
+	bottom: 20px;
+	line-height: 2vh;
+	height: max(2.2vh, 15px);
+}
+
+.two-auth .input-email{
+	background-color: white;
+	color: black;
+	line-height: 2.5vh;
+
+}
+
+
+.email .info{
+	font-size: min(4vh, 15px);
+	
 }

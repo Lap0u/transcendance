@@ -3,14 +3,14 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { TypeOrmSession } from './account/entities/session.entity';
 import { TypeormStore } from 'connect-typeorm/out';
-
-
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
 	allowedHeaders: ['Content-Type'],
   	origin: 'http://localhost:3000',
@@ -38,16 +38,12 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
- /* app.use(function (req, res, next) {
-	res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-	res.header('Expires', '-1');
-	res.header('Pragma', 'no-cache');
-	res.clearCookie('_intra_42_session_production', {domain: '.intra.42.fr', path: '/'});
-	next();
-  });*/
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const cookieParser = require('cookie-parser');
   app.use(cookieParser());
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('hbs');
   await app.listen(port, () => {
     console.log('[BACK] listen on port ', port);
   });
