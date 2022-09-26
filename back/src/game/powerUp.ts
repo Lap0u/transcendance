@@ -6,7 +6,8 @@ import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, POWERUPDELAY, POWERUPD
 import { getRandomArbitrary } from "./game.utils";
 
 function placePowerup(powerup: any) {
-    powerup.value = Math.round(getRandomArbitrary(0, 3));
+    powerup.value = 3
+    // powerup.value = Math.round(getRandomArbitrary(0, 3));
 	
 	powerup.status = 1;
     powerup.pos.x = Math.round(getRandomArbitrary(POWERUPMARGIN, BACK_WIN_WIDTH - POWERUPMARGIN));
@@ -29,8 +30,6 @@ function handleDelay(powerup: any) {
             placePowerup(powerup)
     }
     else if (powerup.status === 2) {
-		console.log(powerup);
-		
         powerup.delay--;
         if (powerup.delay < 0)
             resetPowerup(powerup)
@@ -50,6 +49,8 @@ function playerCaughtPowerup(ballAngle: number, powerup : any) {
 	}
 	powerup.status = 2
 	powerup.delay = POWERUPDURATION
+	if (powerup.value === 3)
+		powerup.delay *= 2
 }
 
 function handlePickUp(ball: any, powerup : any) {

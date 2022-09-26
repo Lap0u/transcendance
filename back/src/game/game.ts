@@ -1,5 +1,6 @@
 import { matchesDto } from 'src/matchmaking/matches.dto';
 import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
+import { handleBallMove } from './ball.utils';
 import {
   FRAME_RATE,
   RECONNECTION_DELAY,
@@ -56,7 +57,7 @@ function gameLoop(
   curGames.playerOne.pongReply++
   curGames.playerTwo.pongReply++
   if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) { //playerOne left -> playerTWo won
-	console.log(curGames, 'ping2')
+		console.log(curGames, 'ping2')
 	return -2
   }
   if(curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {//playerTwo left -> playerOne won
@@ -65,11 +66,8 @@ function gameLoop(
 	}
   const ball = state.ball;
 
-  const dirX = Math.sin(ball.angle * (Math.PI / 180));
-  const dirY = Math.cos(ball.angle * (Math.PI / 180));
+	handleBallMove(ball, state.powerup)
 
-  ball.pos.x += dirX * ball.speed;
-  ball.pos.y += dirY * ball.speed;
   state.leftPlayer.pos.y = curGames.playerOneY;
   state.rightPlayer.pos.y = curGames.playerTwoY;
   handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y);
