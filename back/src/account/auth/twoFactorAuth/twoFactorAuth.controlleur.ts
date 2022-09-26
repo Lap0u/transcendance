@@ -26,7 +26,6 @@ export class TwoFactorAuthenticationController {
     private readonly authService: AuthService,
   ) {}
 
-
   @Get('/status')
   @UseGuards(JwtTwoFactorGuard)
   // @UseGuards(AuthenticatedGuard)
@@ -72,7 +71,7 @@ export class TwoFactorAuthenticationController {
   // @HttpCode(200)
   @UseGuards(AuthenticatedGuard)
   async authenticate(@Req() request: Request, @Body() data: any) {
-    const id = request.session['passport'].id;
+    const id = request.session['passport'].user.id;
     const user = await this.authService.findUser(id);
     const twoFactorAuthenticationCode = data.twoFactorAuthenticationCode;
     const isCodeValid =

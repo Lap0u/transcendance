@@ -33,13 +33,13 @@ const UserName = (props : any) => {
 }
 
 
-const  PublicInfo = () => {
+const  PublicInfo = (props: any) => {
 
 	const [ok, setOk] = useState(false);
 	const [user, getUser] = useState({name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
 
 	useEffect(() => {
-		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+		axios.get(`${BACK_URL}/account/${props.userId}`,  {withCredentials:true })
 			.then((response) => {
 				console.log(response.data);
 				console.log("resssss", response.data);
@@ -74,7 +74,7 @@ const  PublicInfo = () => {
 
 	return (
 		ok ?
-		<div>
+		<div style={{display: props.display}}>
 		<div className='top-line'/>
 		<li className='account-info'>
 			<Avatar avatar={user.avatar}/>

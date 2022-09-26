@@ -9,7 +9,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt = require('bcrypt');
 
 @Injectable()
 export class TwoFactorAuthenticationService {
@@ -67,8 +67,6 @@ export class TwoFactorAuthenticationService {
   }
 
   async verifyAccount(code: string, req: Request): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const bcrypt = require('bcrypt');
     try {
       const id = req.session['passport'].user.id;
       const user = await this.authService.findUser(id);
@@ -194,8 +192,6 @@ export class TwoFactorAuthenticationService {
   }
 
   async hashCode(code: string) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const bcrypt = require('bcrypt');
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(code, salt);
     return hash;
