@@ -1,11 +1,12 @@
 import { matchesDto } from 'src/matchmaking/matches.dto';
 import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
 import { handleBallMove } from './ball.utils';
+import { handleWallBounce } from './bounce.utils';
 import {
   FRAME_RATE,
   RECONNECTION_DELAY,
 } from './constants';
-import { checkGameEnd, checkGoal, createGameState, handleEndGame, handlePing, handleWallBounce } from './game.utils';
+import { checkGameEnd, checkGoal, createGameState, handleEndGame, handlePing } from './game.utils';
 import { handlePowerUp } from './powerUp';
 
 export function launchGame(
@@ -70,7 +71,7 @@ function gameLoop(
 
   state.leftPlayer.pos.y = curGames.playerOneY;
   state.rightPlayer.pos.y = curGames.playerTwoY;
-  handleWallBounce(ball, state.leftPlayer.pos.y, state.rightPlayer.pos.y);
+  handleWallBounce(ball, state.leftPlayer, state.rightPlayer, state.powerup);
   handlePowerUp(ball, state.powerup)
   state.ball = checkGoal(ball, state);
   return checkGameEnd(state)

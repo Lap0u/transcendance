@@ -5,12 +5,40 @@
 import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, BACK_WIN_WIDTH, POWERUPDELAY, POWERUPDURATION, POWERUPMARGIN, POWERUPSCALE } from "./constants";
 import { getRandomArbitrary } from "./game.utils";
 
-function placePowerup(powerup: any) {
-    powerup.value = 3
-    // powerup.value = Math.round(getRandomArbitrary(0, 3));
+export function createPowerup(){
+	return {
+		value: -1, //crash si on essaye de le draw
+		status: 0,
+		delay: POWERUPDELAY,
+		target: 0,
+		pos: {
+			x: 0,
+			y: 0,
+		}
+	}
+}
+
+export function checkPowerup(powerup: any, leftPlayer: any, rightPlayer : any) {
+	if (powerup.status === 2 && powerup.value === 0 && powerup.target === 0)
+		leftPlayer.scale = 2
+	if (powerup.status === 2 && powerup.value === 0 && powerup.target === 1)
+		rightPlayer.scale = 2
+	if (powerup.status === 2 && powerup.value === 2 && powerup.target === 0)
+		rightPlayer.scale = 0.5
+	if (powerup.status === 2 && powerup.value === 2 && powerup.target === 1)
+		leftPlayer.scale = 0.5
+	if (powerup.status === 0) {
+		leftPlayer.scale = 1
+		rightPlayer.scale = 1
+	}
 	
+}
+
+function placePowerup(powerup: any) {
+    
+	powerup.value = Math.round(getRandomArbitrary(0, 3));
 	powerup.status = 1;
-    powerup.pos.x = Math.round(getRandomArbitrary(POWERUPMARGIN, BACK_WIN_WIDTH - POWERUPMARGIN));
+    powerup.pos.x = Math.round(getRandomArbitrary(POWERUPMARGIN , BACK_WIN_WIDTH - POWERUPMARGIN));
     powerup.pos.y = Math.round(getRandomArbitrary(POWERUPMARGIN / 2, BACK_WIN_HEIGHT - POWERUPMARGIN / 2));
 }
 
