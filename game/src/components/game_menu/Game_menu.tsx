@@ -60,16 +60,16 @@ const GameMenu = (props : any) => {
       clearInterval(interval)
     }
   }, [])
+	socket.on(`matchFound:`, (gameId : string) => {
+		navigate(`/singleGame/${gameId}`, {state: customGameValues});
+	});
   useEffect(() => {
   
     if (inMatchmaking)
       joinMatchmakingList(socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
     if (!inMatchmaking)
       quitMatchmakingList(socket.id)
-    socket.on(`matchFound:`, (gameId : string) => {
-      navigate(`/singleGame/${gameId}`, {state: customGameValues});
-    });
-  }, [inMatchmaking, socket, navigate]);
+  }, [inMatchmaking, socket]);
 
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (
