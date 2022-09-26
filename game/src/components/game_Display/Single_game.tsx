@@ -33,7 +33,16 @@ const SingleGame = (props : any) => {
 	powerupSprite.src = myImg
 	
 	console.log('updated')
-	const gameCustomization	 : any = pageLocation.state
+	let gameCustomization	 : any = pageLocation.state
+	if (gameCustomization === null)
+		gameCustomization = {
+			myColor: "#ffffff",
+			opponentColor: "#ffffff",
+			ballColor: "#ffffff",
+			gameBackground: "#000000"
+		}
+	console.log('gaaa', gameCustomization);
+	
 	function searchId(allGames : any){
 		for (const game of allGames) {
 			if (game.gameId === gameSocket)
