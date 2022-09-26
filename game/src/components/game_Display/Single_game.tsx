@@ -31,7 +31,7 @@ const SingleGame = (props : any) => {
 	// 	console.log('image loaded')
 	// }
 	powerupSprite.src = myImg
-	
+
 	console.log('updated')
 	let gameCustomization	 : any = pageLocation.state
 	if (gameCustomization === null)

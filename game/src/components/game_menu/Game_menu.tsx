@@ -82,7 +82,7 @@ const GameMenu = (props : any) => {
 	 	 opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
 	 	 ballColor={ballColor} setBallColor={setBallColor}
 		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
-      <GameList games={gamesList} />
+      <GameList games={gamesList} customGameValues={customGameValues}/>
       <div className='preview-box'>
         <div>Live game preview</div>
 	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
