@@ -37,7 +37,7 @@ function App() {
           <Route path="/menu" element={<GameMenu socket={socket} />} />
           <Route
             path="/singleGame/:id"
-            element={<SingleGame socket={socket} />}
+            element={<SingleGame socket={socket}/>}
           />
 		  <Route path = "/error403" element={<Disconnected/>} />
 		  <Route path = "/error500" element={<InternalError/>} />

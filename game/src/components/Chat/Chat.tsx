@@ -67,8 +67,13 @@ const Chat = ({ socket }: { socket: any }) => {
 
   useEffect(() => {
     if (currentUser) {
+      const userUpdate = 'userUpdate';
       const updateChannelSocketMessage = 'updateChannel';
       const createNewChannelSocket = 'createChannel';
+
+      socket.on(userUpdate, (newCurrentUser: any) => {
+        setCurrentUser(newCurrentUser);
+      });
 
       socket.on(updateChannelSocketMessage, (updateChannel: ChannelType) => {
         setChannels((oldChannels: ChannelType[]) => {
@@ -112,6 +117,7 @@ const Chat = ({ socket }: { socket: any }) => {
       });
 
       return () => {
+        socket.off(userUpdate);
         socket.off(updateChannelSocketMessage);
         socket.off(createNewChannelSocket);
       };

@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   Res,
   StreamableFile,
@@ -115,6 +116,16 @@ export class AccountController {
     if (!ok2) return { ok: ok2, msg: msg2 };
     await this.usersService.changeUsername(id, newUsername);
     return { ok: true, msg: '' };
+  }
+
+  @Put('blacklist')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async updateBlacklist(@Req() req: Request, @Body() data: any) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    const { newBlacklist } = data;
+    return this.usersService.updateBlacklist(id, newBlacklist);
   }
 
   @Get('/all')

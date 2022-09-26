@@ -1,8 +1,8 @@
 import { useRef } from "react";
-import { drawBackground } from "../game_Display/draw_background";
-import { drawBall } from "../game_Display/draw_ball";
-import { drawPlayBar } from "../game_Display/draw_paddle";
-import { drawScore } from "../game_Display/draw_score";
+import { drawBackground } from "../game_Display/display_utils/draw_background";
+import { drawBall } from "../game_Display/display_utils/draw_ball";
+import { drawPlayBar } from "../game_Display/display_utils/draw_paddle";
+import { drawScore } from "../game_Display/display_utils/draw_score";
 import { DEFAULT_GAME } from "./defaultGame";
 import './GamePreview.css'
 

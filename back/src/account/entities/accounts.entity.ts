@@ -40,6 +40,9 @@ export class Accounts {
   @Column({ nullable: true })
   public twoFactorAuthenticationSecret?: string;
 
+  @Column('text', { array: true, default: [] })
+  blacklist!: string[];
+
   @JoinColumn({ name: 'avatar' })
   @ManyToOne(() => DatabaseFile, {
     nullable: true,
