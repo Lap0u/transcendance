@@ -18,6 +18,7 @@ import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate'
 import { ActivateTwoAuth } from './components/TwoFactorAuth/TwoAuthActivate';
 import Forrbidden from './components/ErrorPage/Forbidden';
 import { ScoresHistory } from './components/Scores/ScoresHistory';
+import PublicInfo from './components/Account/PublicAccount';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -45,6 +46,7 @@ function App() {
 		  <Route path = "/emailverify" element={<EmailConfirm/>} />
 		  <Route path = "/2fa" element={<TwoAuthAutenticatePage/>} />
 		  <Route path = "/scores/:id" element={<ScoresHistory/>} />
+		  <Route path = "/playerinfo" element={<PublicInfo/>} />
 		  <Route path = "/forbidden" element={<Forrbidden/>} />
           {/* If no route match, then return 404 page */}
           <Route path="*" element={<Page404 />} />
