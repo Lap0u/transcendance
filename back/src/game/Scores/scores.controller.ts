@@ -59,4 +59,11 @@ export class ScoresController {
   async getStats(@Req() req: Request, @Param() param) {
     return await this.scoresService.statsById(param.id);
   }
+
+  @Get('/classement')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async getClassement() {
+    return await this.scoresService.getClassement();
+  }
 }

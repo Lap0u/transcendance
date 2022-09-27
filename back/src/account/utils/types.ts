@@ -11,6 +11,7 @@ export type IntraUserDetails = {
   twoFactorAuthenticationSecret?: string;
   email: string;
   avatar: string;
+  points: number;
 };
 
 export type DatabaseFile = {

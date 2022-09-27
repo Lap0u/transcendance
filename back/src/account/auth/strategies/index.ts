@@ -28,7 +28,8 @@ export class Strategy42 extends PassportStrategy(Strategy){
 		const avatar = file.id;
 		const isTwoFactorAuthenticationEnabled = false;
 		const email: string = null;
-		const details : IntraUserDetails = {id, username, name, accountUsername, isTwoFactorAuthenticationEnabled, email, avatar};
+		const points = 0;
+		const details : IntraUserDetails = {id, username, name, accountUsername, isTwoFactorAuthenticationEnabled, email, avatar, points};
 		return this.authService.validateUser(details);
 	}
 }
