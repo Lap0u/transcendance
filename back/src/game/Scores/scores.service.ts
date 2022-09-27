@@ -28,6 +28,7 @@ export class ScoresService {
 
   async addScore(scores: ScoresDto) {
     const newScore = this.scoresRepo.create(scores);
+    await this.addPoint(scores.idWinner, scores.ScorePlayer1);
     return this.scoresRepo.save(newScore);
   }
 
@@ -35,5 +36,18 @@ export class ScoresService {
     const gameWon = await this.scoresRepo.countBy({ idWinner: id });
     const gameLost = await this.scoresRepo.countBy({ idLoser: id });
     return { gameWon: gameWon, gameLost: gameLost };
+  }
+
+  async getClassement() {
+    return await this.userRepo.find({ order: { points: 'DESC' } });
+  }
+
+  async addPoint(account_id: string, points: number) {
+    const user = await this.userRepo.findOneBy({ account_id });
+    const newPoints: number = +user.points + +points;
+    return await this.userRepo.save({
+      ...user, // existing fields
+      points: newPoints,
+    });
   }
 }

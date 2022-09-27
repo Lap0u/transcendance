@@ -20,22 +20,6 @@ const ScoresDto = [{
 	ScorePlayer2: null
   }];
 
-export function ScoresHistory(props: any){
-	const params = useParams();
-	const id= params.id;
-	const nav = useNavigate();
-
-	return (
-		<div>
-		<Button className='home-button' shape="circle" icon={<HomeOutlined />} onClick={() => nav('/')} />
-		<div className='score-page' >
-		<ScoreTab id={id}/>
-		<Stats id={id}/>
-		</div>
-		</div>
-	  );
-
-}
 
 export function ScoreTab(props: any){
 
@@ -56,6 +40,7 @@ export function ScoreTab(props: any){
 	}, []);
 	return(
 		ok && scoreLen?
+	<div className='tab'>
 	<ul className="score-tab">
 	<li className='raw'> Winner 
 		{scores.map((score) => (
@@ -83,8 +68,9 @@ export function ScoreTab(props: any){
 	  ))}
 	  </li>
 	</ul>
+	</div>
 		: 
-	<div>No score yet</div>
+	<div >No score yet</div>
 	)
 }
 
