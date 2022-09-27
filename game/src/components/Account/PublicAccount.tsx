@@ -95,4 +95,12 @@ const  PublicInfo = (props: any) => {
 	)
 }
 
+export function ClickPlayerMsg(props: any){
+	console.log("mouseX", props.clickProfile.mouseX);
+	console.log("mouseY", props.clickProfile.mouseY);
+	return (
+		<div className="click-profile" style={{display: props.clickProfile.display, /*"top": props.clickProfile.mouseY + "px", "left": props.clickProfile.mouseX + "px"*/}}>Click to see the player profil</div>
+	)
+}
+
 export default PublicInfo;

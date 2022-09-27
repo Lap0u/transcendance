@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
 import './ProfilPlayer.css'
-import PublicInfo from '../Account/PublicAccount';
+import PublicInfo, { ClickPlayerMsg } from '../Account/PublicAccount';
 import ChatAvatar from './ChatAvatar';
 
 
@@ -199,11 +199,4 @@ type ChatContentWindowProps = {
   selectedChannel: ChannelType | null;
 };
 
-function ClickPlayerMsg(props: any){
-	console.log("mouseX", props.clickProfile.mouseX);
-	console.log("mouseY", props.clickProfile.mouseY);
-	return (
-		<div className="click-profile" style={{display: props.clickProfile.display, /*"top": props.clickProfile.mouseY + "px", "left": props.clickProfile.mouseX + "px"*/}}>Click to see the player profil</div>
-	)
-}
 export default ChatContentWindow;
