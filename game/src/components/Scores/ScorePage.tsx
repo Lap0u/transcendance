@@ -7,6 +7,7 @@ import { Stats } from "./Stats";
 import { Tabs, Tab, Box } from '@mui/material';
 import { useState } from "react";
 import React from 'react';
+import '../Account/PublicAccount.css'
 import { blue, red } from '@mui/material/colors';
 
 

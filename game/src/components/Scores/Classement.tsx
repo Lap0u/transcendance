@@ -4,7 +4,7 @@ import handleErrors from "../RequestErrors/handleErrors";
 import { Stats } from "./Stats";
 import './ScoresHistory.css'
 import PublicInfo, { ClickPlayerMsg } from "../Account/PublicAccount";
-import { Username} from "../Account/Username";
+import {UsernameInterface} from "../Account/Username";
 
 const BACK_URL = "http://localhost:4000";
 
@@ -40,7 +40,7 @@ export function ClassementTab(props: any){
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-			<Username username={classement.accountUsername} userId={classement.id}/>
+			<UsernameInterface username={classement.accountUsername} userId={classement.id}/>
 		</i>
 	  ))}
 	  </li>
