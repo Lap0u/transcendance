@@ -14,10 +14,12 @@ import {
   NotAuthJwtTwoFactorStrategy,
 } from './twoFactorAuth/strategies';
 import { JwtService } from '@nestjs/jwt';
+import { ScoresService } from '../../game/Scores/scores.service';
+import { Scores } from '../../game/Scores/entities/scores.entities';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Accounts]),
+    TypeOrmModule.forFeature([Accounts, Scores]),
     TypeOrmModule.forFeature([DatabaseFile]),
   ],
   controllers: [AuthController],
@@ -35,6 +37,7 @@ import { JwtService } from '@nestjs/jwt';
     },
     AccountService,
     JwtService,
+    ScoresService,
   ],
 })
 export class AuthModule {}

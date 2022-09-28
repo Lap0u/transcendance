@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccountService } from '../../account/account/account.service';
 import { Accounts } from '../../account/entities/accounts.entity';
 import { Scores } from './entities/scores.entities';
-import { ScoresDbDto, ScoresDto } from './utils/types';
+import { ScoresDto } from './utils/types';
 
 @Injectable()
 export class ScoresService {
   constructor(
     @InjectRepository(Accounts) private userRepo: Repository<Accounts>,
     @InjectRepository(Scores) private scoresRepo: Repository<Scores>,
-    private readonly usersService: AccountService,
   ) {}
 
   async histoty() {
@@ -25,52 +23,13 @@ export class ScoresService {
     const player2 = await this.scoresRepo.find({
       where: { idLoser: account_id },
     });
-    const player = [...player1, ...player2];
-    const history: ScoresDto[] = player.map((score) => score);
-    for (const score of history) {
-      score.UsernameWinner = await this.usersService.getUsernameById(
-        score.idWinner,
-      );
-      score.UsernameLoser = await this.usersService.getUsernameById(
-        score.idLoser,
-      );
-    }
-    return history;
+    return [...player1, ...player2];
   }
-
-  calcPoints(winner: number, loser: number) {
-	const diff = winner - loser
-	const points = diff > 0 ? 20 - Math.round(diff / 30) : 20 + Math.round((diff * -1) / 30)
-	if (points < 0)
-		return 0
-	return points
-  }
-
-  async addPoint(winnerId: string, loserId: string) {
-	let account_id = winnerId;
-    const winner = await this.userRepo.findOneBy({ account_id });
-    account_id = loserId
-    const loser = await this.userRepo.findOneBy({ account_id });
-    const points = this.calcPoints(winner.points, loser.points)
-	console.log('points', points);
-	
-	let newPoints: number = +winner.points + +points;
-	await this.userRepo.save({
-      ...winner, // existing fields
-      points: newPoints,
-    });
-	newPoints = +loser.points - +points;
-	await this.userRepo.save({
-      ...loser, // existing fields
-      points: newPoints,
-    });
-  }
-
 
   async addScore(scores: ScoresDto) {
     const newScore = this.scoresRepo.create(scores);
-    await this.addPoint(scores.idWinner, scores.idLoser);
-    return this.scoresRepo.save(newScore); 
+    await this.addPoint(scores.idWinner, scores.ScorePlayer1);
+    return this.scoresRepo.save(newScore);
   }
 
   async statsById(id: string) {
@@ -81,5 +40,35 @@ export class ScoresService {
 
   async getClassement() {
     return await this.userRepo.find({ order: { points: 'DESC' } });
+  }
+
+  async addPoint(account_id: string, points: number) {
+    const user = await this.userRepo.findOneBy({ account_id });
+    const newPoints: number = +user.points + +points;
+    return await this.userRepo.save({
+      ...user, // existing fields
+      points: newPoints,
+    });
+  }
+
+  async updateUsernames(account_id: string, username: string) {
+    const player1 = await this.scoresRepo.find({
+      where: { idWinner: account_id },
+    });
+    const player2 = await this.scoresRepo.find({
+      where: { idLoser: account_id },
+    });
+    for (const score of player1) {
+      await this.scoresRepo.save({
+        ...score,
+        UsernameWinner: username,
+      });
+      for (const score of player2) {
+        await this.scoresRepo.save({
+          ...score,
+          UsernameLoser: username,
+        });
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SocketService } from 'src/socket/socket.service';
 import { Repository } from 'typeorm';
+import { ScoresService } from '../../game/Scores/scores.service';
 import { Accounts } from '../entities/accounts.entity';
 import { DatabaseFilesService } from '../files/databaseFile.service';
 
@@ -10,6 +11,7 @@ export class AccountService {
   constructor(
     @InjectRepository(Accounts)
     private usersRepository: Repository<Accounts>,
+    private scoreService: ScoresService,
     private readonly databaseFilesService: DatabaseFilesService,
     private socketService: SocketService,
   ) {}
@@ -32,6 +34,7 @@ export class AccountService {
 
   async changeUsername(id: string, username: string) {
     const user = await this.usersRepository.findOneBy({ id });
+    await this.scoreService.updateUsernames(user.account_id, username);
     return await this.usersRepository.save({
       ...user, // existing fields
       accountUsername: username,
@@ -102,10 +105,5 @@ export class AccountService {
     this.socketService.socket.emit('userUpdate', account);
 
     return saveAccount;
-  }
-
-  async getUsernameById(account_id: string) {
-    const user = await this.usersRepository.findOneBy({ account_id });
-    return user.accountUsername;
   }
 }
