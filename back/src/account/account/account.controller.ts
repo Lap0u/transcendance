@@ -128,7 +128,7 @@ export class AccountController {
     return this.usersService.updateBlacklist(id, newBlacklist);
   }
 
-  @Get('/all')
+  @Get('/all/users')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
   async getAllAccounts() {
