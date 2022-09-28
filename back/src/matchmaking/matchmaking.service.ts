@@ -45,6 +45,8 @@ export class MatchmakingService {
 
   async joinMatchmaking(payload: joinMatchmakingDto): Promise<matchmakingDto> {
 	let newUserInMatchmaking = addUserMatchmakingList(payload, this.matchmakingList)
+  console.log(this.matchmakingList);
+  
     if (this.matchmakingList.length >= 2) {
 		let toQuit = gameStart(this.matchmakingList, this.socketService, this.currentMatches)
 		this.quitMatchmaking(toQuit[0])

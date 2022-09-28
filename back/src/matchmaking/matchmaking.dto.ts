@@ -4,7 +4,8 @@ export class joinMatchmakingDto {
 }
 
 export class matchmakingDto {
-  id: string;
+  login: string;
+  accountUsername: string;
   socket: string;
   pongReply: number;
 }

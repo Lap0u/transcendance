@@ -16,8 +16,9 @@ const GameMenu = (props : any) => {
 	const [ballColor, setBallColor] = useState("#ffffff")
 	const [gameBackground, setGameBackground] = useState("#000000")
 	const [inMatchmaking, setMatchmaking] = useState(false);
-	const [gamesList, setGamesList] = useState<game[]>([]);
+	const [ gamesList, setGamesList] = useState<game[]>([]);
 	const socket = props.socket;
+  const [currentUser, setCurrentUser] = useState<any>(null);
 	const navigate = useNavigate();
 
   const customGameValues : any= {
@@ -27,6 +28,21 @@ const GameMenu = (props : any) => {
 	background: gameBackground
   }
   
+  useEffect(() => {
+    const initData = async () => {
+      try {
+        const res = await axios.get(`${BACK_URL}/account`, {
+          withCredentials: true,
+        });
+        setCurrentUser(res.data);
+      } catch {
+        console.log('Must be connect to use chat!');
+        navigate('/');
+      }
+    };
+    initData();
+  }, [navigate]);
+
   const joinMatchmaking = () =>{
     setMatchmaking(!inMatchmaking)
   }
@@ -38,9 +54,9 @@ const GameMenu = (props : any) => {
     }
   }
 
-  const joinMatchmakingList = async(userId: string) => {
+  const joinMatchmakingList = async(userLogin: string, userId: string, socket: string) => {
     try {
-        await axios.post(`${BACK_URL}/matchmaking`, { id: userId}, {withCredentials:true});
+        await axios.post(`${BACK_URL}/matchmaking`, { login: userLogin, accountUsername: userId, socket: socket}, {withCredentials:true});
     } catch(e) {
       handleErrors(e);
     }
@@ -51,6 +67,8 @@ const GameMenu = (props : any) => {
         setGamesList(res.data)
       }
       catch(e) {
+		console.log(e);
+		
         handleErrors(e);
     }
   }
@@ -60,16 +78,26 @@ const GameMenu = (props : any) => {
       clearInterval(interval)
     }
   }, [])
+
+	useEffect(() => {
+		socket.on(`matchFound:`, (gameId : string) => {
+			navigate(`/singleGame/${gameId}`, {state: customGameValues});
+		return () => 
+			socket.off(`matchFound:`)
+	})
+
+	});
   useEffect(() => {
-  
-    if (inMatchmaking)
-      joinMatchmakingList(socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
-    if (!inMatchmaking)
-      quitMatchmakingList(socket.id)
-    socket.on(`matchFound:`, (gameId : string) => {
-      navigate(`/singleGame/${gameId}`, {state: customGameValues});
-    });
-  }, [inMatchmaking, socket, navigate]);
+		if (currentUser) {
+      if (inMatchmaking)
+        joinMatchmakingList(currentUser.username, currentUser.accountUsername, socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+      if (!inMatchmaking)
+        quitMatchmakingList(currentUser.username)
+        return () => {
+          quitMatchmakingList(currentUser.username)
+	  }
+  }
+  }, [inMatchmaking, currentUser]);
 
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (
@@ -82,7 +110,7 @@ const GameMenu = (props : any) => {
 	 	 opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
 	 	 ballColor={ballColor} setBallColor={setBallColor}
 		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
-      <GameList games={gamesList} />
+      <GameList games={gamesList} customGameValues={customGameValues}/>
       <div className='preview-box'>
         <div>Live game preview</div>
 	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
