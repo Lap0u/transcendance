@@ -106,7 +106,6 @@ export class AccountService {
 
   async getUsernameById(account_id: string) {
     const user = await this.usersRepository.findOneBy({ account_id });
-	console.log("user name", user.accountUsername);
     return user.accountUsername;
   }
 }

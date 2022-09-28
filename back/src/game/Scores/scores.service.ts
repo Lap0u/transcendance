@@ -25,7 +25,6 @@ export class ScoresService {
     const player2 = await this.scoresRepo.find({
       where: { idLoser: account_id },
     });
-
     const player = [...player1, ...player2];
     const history: ScoresDto[] = player.map((score) => score);
     for (const score of history) {
