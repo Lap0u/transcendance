@@ -52,18 +52,20 @@ export function handlePing(pongCounter : number, socket : any,  playerOne: strin
 export function handleEndGame(gameStatus: number, socket : any, state: any, game:any, scoreService: ScoresService) {
 	const playerOne = game.playerOne
 	const playerTwo = game.playerTwo
+	console.log('state', state);
+	
 	let score : ScoresDto
 	if (gameStatus === -1) {
 		socket.to(playerOne.socket).emit('winner', {gameResult: 'You won', gameState: state})
 		socket.to(playerTwo.scoket).emit('winner', {gameResult: 'You lost', gameState: state})
-		socket.emit('winner', {gameResult: `${playerTwo.accountUsername} won`, gameState: state})
+		socket.emit('winner', {gameResult: `${playerOne.accountUsername} won`, gameState: state})
 		score = {
-			idWinner: playerTwo.login,
-			idLoser: playerOne.login,
-			UsernameWinner: playerTwo.accountUsername,
-			UsernameLoser: playerOne.accountUsername,
-			ScorePlayer1: 2,
-			ScorePlayer2: 2,
+			idWinner: playerOne.login,
+			idLoser: playerTwo.login,
+			UsernameWinner: playerOne.accountUsername,
+			UsernameLoser: playerTwo.accountUsername,
+			ScorePlayer1: state.score.playerTwo,
+			ScorePlayer2: state.score.playerOne,
 		}
 	}
 	else if (gameStatus === -2) {
@@ -71,12 +73,12 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 		socket.to(playerTwo.socket).emit('winner', {gameResult: 'You won', gameState: state})
 		socket.emit('winner', {gameResult: `${playerTwo.accountUsername} won`, gameState: state})
 		score = {
-			idWinner: playerOne.login,
-			idLoser: playerTwo.login,
-			UsernameWinner: playerOne.accountUsername,
-			UsernameLoser: playerTwo.accountUsername,
-			ScorePlayer1: 2,
-			ScorePlayer2: 1,
+			idWinner: playerTwo.login,
+			idLoser: playerOne.login,
+			UsernameWinner: playerTwo.accountUsername,
+			UsernameLoser: playerOne.accountUsername,
+			ScorePlayer1: state.score.playerOne,
+			ScorePlayer2: state.score.playerTwo,
 		}
 	}
 	console.log('score', score);
