@@ -26,6 +26,16 @@ export class ScoresService {
     return [...player1, ...player2];
   }
 
+  async addPoint(account_id: string, points: number) {
+    const user = await this.userRepo.findOneBy({ account_id });
+    const newPoints: number = +user.points + +points;
+    return await this.userRepo.save({
+      ...user, // existing fields
+      points: newPoints,
+    });
+  }
+
+
   async addScore(scores: ScoresDto) {
     const newScore = this.scoresRepo.create(scores);
     await this.addPoint(scores.idWinner, scores.ScorePlayer1);
@@ -40,14 +50,5 @@ export class ScoresService {
 
   async getClassement() {
     return await this.userRepo.find({ order: { points: 'DESC' } });
-  }
-
-  async addPoint(account_id: string, points: number) {
-    const user = await this.userRepo.findOneBy({ account_id });
-    const newPoints: number = +user.points + +points;
-    return await this.userRepo.save({
-      ...user, // existing fields
-      points: newPoints,
-    });
   }
 }

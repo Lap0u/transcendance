@@ -7,8 +7,8 @@ import { ScoresService } from 'src/game/Scores/scores.service';
 
 @Injectable()
 export class MatchmakingService {
-  constructor(private socketService: SocketService) {}
-	// private scoreService: ScoresService) {}
+  constructor(private socketService: SocketService,
+	private scoreService: ScoresService) {}
 
   private matchmakingList: matchmakingDto[] = [];
   private currentMatches: matchesDto[] = [];
@@ -50,13 +50,12 @@ export class MatchmakingService {
 	let newUserInMatchmaking = addUserMatchmakingList(payload, this.matchmakingList)
   
     if (this.matchmakingList.length >= 2) {
-		let toQuit = gameStart(this.matchmakingList, this.socketService, this.currentMatches, null)
+		let toQuit = gameStart(this.matchmakingList, this.socketService, this.currentMatches, this.scoreService)
 		this.quitMatchmaking(toQuit[0])
 		this.quitMatchmaking(toQuit[1])
 	}
 	return newUserInMatchmaking
   }
-
 
   quitMatchmaking(userId: string): matchmakingDto[] {
     const newMatchmakingList = this.matchmakingList.filter((user) => {

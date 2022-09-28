@@ -25,8 +25,7 @@ import { DatabaseFileModule } from './account/files/databaseFile.module';
 import { twoFactorAuthModule } from './account/auth/twoFactorAuth/twoFactorAuth.module';
 import { ScoresModule } from './game/Scores/scores.module';
 import { Scores } from './game/Scores/entities/scores.entities';
-import { ScoresService } from './game/Scores/scores.service';
-import { AuthService } from './account/auth/auth.service';
+import { ScoresController } from './game/Scores/scores.controller';
 
 @Module({
   imports: [
@@ -56,8 +55,8 @@ import { AuthService } from './account/auth/auth.service';
     PassportModule.register({ session: true }),
     HttpModule,
   ],
-  controllers: [AppController, MatchmakingController],
-  providers: [AppService, SocketGateway, MatchmakingService],
+  controllers: [AppController],
+  providers: [AppService, SocketGateway],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

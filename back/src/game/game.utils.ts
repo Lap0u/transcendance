@@ -3,6 +3,7 @@ import { resetBall } from "./ball.utils";
 import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, POWERUPDELAY, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 import { createPowerup } from "./powerUp";
 import { ScoresService } from "./Scores/scores.service";
+import { ScoresDto } from "./Scores/utils/types";
 
 export function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
@@ -51,7 +52,7 @@ export function handlePing(pongCounter : number, socket : any,  playerOne: strin
 export function handleEndGame(gameStatus: number, socket : any, state: any, game:any, scoreService: ScoresService) {
 	const playerOne = game.playerOne
 	const playerTwo = game.playerTwo
-	let score = {}	
+	let score : ScoresDto
 	if (gameStatus === -1) {
 		socket.to(playerOne.socket).emit('winner', {gameResult: 'You won', gameState: state})
 		socket.to(playerTwo.scoket).emit('winner', {gameResult: 'You lost', gameState: state})
@@ -79,6 +80,7 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 		}
 	}
 	console.log('score', score);
+	scoreService.addScore(score)
 	
 	//call addscore
 }
