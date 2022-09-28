@@ -14,11 +14,11 @@ const OneGame = ({game, customGameValues} : singleGamesprops) => {
             <Button onClick={joinGame} type="link">Join {game.gameId}</Button>
             <li className='one-game-list'>
                 <span className='leftPlayer'>
-                    {game.playerOne.id}
+                    {game.playerOne.accountUsername}
                 </span> 
                 vs 
                 <span className='rightPlayer'>
-                    {game.playerTwo.id}
+                    {game.playerTwo.accountUsername}
                 </span>
             </li>
                 
@@ -68,4 +68,5 @@ export type game = {
 type matchmakingDto = {
     id: string;
     socket: string;
+	accountUsername: string;
 }

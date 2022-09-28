@@ -6,11 +6,15 @@ import { matchmakingDto } from './matchmaking.dto';
 
 export function addUserMatchmakingList(payload: any, matchmakingList : matchmakingDto[]) {
     let newUserInMatchmaking = {
-        id: uuid(),
 		pongReply: 0,
-        socket: payload.id, //ne marchera pas quand il y aura des spectateurs
         ...payload
     }
+	for (let user of matchmakingList) {
+		if (user.login === payload.login) {
+			user = newUserInMatchmaking
+			return user;
+		}
+	}
     matchmakingList.push(newUserInMatchmaking);
     return newUserInMatchmaking;
 }
