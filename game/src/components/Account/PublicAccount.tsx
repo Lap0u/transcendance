@@ -58,8 +58,7 @@ const  PublicInfo = (props: any) => {
 	return (
 		ok ?
 		<div style={{display: props.display}}>
-		<div className='top-line'/>
-		<li className='public-info'>
+		<div className='public-info'>
 			<Avatar avatar={user.avatar}/>
 			<ul className='public-username'>
 				<i> {user.accountUsername}</i>
@@ -71,7 +70,7 @@ const  PublicInfo = (props: any) => {
 			<ul className='stats'>
 				<Stats id={user.account_id}/>
 			</ul>
-		</li>
+		</div>
 		<div className='bottom-line'/>
 		</div>
 		:null

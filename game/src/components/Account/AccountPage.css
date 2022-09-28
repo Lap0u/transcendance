@@ -136,13 +136,13 @@
 .username .input-text{
 	z-index: 4;
 	position:relative;
-	line-height: 4vh;
-	height: max(2.2vh, 12px);
+	height: max(2.5vh, 19px);
 	width: 120px;
 	background-color: var(--light-grey); 
 	padding: 0;
 	bottom: 0px;
 	right: 140px;
+	font-size: 1.9vh;
 
 }
 

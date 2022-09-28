@@ -11,7 +11,7 @@ import { Stats } from "./Stats";
 const BACK_URL = "http://localhost:4000";
 
 const ScoresDto = [{
-	account_id: "",
+	key: "",
 	idWinner: "",
 	idLoser: "",
 	UsernameWinner: "",
@@ -29,6 +29,7 @@ export function ScoreTab(props: any){
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/history/${props.id}`,  {withCredentials:true })
 			.then((response) => {
+				console.log("scooroe", response.data);
 				getScores(response.data);
 				getScoreLen(response.data.length);
 				setOk(true);
@@ -44,21 +45,21 @@ export function ScoreTab(props: any){
 	<ul className="score-tab">
 	<li className='raw'> Winner 
 		{scores.map((score) => (
-		<i key={score.account_id} className="data">
+		<i key={score.key} className="data">
 		{score.UsernameWinner}
 		</i>
 	  ))}
 	  </li>
 	<li className='raw'> Loser
 		{scores.map((score) => (
-		<i key={score.account_id} className="data">
+		<i key={score.key} className="data">
 		{score.UsernameLoser}
 		</i>
 	  ))}
 	  </li>
 	<li className='raw'> Score
 		{scores.map((score) => (
-		<i key={score.account_id} className="data">
+		<i key={score.key} className="data">
 		<div className="res-score">
 		<i className="score">{score.ScorePlayer1}</i>
 		<i className="vl"/>

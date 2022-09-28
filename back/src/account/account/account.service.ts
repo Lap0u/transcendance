@@ -14,18 +14,6 @@ export class AccountService {
     private socketService: SocketService,
   ) {}
 
-  /*  async setTwoFactorAuthenticationSecret(secret: string, id: string) {
-    return this.usersRepository.update(id, {
-      twoFactorAuthenticationSecret: secret,
-    });
-  }
-
-  async turnOnTwoFactorAuthentication(userId: string) {
-    return this.usersRepository.update(userId, {
-      isTwoFactorAuthenticationEnabled: true,
-    });
-  }*/
-
   async changeAvatar(id: string, imageBuffer: Buffer, filename: string) {
     const user = await this.usersRepository.findOneBy({ id });
     const odlAvatarId = user.avatar;
@@ -44,7 +32,6 @@ export class AccountService {
 
   async changeUsername(id: string, username: string) {
     const user = await this.usersRepository.findOneBy({ id });
-	console.log("change username");
     return await this.usersRepository.save({
       ...user, // existing fields
       accountUsername: username,
@@ -115,5 +102,10 @@ export class AccountService {
     this.socketService.socket.emit('userUpdate', account);
 
     return saveAccount;
+  }
+
+  async getUsernameById(account_id: string) {
+    const user = await this.usersRepository.findOneBy({ account_id });
+    return user.accountUsername;
   }
 }
