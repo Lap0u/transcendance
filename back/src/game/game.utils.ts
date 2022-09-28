@@ -2,6 +2,7 @@ import { matchesDto } from "src/matchmaking/matches.dto";
 import { resetBall } from "./ball.utils";
 import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, POWERUPDELAY, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
 import { createPowerup } from "./powerUp";
+import { ScoresService } from "./Scores/scores.service";
 
 export function getRandomArbitrary(min : number, max : number) {
     return Math.random() * (max - min) + min;
@@ -47,17 +48,39 @@ export function handlePing(pongCounter : number, socket : any,  playerOne: strin
 	return pongCounter
 }
 
-export function handleEndGame(gameStatus: number, socket : any, playerOne: string, playerTwo: string, state: any) {
+export function handleEndGame(gameStatus: number, socket : any, state: any, game:any, scoreService: ScoresService) {
+	const playerOne = game.playerOne
+	const playerTwo = game.playerTwo
+	let score = {}	
 	if (gameStatus === -1) {
-		socket.to(playerOne).emit('winner', {gameResult: 'You won', gameState: state})
-		socket.to(playerTwo).emit('winner', {gameResult: 'You lost', gameState: state})
-		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
+		socket.to(playerOne.socket).emit('winner', {gameResult: 'You won', gameState: state})
+		socket.to(playerTwo.scoket).emit('winner', {gameResult: 'You lost', gameState: state})
+		socket.emit('winner', {gameResult: `${playerTwo.accountUsername} won`, gameState: state})
+		score = {
+			idWinner: playerTwo.login,
+			idLoser: playerOne.login,
+			UsernameWinner: playerTwo.accountUsername,
+			UsernameLoser: playerOne.accountUsername,
+			ScorePlayer1: 2,
+			ScorePlayer2: 2,
+		}
 	}
 	else if (gameStatus === -2) {
-		socket.to(playerOne).emit('winner', {gameResult: 'You lost', gameState: state})
-		socket.to(playerTwo).emit('winner', {gameResult: 'You won', gameState: state})
-		socket.emit('winner', {gameResult: `${playerTwo} won`, gameState: state})
+		socket.to(playerOne.socket).emit('winner', {gameResult: 'You lost', gameState: state})
+		socket.to(playerTwo.socket).emit('winner', {gameResult: 'You won', gameState: state})
+		socket.emit('winner', {gameResult: `${playerTwo.accountUsername} won`, gameState: state})
+		score = {
+			idWinner: playerOne.login,
+			idLoser: playerTwo.login,
+			UsernameWinner: playerOne.accountUsername,
+			UsernameLoser: playerTwo.accountUsername,
+			ScorePlayer1: 2,
+			ScorePlayer2: 1,
+		}
 	}
+	console.log('score', score);
+	
+	//call addscore
 }
 
 export function createGameState() {

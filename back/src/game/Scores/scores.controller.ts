@@ -46,13 +46,6 @@ export class ScoresController {
     return await this.scoresService.historyById(id);
   }
 
-  @Post()
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtTwoFactorGuard)
-  async addScore(@Req() req: Request, @Body() body: ScoresDto) {
-    return await this.scoresService.addScore(body);
-  }
-
   @Get('/stats/:id')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)

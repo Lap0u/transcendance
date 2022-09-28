@@ -50,6 +50,6 @@ export class Accounts {
   @Column({ nullable: true })
   public avatar?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true , default: 1000})
   public points?: number;
 }

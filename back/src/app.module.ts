@@ -25,6 +25,8 @@ import { DatabaseFileModule } from './account/files/databaseFile.module';
 import { twoFactorAuthModule } from './account/auth/twoFactorAuth/twoFactorAuth.module';
 import { ScoresModule } from './game/Scores/scores.module';
 import { Scores } from './game/Scores/entities/scores.entities';
+import { ScoresService } from './game/Scores/scores.service';
+import { AuthService } from './account/auth/auth.service';
 
 @Module({
   imports: [

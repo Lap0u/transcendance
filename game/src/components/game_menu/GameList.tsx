@@ -21,8 +21,6 @@ const OneGame = ({game, customGameValues} : singleGamesprops) => {
                     {game.playerTwo.accountUsername}
                 </span>
             </li>
-                
-        
         </div>
     )
 }

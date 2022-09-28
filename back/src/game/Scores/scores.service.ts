@@ -29,7 +29,7 @@ export class ScoresService {
   async addScore(scores: ScoresDto) {
     const newScore = this.scoresRepo.create(scores);
     await this.addPoint(scores.idWinner, scores.ScorePlayer1);
-    return this.scoresRepo.save(newScore);
+    return this.scoresRepo.save(newScore); 
   }
 
   async statsById(id: string) {

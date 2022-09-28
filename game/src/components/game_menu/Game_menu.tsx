@@ -90,11 +90,11 @@ const GameMenu = (props : any) => {
   useEffect(() => {
 		if (currentUser) {
       if (inMatchmaking)
-        joinMatchmakingList(currentUser.username, currentUser.accountUsername, socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+        joinMatchmakingList(currentUser.account_id, currentUser.accountUsername, socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
       if (!inMatchmaking)
-        quitMatchmakingList(currentUser.username)
+        quitMatchmakingList(currentUser.account_id)
         return () => {
-          quitMatchmakingList(currentUser.username)
+          quitMatchmakingList(currentUser.account_id)
 	  }
   }
   }, [inMatchmaking, currentUser]);

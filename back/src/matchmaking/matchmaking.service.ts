@@ -3,10 +3,13 @@ import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
 import { addUserMatchmakingList, gameStart } from './matchmaking.utils';
+import { ScoresService } from 'src/game/Scores/scores.service';
 
 @Injectable()
 export class MatchmakingService {
   constructor(private socketService: SocketService) {}
+	// private scoreService: ScoresService) {}
+
   private matchmakingList: matchmakingDto[] = [];
   private currentMatches: matchesDto[] = [];
   getMatchmakingList(): matchmakingDto[] {
@@ -45,10 +48,9 @@ export class MatchmakingService {
 
   async joinMatchmaking(payload: joinMatchmakingDto): Promise<matchmakingDto> {
 	let newUserInMatchmaking = addUserMatchmakingList(payload, this.matchmakingList)
-  console.log(this.matchmakingList);
   
     if (this.matchmakingList.length >= 2) {
-		let toQuit = gameStart(this.matchmakingList, this.socketService, this.currentMatches)
+		let toQuit = gameStart(this.matchmakingList, this.socketService, this.currentMatches, null)
 		this.quitMatchmaking(toQuit[0])
 		this.quitMatchmaking(toQuit[1])
 	}
