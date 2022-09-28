@@ -8,16 +8,18 @@ import {
 } from './constants';
 import { checkGameEnd, checkGoal, createGameState, handleEndGame, handlePing } from './game.utils';
 import { handlePowerUp } from './powerUp';
+import { ScoresService } from './Scores/scores.service';
 
 export function launchGame(
   playerOne: matchmakingDto,
   playerTwo: matchmakingDto,
   socket: any,
   game: any,
-  allGames: matchesDto[]
+  allGames: matchesDto[],
+  scoreService: ScoresService
 ) {
   const state = createGameState();
-  startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames);
+  startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames, scoreService);
 }
 
 function startGameInterval(
@@ -26,7 +28,8 @@ function startGameInterval(
   state: any,
   socket: any,
   curGame: any,
-  allGames: matchesDto[]
+  allGames: matchesDto[],
+  scoreService: ScoresService
 
 ) {
   let pongCounter : number = FRAME_RATE
@@ -39,7 +42,7 @@ function startGameInterval(
 	  socket.emit(curGame.gameId, state);
 	} else {
 	  console.log(status);
-      handleEndGame(status, socket, playerOne, playerTwo, state)
+      handleEndGame(status, socket, state, curGame, scoreService)
 	//   clearGame(curGame.gameId, allGames) //enleve la game de la liste, pose des problemes avec le front pour l'instant
 	  clearInterval(intervalId);
 	}

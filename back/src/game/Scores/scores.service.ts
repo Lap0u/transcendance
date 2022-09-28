@@ -26,10 +26,39 @@ export class ScoresService {
     return [...player1, ...player2];
   }
 
+  calcPoints(winner: number, loser: number) {
+	const diff = winner - loser
+	const points = diff > 0 ? 20 - Math.round(diff / 30) : 20 + Math.round((diff * -1) / 30)
+	if (points < 0)
+		return 0
+	return points
+  }
+
+  async addPoint(winnerId: string, loserId: string) {
+	let account_id = winnerId;
+    const winner = await this.userRepo.findOneBy({ account_id });
+    account_id = loserId
+    const loser = await this.userRepo.findOneBy({ account_id });
+    const points = this.calcPoints(winner.points, loser.points)
+	console.log('points', points);
+	
+	let newPoints: number = +winner.points + +points;
+	await this.userRepo.save({
+      ...winner, // existing fields
+      points: newPoints,
+    });
+	newPoints = +loser.points - +points;
+	await this.userRepo.save({
+      ...loser, // existing fields
+      points: newPoints,
+    });
+  }
+
+
   async addScore(scores: ScoresDto) {
     const newScore = this.scoresRepo.create(scores);
-    await this.addPoint(scores.idWinner, scores.ScorePlayer1);
-    return this.scoresRepo.save(newScore);
+    await this.addPoint(scores.idWinner, scores.idLoser);
+    return this.scoresRepo.save(newScore); 
   }
 
   async statsById(id: string) {
@@ -40,14 +69,5 @@ export class ScoresService {
 
   async getClassement() {
     return await this.userRepo.find({ order: { points: 'DESC' } });
-  }
-
-  async addPoint(account_id: string, points: number) {
-    const user = await this.userRepo.findOneBy({ account_id });
-    const newPoints: number = +user.points + +points;
-    return await this.userRepo.save({
-      ...user, // existing fields
-      points: newPoints,
-    });
   }
 }
