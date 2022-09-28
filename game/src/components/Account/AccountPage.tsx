@@ -93,7 +93,6 @@ function ButtonChangeAvatar(props : any) {
 		.catch((error) => {
 			handleErrors(error)
 		});
-		console.log("hiiiiiiiii");
 	}
 	  
 	return (
@@ -110,8 +109,6 @@ function ButtonChangeAvatar(props : any) {
 }
 
 const Avatar = (props : any) => {
-	console.log("avataaaaar", BACK_URL + 'account/avatar/' + props.avatar);
-
 
 	return(
 		<ul className='avatar'>

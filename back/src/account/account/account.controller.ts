@@ -109,11 +109,14 @@ export class AccountController {
       newUsername,
       oldUsername,
     );
+	console.log("wwwwwwwww");
     if (!ok1) return { ok: ok1, msg: msg1 };
     const { ok2, msg2 } = await this.usersService.checkDuplicateUsername(
       newUsername,
     );
+	console.log("xxxxxxx");
     if (!ok2) return { ok: ok2, msg: msg2 };
+	console.log("zzzzzzz");
     await this.usersService.changeUsername(id, newUsername);
     return { ok: true, msg: '' };
   }

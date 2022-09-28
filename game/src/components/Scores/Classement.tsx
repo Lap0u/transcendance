@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import handleErrors from "../RequestErrors/handleErrors";
 import { Stats } from "./Stats";
 import './ScoresHistory.css'
+import PublicInfo, { ClickPlayerMsg } from "../Account/PublicAccount";
+import {UsernameInterface} from "../Account/Username";
 
 const BACK_URL = "http://localhost:4000";
 
 const ScoresDto = [{
 	account_id: "",
+	id: "",
 	accountUsername: "",
 	points: 0,
   }];
@@ -17,6 +20,7 @@ export function ClassementTab(props: any){
 	const [Classement, getClassement] = useState(ScoresDto);
 	const [classementLen, getClassementLen] = useState(0);
 	const [ok, setOk] = useState(false);
+
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
 			.then((response) => {
@@ -33,10 +37,10 @@ export function ClassementTab(props: any){
 		ok && classementLen?
 	<div className='tab'>
 		<ul className="classement-tab">
-		<li className='raw'> Username 
+		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-		{classement.accountUsername}
+			<UsernameInterface username={classement.accountUsername} userId={classement.id}/>
 		</i>
 	  ))}
 	  </li>

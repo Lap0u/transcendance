@@ -1,0 +1,35 @@
+.username-interface .account-username:hover{
+	color: #7270ec;
+}
+
+.public-info{
+	z-index: 2;
+	text-align: left;
+    position:fixed ;
+	width: 10em;
+	font-size: 0.7em;
+	background-color: #7270ec;
+
+}
+
+
+.public-info .avatarImg{
+	position:static;
+	border-radius: 50%; 
+	height: 6em;
+	width: 6em;
+	max-height: 50px;
+	max-width: 50px;
+	object-fit: cover;
+	right: 40px;
+}
+
+.public-info .stats{
+	position: relative;
+	float:right;
+	right: 3px;
+}
+
+.box-tab{
+	z-index: 1;
+}

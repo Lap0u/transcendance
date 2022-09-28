@@ -44,7 +44,8 @@ export class AccountService {
 
   async changeUsername(id: string, username: string) {
     const user = await this.usersRepository.findOneBy({ id });
-    return this.usersRepository.save({
+	console.log("change username");
+    return await this.usersRepository.save({
       ...user, // existing fields
       accountUsername: username,
     });
@@ -83,7 +84,7 @@ export class AccountService {
 
   async checkDuplicateUsername(accountUsername: string) {
     const user = await this.usersRepository.findOneBy({ accountUsername });
-    if (user == null) return { ok: true, msg: '' };
+    if (user == null) return { ok2: true, msg2: '' };
     return {
       ok2: false,
       msg2: 'This username is already token please choose an other',

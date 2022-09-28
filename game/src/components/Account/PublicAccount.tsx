@@ -22,21 +22,12 @@ const Avatar = (props : any) => {
 	)
 }
 
-const UserName = (props : any) => {
-
-	return (
-	<ul className='username'>
-		<i className='info-type'>Username</i>
-		<i className='info'> {props.username}</i>
-	</ul>
-	)
-}
 
 
 const  PublicInfo = (props: any) => {
 
 	const [ok, setOk] = useState(false);
-	const [user, getUser] = useState({name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
+	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
 
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/${props.userId}`,  {withCredentials:true })
@@ -63,35 +54,35 @@ const  PublicInfo = (props: any) => {
 		return true;
 	}
 
-	function getName() : string {
-		if (!isJson(user.name))
-			return " ";
-		const {givenName, familyName} = JSON.parse(user.name);
-		return (" " + givenName + " " + familyName);
-	 }
-	console.log("useer AVATAR", user.avatar);
-
 
 	return (
 		ok ?
 		<div style={{display: props.display}}>
 		<div className='top-line'/>
-		<li className='account-info'>
+		<li className='public-info'>
 			<Avatar avatar={user.avatar}/>
-			<UserName username={user.username}/>
-			<ul className='name'>
-				<i className='info-type'>Name </i>
-				<i className='info'>{getName()}</i>
+			<ul className='public-username'>
+				<i> {user.accountUsername}</i>
 			</ul>
 			<ul className='login' >
 				<i className='info-type'>Login </i>
 				<i className='info'>{user.username} </i>
 			</ul>
-			<Stats id="e"/>
+			<ul className='stats'>
+				<Stats id={user.account_id}/>
+			</ul>
 		</li>
 		<div className='bottom-line'/>
 		</div>
 		:null
+	)
+}
+
+export function ClickPlayerMsg(props: any){
+	console.log("mouseX", props.clickProfile.mouseX);
+	console.log("mouseY", props.clickProfile.mouseY);
+	return (
+		<div className="click-profile" style={{display: props.clickProfile.display, /*"top": props.clickProfile.mouseY + "px", "left": props.clickProfile.mouseX + "px"*/}}>Click to see the player profil</div>
 	)
 }
 
