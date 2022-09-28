@@ -30,6 +30,7 @@ function ButtonChangeUsername(props : any) {
 			headers: {}
 		})
 		.then(function (response) {
+			console.log("change username", response.data)
 			if (response.data.ok === false){
 				alert(response.data.msg);
 				return;

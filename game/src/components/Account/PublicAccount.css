@@ -14,14 +14,14 @@
 
 
 .public-info .avatarImg{
-	position:static;
+	position:fixed;
 	border-radius: 50%; 
 	height: 6em;
 	width: 6em;
 	max-height: 50px;
 	max-width: 50px;
-	object-fit: cover;
-	right: 40px;
+	object-fit: cover;;
+	left:10vw;
 }
 
 .public-info .stats{

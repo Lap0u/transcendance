@@ -2,22 +2,33 @@ import { matchesDto } from 'src/matchmaking/matches.dto';
 import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
 import { handleBallMove } from './ball.utils';
 import { handleWallBounce } from './bounce.utils';
+import { FRAME_RATE, RECONNECTION_DELAY } from './constants';
 import {
-  FRAME_RATE,
-  RECONNECTION_DELAY,
-} from './constants';
-import { checkGameEnd, checkGoal, createGameState, handleEndGame, handlePing } from './game.utils';
+  checkGameEnd,
+  checkGoal,
+  createGameState,
+  handleEndGame,
+  handlePing,
+} from './game.utils';
 import { handlePowerUp } from './powerUp';
+import { ScoresService } from './Scores/scores.service';
 
 export function launchGame(
   playerOne: matchmakingDto,
   playerTwo: matchmakingDto,
   socket: any,
   game: any,
-  allGames: matchesDto[]
+  allGames: matchesDto[],
 ) {
   const state = createGameState();
-  startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames);
+  startGameInterval(
+    playerOne.socket,
+    playerTwo.socket,
+    state,
+    socket,
+    game,
+    allGames,
+  );
 }
 
 function startGameInterval(
@@ -26,53 +37,51 @@ function startGameInterval(
   state: any,
   socket: any,
   curGame: any,
-  allGames: matchesDto[]
-
+  allGames: matchesDto[],
 ) {
-  let pongCounter : number = FRAME_RATE
+  let pongCounter: number = FRAME_RATE;
   const intervalId = setInterval(() => {
-	//check connection with client every second
-	pongCounter = handlePing(pongCounter, socket, playerOne, playerTwo)
-	//
-	const status: number = gameLoop(state, curGame);
-	if (status === 1) {
-	  socket.emit(curGame.gameId, state);
-	} else {
-	  console.log(status);
-      handleEndGame(status, socket, playerOne, playerTwo, state)
-	//   clearGame(curGame.gameId, allGames) //enleve la game de la liste, pose des problemes avec le front pour l'instant
-	  clearInterval(intervalId);
-	}
+    //check connection with client every second
+    pongCounter = handlePing(pongCounter, socket, playerOne, playerTwo);
+    //
+    const status: number = gameLoop(state, curGame);
+    if (status === 1) {
+      socket.emit(curGame.gameId, state);
+    } else {
+      console.log(status);
+      handleEndGame(status, socket, playerOne, playerTwo, state);
+      //   clearGame(curGame.gameId, allGames) //enleve la game de la liste, pose des problemes avec le front pour l'instant
+      clearInterval(intervalId);
+    }
   }, 1000 / FRAME_RATE);
-  return curGame.gameId
+  return curGame.gameId;
 }
 
-function gameLoop(
-  state: any,
-  curGames: any,
-): number {
+function gameLoop(state: any, curGames: any): number {
   if (state.frameDelay > 0) {
     state.frameDelay--;
     return 1;
   }
-  curGames.playerOne.pongReply++
-  curGames.playerTwo.pongReply++
-  if(curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) { //playerOne left -> playerTWo won
-		console.log(curGames, 'ping2')
-	return -2
+  curGames.playerOne.pongReply++;
+  curGames.playerTwo.pongReply++;
+  if (curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {
+    //playerOne left -> playerTWo won
+    console.log(curGames, 'ping2');
+    return -2;
   }
-  if(curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {//playerTwo left -> playerOne won
-  		console.log(curGames, 'ping1')
- 		return -1
-	}
+  if (curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {
+    //playerTwo left -> playerOne won
+    console.log(curGames, 'ping1');
+    return -1;
+  }
   const ball = state.ball;
 
-	handleBallMove(ball, state.powerup)
+  handleBallMove(ball, state.powerup);
 
   state.leftPlayer.pos.y = curGames.playerOneY;
   state.rightPlayer.pos.y = curGames.playerTwoY;
   handleWallBounce(ball, state.leftPlayer, state.rightPlayer, state.powerup);
-  handlePowerUp(ball, state.powerup)
+  handlePowerUp(ball, state.powerup);
   state.ball = checkGoal(ball, state);
-  return checkGameEnd(state)
+  return checkGameEnd(state);
 }

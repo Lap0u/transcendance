@@ -36,28 +36,28 @@ export function ClassementTab(props: any){
 	return(
 		ok && classementLen?
 	<div className='tab'>
-		<ul className="classement-tab">
+	<ul className="classement-tab">
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
 			<UsernameInterface username={classement.accountUsername} userId={classement.id}/>
 		</i>
 	  ))}
-	  </li>
-	<li className='raw'> Points
+		</li>
+		<li className='raw'> Points
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
 		{classement.points}
 		</i>
 	  ))}
-	  </li>
-	<li className='raw'> Stats
+	  	</li>
+		<li className='raw'> Stats
 	{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
 		<Stats id={classement.account_id}/>
 		</i>
 	  ))}
-	  </li>
+		</li>
 	</ul>
 	</div>
 		: 

@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { AccountService } from '../../account/account/account.service';
 import { Accounts } from '../../account/entities/accounts.entity';
 import { Scores } from './entities/scores.entities';
-import { ScoresDto } from './utils/types';
+import { ScoresDbDto, ScoresDto } from './utils/types';
 
 @Injectable()
 export class ScoresService {
   constructor(
     @InjectRepository(Accounts) private userRepo: Repository<Accounts>,
     @InjectRepository(Scores) private scoresRepo: Repository<Scores>,
+    private readonly usersService: AccountService,
   ) {}
 
   async histoty() {
@@ -23,7 +25,18 @@ export class ScoresService {
     const player2 = await this.scoresRepo.find({
       where: { idLoser: account_id },
     });
-    return [...player1, ...player2];
+
+    const player = [...player1, ...player2];
+    const history: ScoresDto[] = player.map((score) => score);
+    for (const score of history) {
+      score.UsernameWinner = await this.usersService.getUsernameById(
+        score.idWinner,
+      );
+      score.UsernameLoser = await this.usersService.getUsernameById(
+        score.idLoser,
+      );
+    }
+    return history;
   }
 
   async addScore(scores: ScoresDto) {
