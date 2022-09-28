@@ -2,11 +2,11 @@ import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './Game_list.css'
 
-const OneGame = ({game} : singleGamesprops) => {
+const OneGame = ({game, customGameValues} : singleGamesprops) => {
 	
     const navigate = useNavigate();
     const joinGame = () => {
-        navigate(`/singleGame/${game.gameId}`);
+        navigate(`/singleGame/${game.gameId}`, {state: customGameValues});
 
     }
     return (
@@ -14,22 +14,20 @@ const OneGame = ({game} : singleGamesprops) => {
             <Button onClick={joinGame} type="link">Join {game.gameId}</Button>
             <li className='one-game-list'>
                 <span className='leftPlayer'>
-                    {game.playerOne.id}
+                    {game.playerOne.accountUsername}
                 </span> 
                 vs 
                 <span className='rightPlayer'>
-                    {game.playerTwo.id}
+                    {game.playerTwo.accountUsername}
                 </span>
             </li>
-                
-        
         </div>
     )
 }
 
-export const GameList = ({games} : gameslistprops) => {
+export const GameList = ({games, customGameValues} : gameslistprops) => {
     const ListHeader = games.length === 0 ? "No games yet" : "Current games"
-    const listItems = games.map((d) => <OneGame key={d.gameId} game={d} />) 
+    const listItems = games.map((d) => <OneGame key={d.gameId} game={d} customGameValues={customGameValues} />) 
     return (
         <div className="game-list-container">
             <h1>{ListHeader}</h1>            
@@ -42,10 +40,19 @@ export const GameList = ({games} : gameslistprops) => {
 
 export type gameslistprops = {
     games: game[],
+	customGameValues: customProps
 }
 
 type singleGamesprops = {
     game: game,
+	customGameValues: customProps
+}
+
+type customProps = {
+	myColor: string,
+	opponentColor: string,
+	ballColor: string,
+	background: string
 }
 
 export type game = {
@@ -59,8 +66,5 @@ export type game = {
 type matchmakingDto = {
     id: string;
     socket: string;
-}
-
-type gameProps = {
-    gameId : string;
+	accountUsername: string;
 }
