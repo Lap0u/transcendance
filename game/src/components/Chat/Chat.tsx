@@ -38,7 +38,7 @@ const Chat = ({ socket }: { socket: any }) => {
 
   const getAllUsers = async () => {
     try {
-      const res = await axios.get(`${BACK_URL}/account/all`, {
+      const res = await axios.get(`${BACK_URL}/account/all/users`, {
         withCredentials: true,
       });
       res.data = res.data.map((data: any) => ({ ...data, key: data.id }));
