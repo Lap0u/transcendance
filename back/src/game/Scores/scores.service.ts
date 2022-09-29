@@ -17,13 +17,11 @@ export class ScoresService {
   }
 
   async historyById(account_id: string) {
-    const player1: ScoresDbDto[] = await this.scoresRepo.find({
-      where: { idWinner: account_id },
+    const total: ScoresDbDto[] = await this.scoresRepo.find({
+      where: [{ idWinner: account_id }, { idLoser: account_id }],
+      order: { date: 'DESC' },
     });
-    const player2: ScoresDbDto[] = await this.scoresRepo.find({
-      where: { idLoser: account_id },
-    });
-    for (const player of player1) {
+    for (const player of total) {
       player.winner = await this.userRepo.findOneBy({
         account_id: player.idWinner,
       });
@@ -31,15 +29,7 @@ export class ScoresService {
         account_id: player.idLoser,
       });
     }
-    for (const player of player2) {
-      player.loser = await this.userRepo.findOneBy({
-        account_id: player.idLoser,
-      });
-      player.winner = await this.userRepo.findOneBy({
-        account_id: player.idWinner,
-      });
-    }
-    return [...player1, ...player2];
+    return total;
   }
 
   async addScore(scores: ScoresDto) {

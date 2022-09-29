@@ -34,7 +34,12 @@ export function ClassementTab(props: any){
 		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
 			.then((response) => {
 				getUser(response.data);
-				setOk(true);
+				axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
+					.then((response) => {
+					getClassement(response.data);
+					getClassementLen(response.data.length);
+					setOk(true);
+				})
 			})
 			.catch((error) => {
 				handleErrors(error)
@@ -42,18 +47,6 @@ export function ClassementTab(props: any){
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(() => {
-		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
-			.then((response) => {
-				getClassement(response.data);
-				getClassementLen(response.data.length);
-				setOk(true);
-			})
-			.catch((error) => {
-				handleErrors(error)
-			})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 	return(
 		ok && classementLen?
 	<div className='tab'>

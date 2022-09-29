@@ -1,8 +1,9 @@
+import { getDialogContentTextUtilityClass } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ChatAvatar from "../Chat/ChatAvatar";
 import handleErrors from "../RequestErrors/handleErrors";
-import './ScoresHistory.css'
+import './ScoresHistory.css';
 
 const BACK_URL = "http://localhost:4000";
 
@@ -29,7 +30,8 @@ const ScoresDto = [{
 	winner: {...UserDto},
 	loser: {...UserDto},
 	ScorePlayer1: null,
-	ScorePlayer2: null
+	ScorePlayer2: null,
+	date: undefined,
   }];
 
 
@@ -65,6 +67,13 @@ export function ScoreTab(props: any){
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	function getDate(date:any){
+		const newdate = new Date(date);
+		const dateString = newdate.toString();
+		return dateString.substring(0, dateString.indexOf('GMT'));
+	}
+
 	return(
 		ok && scoreLen?
 	<div className='tab'>
@@ -91,6 +100,13 @@ export function ScoreTab(props: any){
 		<i className="vl"/>
 		<i className="score">{score.ScorePlayer2}</i>
 		</div>
+		</i>
+	  ))}
+	</li>
+	<li className='raw'> Date
+		{scores.map((score) => (
+		<i key={score.key} className="data">
+		{getDate(score.date)}
 		</i>
 	  ))}
 	  </li>
