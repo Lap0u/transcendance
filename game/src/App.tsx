@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Accueil from './components/Accueil';
@@ -24,29 +24,52 @@ const BACK_URL = 'http://localhost:4000';
 const socket = io(BACK_URL).connect();
 
 function App() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      const receiveMessage = `inviteGame:${currentUser.id}`;
+      socket.on(receiveMessage, (message: any) => {
+        console.log(`${message.senderId} invite you to play game`);
+      });
+
+      return () => {
+        socket.off(receiveMessage);
+      };
+    }
+  }, [currentUser]);
 
   return (
     <div id="wholepage">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Accueil />} />
-		  <Route path = "/account" element={<AccountPage/>} />
-		  <Route path = "/logout" element={<Logout/>} />
-          <Route path="/chat" element={<Chat socket={socket} />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route
+            path="/chat"
+            element={
+              <Chat
+                socket={socket}
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
+          />
           <Route path="/menu" element={<GameMenu socket={socket} />} />
           <Route
             path="/singleGame/:id"
-            element={<SingleGame socket={socket}/>}
+            element={<SingleGame socket={socket} />}
           />
-		  <Route path = "/error403" element={<Disconnected/>} />
-		  <Route path = "/error500" element={<InternalError/>} />
-		  <Route path = "/wrongGameId" element={<WrongGameId/>} />
-		  <Route path = "/login" element={<LoginSuccess/>} />
-		  <Route path = "/emailverify" element={<EmailConfirm/>} />
-		  <Route path = "/2fa" element={<TwoAuthAutenticatePage/>} />
-		  <Route path = "/scores/:id" element={<ScoresPage/>} />
-		  <Route path = "/playerinfo" element={<PublicInfo/>} />
-		  <Route path = "/forbidden" element={<Forrbidden/>} />
+          <Route path="/error403" element={<Disconnected />} />
+          <Route path="/error500" element={<InternalError />} />
+          <Route path="/wrongGameId" element={<WrongGameId />} />
+          <Route path="/login" element={<LoginSuccess />} />
+          <Route path="/emailverify" element={<EmailConfirm />} />
+          <Route path="/2fa" element={<TwoAuthAutenticatePage />} />
+          <Route path="/scores/:id" element={<ScoresPage />} />
+          <Route path="/playerinfo" element={<PublicInfo />} />
+          <Route path="/forbidden" element={<Forrbidden />} />
           {/* If no route match, then return 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>

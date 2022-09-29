@@ -1,103 +1,119 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import ChatAvatar from "../Chat/ChatAvatar";
-import handleErrors from "../RequestErrors/handleErrors";
-import './ScoresHistory.css'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import UserPopover from '../utils/UserPopover';
+import handleErrors from '../RequestErrors/handleErrors';
+import './ScoresHistory.css';
 
-const BACK_URL = "http://localhost:4000";
-
+const BACK_URL = 'http://localhost:4000';
 
 const UserDto = {
-	account_id:"",
-	id: "",
-	username: "",
-	name: "",
-	accountUsername: "",
-	isTwoFactorAuthenticationEnabled: "",
-	authConfirmToken: "",
-	isVerified: "",
-	twoFactorAuthenticationSecret: "",
-	email: "",
-	avatar: "",
-	points: "",
-  };
+  account_id: '',
+  id: '',
+  username: '',
+  name: '',
+  accountUsername: '',
+  isTwoFactorAuthenticationEnabled: '',
+  authConfirmToken: '',
+  isVerified: '',
+  twoFactorAuthenticationSecret: '',
+  email: '',
+  avatar: '',
+  points: '',
+};
 
-const ScoresDto = [{
-	key: "",
-	idWinner: "",
-	idLoser: "",
-	winner: {...UserDto},
-	loser: {...UserDto},
-	ScorePlayer1: null,
-	ScorePlayer2: null
-  }];
+const ScoresDto = [
+  {
+    key: '',
+    idWinner: '',
+    idLoser: '',
+    winner: { ...UserDto },
+    loser: { ...UserDto },
+    ScorePlayer1: null,
+    ScorePlayer2: null,
+  },
+];
 
+export function ScoreTab(props: any) {
+  const [scores, getScores] = useState(ScoresDto);
+  const [scoreLen, getScoreLen] = useState(0);
+  const [ok, setOk] = useState(false);
+  const [user, getUser] = useState({
+    account_id: '',
+    name: '',
+    username: '',
+    avatar: '',
+    accountUsername: '',
+    isTwoFactorAuthenticationEnabled: false,
+    email: null,
+  });
 
-
-export function ScoreTab(props: any){
-
-	const [scores, getScores] = useState(ScoresDto);
-	const [scoreLen, getScoreLen] = useState(0);
-	const [ok, setOk] = useState(false);
-	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
-
-	useEffect(() => {
-		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
-			.then((response) => {
-				getUser(response.data);
-				setOk(true);
-			})
-			.catch((error) => {
-				handleErrors(error)
-			})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	useEffect(() => {
-		axios.get(`${BACK_URL}/scores/history/${props.id}`,  {withCredentials:true })
-			.then((response) => {
-				console.log("scooroe", response.data);
-				getScores(response.data);
-				getScoreLen(response.data.length);
-				setOk(true);
-			})
-			.catch((error) => {
-				handleErrors(error)
-			})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	return(
-		ok && scoreLen?
-	<div className='tab'>
-	<ul className="score-tab">
-	<li className='raw'> Winner 
-		{scores.map((score) => (
-		<i key={score.key} className="data">
-		<ChatAvatar currentUser={user} user={score.winner} avatarOrUsername={'username'}/>
-		</i>
-	  ))}
-	  </li>
-	<li className='raw'> Loser
-		{scores.map((score) => (
-		<i key={score.key} className="data">
-		{score.loser.accountUsername}
-		</i>
-	  ))}
-	  </li>
-	<li className='raw'> Score
-		{scores.map((score) => (
-		<i key={score.key} className="data">
-		<div className="res-score">
-		<i className="score">{score.ScorePlayer1}</i>
-		<i className="vl"/>
-		<i className="score">{score.ScorePlayer2}</i>
-		</div>
-		</i>
-	  ))}
-	  </li>
-	</ul>
-	</div>
-		: 
-	<div >No score yet</div>
-	)
+  useEffect(() => {
+    axios
+      .get(`${BACK_URL}/account`, { withCredentials: true })
+      .then((response) => {
+        getUser(response.data);
+        setOk(true);
+      })
+      .catch((error) => {
+        handleErrors(error);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    axios
+      .get(`${BACK_URL}/scores/history/${props.id}`, { withCredentials: true })
+      .then((response) => {
+        console.log('scooroe', response.data);
+        getScores(response.data);
+        getScoreLen(response.data.length);
+        setOk(true);
+      })
+      .catch((error) => {
+        handleErrors(error);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return ok && scoreLen ? (
+    <div className="tab">
+      <ul className="score-tab">
+        <li className="raw">
+          {' '}
+          Winner
+          {scores.map((score) => (
+            <i key={score.key} className="data">
+              <UserPopover
+                currentUser={user}
+                user={score.winner}
+                avatarOrUsername={'username'}
+              />
+            </i>
+          ))}
+        </li>
+        <li className="raw">
+          {' '}
+          Loser
+          {scores.map((score) => (
+            <i key={score.key} className="data">
+              {score.loser.accountUsername}
+            </i>
+          ))}
+        </li>
+        <li className="raw">
+          {' '}
+          Score
+          {scores.map((score) => (
+            <i key={score.key} className="data">
+              <div className="res-score">
+                <i className="score">{score.ScorePlayer1}</i>
+                <i className="vl" />
+                <i className="score">{score.ScorePlayer2}</i>
+              </div>
+            </i>
+          ))}
+        </li>
+      </ul>
+    </div>
+  ) : (
+    <div>No score yet</div>
+  );
 }
-

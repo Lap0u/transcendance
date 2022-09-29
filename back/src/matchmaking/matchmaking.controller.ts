@@ -1,4 +1,14 @@
-import { Controller, Get, Param, Body, Post, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Body,
+  Post,
+  Delete,
+  UseGuards,
+  Request,
+  Put,
+} from '@nestjs/common';
 import { AuthenticatedGuard, JwtTwoFactorGuard } from 'src/account/auth/guards';
 import { matchesDto } from './matches.dto';
 import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
@@ -7,7 +17,7 @@ import { MatchmakingService } from './matchmaking.service';
 @Controller('matchmaking')
 export class MatchmakingController {
   constructor(private readonly matchmakingService: MatchmakingService) {}
-  
+
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
   @Get()
@@ -36,5 +46,15 @@ export class MatchmakingController {
   @Delete('/:userId')
   quitMatchmaking(@Param('userId') userId: string): matchmakingDto[] {
     return this.matchmakingService.quitMatchmaking(userId);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  @Post('/inviteGame/:invitedUserId')
+  inviteGame(
+    @Request() req: any,
+    @Param('invitedUserId') invitedUserId: string,
+  ): Promise<string> {
+    return this.matchmakingService.inviteGame(req.user.id, invitedUserId);
   }
 }
