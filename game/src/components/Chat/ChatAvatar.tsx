@@ -3,7 +3,7 @@ import axios from "axios";
 import { useMemo, useState } from "react";
 import { BACK_URL } from "../../global";
 
-export const ChatAvatar = ({ currentUser, user }: { currentUser: any, user: any }) => {
+export const ChatAvatar = ({ currentUser, user, avatarOrUsername = 'avatar' }: { currentUser: any, user: any, avatarOrUsername :any}) => {
   const inBlacklist = useMemo(() => {
     return currentUser.blacklist.includes(user.id);
   }, [currentUser.blacklist, user.id]);
@@ -63,9 +63,17 @@ export const ChatAvatar = ({ currentUser, user }: { currentUser: any, user: any 
       title="Select your choice"
       trigger="click"
     >
+	<div>
+	{ avatarOrUsername === 'username' ?
+	  <i> {user.accountUsername} </i>
+	  :
       <Avatar src={BACK_URL + '/account/avatar/' + user.avatar} />
+	}
+	</div>
     </Popover>
   );
 };
-
+ChatAvatar.defaultProps = {
+	avatarOrUsername : "avatar",
+}
 export default ChatAvatar;

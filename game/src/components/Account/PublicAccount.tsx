@@ -1,13 +1,11 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from '../Scores/Stats';
 import './AccountPage.css'
 
 const BACK_URL = "http://localhost:4000";
-const FRONT_URL = "http://localhost:3000";
 
 
 

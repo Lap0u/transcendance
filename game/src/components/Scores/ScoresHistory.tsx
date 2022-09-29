@@ -1,12 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import handleErrors from "../RequestErrors/handleErrors";
 import './ScoresHistory.css'
-import {useParams} from 'react-router-dom';
-import { HomeOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import { Stats } from "./Stats";
 
 const BACK_URL = "http://localhost:4000";
 
