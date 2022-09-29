@@ -1,19 +1,37 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ChatAvatar from "../Chat/ChatAvatar";
 import handleErrors from "../RequestErrors/handleErrors";
 import './ScoresHistory.css'
 
 const BACK_URL = "http://localhost:4000";
 
+
+const UserDto = {
+	account_id:"",
+	id: "",
+	username: "",
+	name: "",
+	accountUsername: "",
+	isTwoFactorAuthenticationEnabled: "",
+	authConfirmToken: "",
+	isVerified: "",
+	twoFactorAuthenticationSecret: "",
+	email: "",
+	avatar: "",
+	points: "",
+  };
+
 const ScoresDto = [{
 	key: "",
 	idWinner: "",
 	idLoser: "",
-	winner: {accountUsername: ""},
-	loser: {accountUsername:""},
+	winner: {...UserDto},
+	loser: {...UserDto},
 	ScorePlayer1: null,
 	ScorePlayer2: null
   }];
+
 
 
 export function ScoreTab(props: any){
@@ -21,6 +39,19 @@ export function ScoreTab(props: any){
 	const [scores, getScores] = useState(ScoresDto);
 	const [scoreLen, getScoreLen] = useState(0);
 	const [ok, setOk] = useState(false);
+	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
+
+	useEffect(() => {
+		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+			.then((response) => {
+				getUser(response.data);
+				setOk(true);
+			})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/history/${props.id}`,  {withCredentials:true })
 			.then((response) => {
@@ -41,7 +72,7 @@ export function ScoreTab(props: any){
 	<li className='raw'> Winner 
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		{score.winner.accountUsername}
+		<ChatAvatar currentUser={user} user={score.winner} avatarOrUsername={'username'}/>
 		</i>
 	  ))}
 	  </li>

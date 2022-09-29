@@ -2,6 +2,7 @@ import { Avatar, Button, message, Popover } from "antd";
 import axios from "axios";
 import { useMemo, useState } from "react";
 import { BACK_URL } from "../../global";
+import '../Account/PublicAccount.css'
 
 export const ChatAvatar = ({ currentUser, user, avatarOrUsername = 'avatar' }: { currentUser: any, user: any, avatarOrUsername :any}) => {
   const inBlacklist = useMemo(() => {
@@ -63,7 +64,7 @@ export const ChatAvatar = ({ currentUser, user, avatarOrUsername = 'avatar' }: {
       title="Select your choice"
       trigger="click"
     >
-	<div>
+	<div className='popover-item'>
 	{ avatarOrUsername === 'username' ?
 	  <i> {user.accountUsername} </i>
 	  :
