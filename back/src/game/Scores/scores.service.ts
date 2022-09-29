@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Accounts } from '../../account/entities/accounts.entity';
 import { Scores } from './entities/scores.entities';
-import { ScoresDto } from './utils/types';
+import { ScoresDbDto, ScoresDto } from './utils/types';
 
 @Injectable()
 export class ScoresService {
@@ -17,17 +17,40 @@ export class ScoresService {
   }
 
   async historyById(account_id: string) {
-    const player1 = await this.scoresRepo.find({
+    const player1: ScoresDbDto[] = await this.scoresRepo.find({
       where: { idWinner: account_id },
     });
-    const player2 = await this.scoresRepo.find({
+    const player2: ScoresDbDto[] = await this.scoresRepo.find({
       where: { idLoser: account_id },
     });
+    for (const player of player1) {
+      player.winner = await this.userRepo.findOneBy({
+        account_id: player.idWinner,
+      });
+      player.loser = await this.userRepo.findOneBy({
+        account_id: player.idLoser,
+      });
+    }
+    for (const player of player2) {
+      player.loser = await this.userRepo.findOneBy({
+        account_id: player.idLoser,
+      });
+      player.winner = await this.userRepo.findOneBy({
+        account_id: player.idWinner,
+      });
+    }
     return [...player1, ...player2];
   }
 
   async addScore(scores: ScoresDto) {
-    const newScore = this.scoresRepo.create(scores);
+    const idWinner = scores.idWinner;
+    const idLoser = scores.idLoser;
+    const scoreDb: ScoresDbDto = {
+      ...scores,
+      winner: await this.userRepo.findOneBy({ account_id: idWinner }),
+      loser: await this.userRepo.findOneBy({ account_id: idLoser }),
+    };
+    const newScore = this.scoresRepo.create(scoreDb);
     await this.addPoint(scores.idWinner, scores.ScorePlayer1);
     return this.scoresRepo.save(newScore);
   }
@@ -49,26 +72,5 @@ export class ScoresService {
       ...user, // existing fields
       points: newPoints,
     });
-  }
-
-  async updateUsernames(account_id: string, username: string) {
-    const player1 = await this.scoresRepo.find({
-      where: { idWinner: account_id },
-    });
-    const player2 = await this.scoresRepo.find({
-      where: { idLoser: account_id },
-    });
-    for (const score of player1) {
-      await this.scoresRepo.save({
-        ...score,
-        UsernameWinner: username,
-      });
-      for (const score of player2) {
-        await this.scoresRepo.save({
-          ...score,
-          UsernameLoser: username,
-        });
-      }
-    }
   }
 }

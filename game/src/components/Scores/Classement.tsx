@@ -5,6 +5,7 @@ import { Stats } from "./Stats";
 import './ScoresHistory.css'
 import PublicInfo, { ClickPlayerMsg } from "../Account/PublicAccount";
 import {UsernameInterface} from "../Account/Username";
+import ChatAvatar from "../Chat/ChatAvatar";
 
 const BACK_URL = "http://localhost:4000";
 
@@ -20,6 +21,19 @@ export function ClassementTab(props: any){
 	const [Classement, getClassement] = useState(ScoresDto);
 	const [classementLen, getClassementLen] = useState(0);
 	const [ok, setOk] = useState(false);
+	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
+
+	useEffect(() => {
+		axios.get(`${BACK_URL}/account/${props.userId}`,  {withCredentials:true })
+			.then((response) => {
+				getUser(response.data);
+				setOk(true);
+			})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
@@ -40,7 +54,7 @@ export function ClassementTab(props: any){
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-			<UsernameInterface username={classement.accountUsername} userId={classement.id}/>
+		<UsernameInterface username={classement.accountUsername} userId={classement.id}/>
 		</i>
 	  ))}
 		</li>

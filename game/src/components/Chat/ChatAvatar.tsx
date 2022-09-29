@@ -3,7 +3,7 @@ import axios from "axios";
 import { useMemo, useState } from "react";
 import { BACK_URL } from "../../global";
 
-const ChatAvatar = ({ currentUser, user }: { currentUser: any, user: any }) => {
+export const ChatAvatar = ({ currentUser, user }: { currentUser: any, user: any }) => {
   const inBlacklist = useMemo(() => {
     return currentUser.blacklist.includes(user.id);
   }, [currentUser.blacklist, user.id]);

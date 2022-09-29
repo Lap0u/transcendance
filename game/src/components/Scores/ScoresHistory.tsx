@@ -14,8 +14,8 @@ const ScoresDto = [{
 	key: "",
 	idWinner: "",
 	idLoser: "",
-	UsernameWinner: "",
-	UsernameLoser: "",
+	winner: {accountUsername: ""},
+	loser: {accountUsername:""},
 	ScorePlayer1: null,
 	ScorePlayer2: null
   }];
@@ -46,14 +46,14 @@ export function ScoreTab(props: any){
 	<li className='raw'> Winner 
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		{score.UsernameWinner}
+		{score.winner.accountUsername}
 		</i>
 	  ))}
 	  </li>
 	<li className='raw'> Loser
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		{score.UsernameLoser}
+		{score.loser.accountUsername}
 		</i>
 	  ))}
 	  </li>

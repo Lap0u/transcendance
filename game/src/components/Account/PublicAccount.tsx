@@ -32,13 +32,10 @@ const  PublicInfo = (props: any) => {
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/${props.userId}`,  {withCredentials:true })
 			.then((response) => {
-				console.log(response.data);
-				console.log("resssss", response.data);
 				getUser(response.data);
 				setOk(true);
 			})
 			.catch((error) => {
-				//console.log("eerrroor", error);
 				handleErrors(error)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,21 +54,18 @@ const  PublicInfo = (props: any) => {
 
 	return (
 		ok ?
-		<div style={{display: props.display}}>
-		<div className='public-info'>
+		<div className='public-info' style={{display: props.display}}>
 			<Avatar avatar={user.avatar}/>
-			<ul className='public-username'>
+			<ul className='username2'>
 				<i> {user.accountUsername}</i>
 			</ul>
 			<ul className='login' >
-				<i className='info-type'>Login </i>
+				<i className='info-type'>Login42 </i>
 				<i className='info'>{user.username} </i>
 			</ul>
 			<ul className='stats'>
 				<Stats id={user.account_id}/>
 			</ul>
-		</div>
-		<div className='bottom-line'/>
 		</div>
 		:null
 	)
