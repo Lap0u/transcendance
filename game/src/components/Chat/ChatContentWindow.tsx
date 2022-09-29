@@ -143,11 +143,8 @@ const ChatContentWindow = ({
       return (
         <>
           <Avatar src={BACK_URL + '/account/avatar/' + selectUser.avatar} />
-          <div className='chat-username' onMouseEnter={(e) => dispayClickProfile({display:"block", mouseX: e.pageX, mouseY:e.pageY})}
-			onMouseLeave={() =>dispayClickProfile({display:"none", mouseX: 0, mouseY:0})} onClick={()=> dispayProfile("block")}>
+          <div className='chat-username'>
 			{selectUser.accountUsername} </div>
-		  <ClickPlayerMsg clickProfile={clickProfile}/>
-		  <PublicInfo userId={selectUser.id} display={profile}/>
         </>
       );
     } else {
