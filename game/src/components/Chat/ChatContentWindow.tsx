@@ -7,7 +7,6 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
 import './ProfilPlayer.css'
-import PublicInfo, { ClickPlayerMsg } from '../Account/PublicAccount';
 import ChatAvatar from './ChatAvatar';
 
 
@@ -58,8 +57,6 @@ const ChatContentWindow = ({
   const [history, setHistory] = useState<any>([]);
   const historyEndRef: any = useRef(null);
   const isUser: boolean = !!selectUser;
-  const [clickProfile, dispayClickProfile] = useState({display : "none", mouseX: 0, mouseY: 0})
-  const [profile, dispayProfile] = useState("none");
 
   useEffect(() => {
     const getHistory = async () => {

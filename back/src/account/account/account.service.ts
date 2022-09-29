@@ -34,7 +34,7 @@ export class AccountService {
 
   async changeUsername(id: string, username: string) {
     const user = await this.usersRepository.findOneBy({ id });
-    await this.scoreService.updateUsernames(user.account_id, username);
+    //   await this.scoreService.updateUsernames(user.account_id, username);
     return await this.usersRepository.save({
       ...user, // existing fields
       accountUsername: username,

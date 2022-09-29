@@ -1,21 +1,11 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import {
   AuthenticatedGuard,
   JwtTwoFactorGuard,
 } from '../../account/auth/guards';
 import { ScoresService } from './scores.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { AuthService } from '../../account/auth/auth.service';
-import { ScoresDto } from './utils/types';
 
 @Controller('scores')
 export class ScoresController {

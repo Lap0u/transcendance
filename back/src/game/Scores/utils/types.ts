@@ -1,3 +1,5 @@
+import { Accounts } from '../../../account/entities/accounts.entity';
+
 export type ScoresDto = {
   idWinner: string;
   idLoser: string;
@@ -15,8 +17,8 @@ export type StatsDto = {
 export type ScoresDbDto = {
   idWinner: string;
   idLoser: string;
-  UsernameWinner: string;
-  UsernameLoser: string;
+  winner?: Accounts;
+  loser?: Accounts;
   ScorePlayer1: number;
   ScorePlayer2: number;
 };

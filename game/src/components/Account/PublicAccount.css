@@ -1,12 +1,13 @@
-.username-interface .account-username:hover{
+.popover-item :hover{
 	color: #7270ec;
 }
 
 .public-info{
 	z-index: 2;
 	text-align: left;
-    position:fixed ;
-	width: 10em;
+    position:absolute ;
+	width: 12em;
+	height: 7em;
 	font-size: 0.7em;
 	background-color: #7270ec;
 
@@ -14,14 +15,15 @@
 
 
 .public-info .avatarImg{
-	position:fixed;
+	position:absolute;
 	border-radius: 50%; 
-	height: 6em;
-	width: 6em;
+	height: 5em;
+	width: 5em;
 	max-height: 50px;
 	max-width: 50px;
-	object-fit: cover;;
-	left:10vw;
+	object-fit: cover;
+	left:0vw;
+	bottom: 1.3em;
 }
 
 .public-info .stats{
@@ -32,4 +34,9 @@
 
 .box-tab{
 	z-index: 1;
+}
+
+.public-info  .username2
+{
+	position: absolute
 }

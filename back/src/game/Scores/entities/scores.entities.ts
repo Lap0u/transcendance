@@ -27,12 +27,6 @@ export class Scores {
   public idLoser: string;
 
   @Column({ nullable: true })
-  public UsernameWinner?: string;
-
-  @Column({ nullable: true })
-  public UsernameLoser?: string;
-
-  @Column({ nullable: true })
   ScorePlayer1: number;
 
   @Column({ nullable: true })

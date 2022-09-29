@@ -3,23 +3,44 @@ import { useEffect, useState } from "react";
 import handleErrors from "../RequestErrors/handleErrors";
 import { Stats } from "./Stats";
 import './ScoresHistory.css'
-import PublicInfo, { ClickPlayerMsg } from "../Account/PublicAccount";
-import {UsernameInterface} from "../Account/Username";
+import ChatAvatar from "../Chat/ChatAvatar";
 
 const BACK_URL = "http://localhost:4000";
 
-const ScoresDto = [{
-	account_id: "",
+const UserDto = [{
+	account_id:"",
 	id: "",
+	username: "",
+	name: "",
 	accountUsername: "",
-	points: 0,
+	isTwoFactorAuthenticationEnabled: "",
+	authConfirmToken: "",
+	isVerified: "",
+	twoFactorAuthenticationSecret: "",
+	email: "",
+	avatar: "",
+	points: "",
   }];
+  
 
 export function ClassementTab(props: any){
 
-	const [Classement, getClassement] = useState(ScoresDto);
+	const [Classement, getClassement] = useState(UserDto);
 	const [classementLen, getClassementLen] = useState(0);
 	const [ok, setOk] = useState(false);
+	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
+
+	useEffect(() => {
+		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+			.then((response) => {
+				getUser(response.data);
+				setOk(true);
+			})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
@@ -40,7 +61,7 @@ export function ClassementTab(props: any){
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-			<UsernameInterface username={classement.accountUsername} userId={classement.id}/>
+		<ChatAvatar currentUser={user} user={classement} avatarOrUsername={'username'}/>
 		</i>
 	  ))}
 		</li>
