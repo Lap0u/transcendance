@@ -17,7 +17,6 @@ import { AccountService } from './account.service';
     AccountService,
     DatabaseFilesService,
     AuthService,
-    SocketService,
     ScoresService,
   ],
 })
