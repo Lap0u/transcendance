@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Accueil from './components/Accueil';
@@ -18,6 +18,9 @@ import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate'
 import Forrbidden from './components/ErrorPage/Forbidden';
 import PublicInfo from './components/Account/PublicAccount';
 import { ScoresPage } from './components/Scores/ScorePage';
+import InviteGameModal from './components/utils/InviteGameModal';
+import axios from 'axios';
+import { message } from 'antd';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -25,16 +28,48 @@ const socket = io(BACK_URL).connect();
 
 function App() {
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isInviteGameModalOpen, setIsInviteGameModalOpen] = useState(false);
+  const [invitor, setInvitor] = useState<string>('');
+
+  useEffect(() => {
+    const initUser = async () => {
+      try {
+        const res = await axios.get(`${BACK_URL}/account`, {
+          withCredentials: true,
+        });
+        setCurrentUser(res.data);
+      } catch {
+        message.error("Une erreur s'est passée");
+      }
+    };
+    initUser();
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
-      const receiveMessage = `inviteGame:${currentUser.id}`;
-      socket.on(receiveMessage, (message: any) => {
-        console.log(`${message.senderId} invite you to play game`);
+      const userUpdate = `userUpdate:${currentUser.id}`;
+      const receiveInviteGame = `inviteGame:${currentUser.id}`;
+      const refuseInviteGame = `refuseInviteGame:${currentUser.id}`;
+
+      socket.on(userUpdate, (newCurrentUser: any) => {
+        if (newCurrentUser.id === currentUser.id) {
+          setCurrentUser(newCurrentUser);
+        }
+      });
+
+      socket.on(receiveInviteGame, (invitor: any) => {
+        setIsInviteGameModalOpen(true);
+        setInvitor(invitor);
+      });
+
+      socket.on(refuseInviteGame, (refusor: any) => {
+        message.error(`${refusor.senderUsername} refuse to play with you`);
       });
 
       return () => {
-        socket.off(receiveMessage);
+        socket.off(userUpdate);
+        socket.off(receiveInviteGame);
+        socket.off(refuseInviteGame);
       };
     }
   }, [currentUser]);
@@ -42,19 +77,19 @@ function App() {
   return (
     <div id="wholepage">
       <BrowserRouter>
+        <InviteGameModal
+          isInviteGameModalOpen={isInviteGameModalOpen}
+          setIsInviteGameModalOpen={setIsInviteGameModalOpen}
+          currentUser={currentUser}
+          invitor={invitor}
+        />
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/logout" element={<Logout />} />
           <Route
             path="/chat"
-            element={
-              <Chat
-                socket={socket}
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser}
-              />
-            }
+            element={<Chat socket={socket} currentUser={currentUser} />}
           />
           <Route path="/menu" element={<GameMenu socket={socket} />} />
           <Route

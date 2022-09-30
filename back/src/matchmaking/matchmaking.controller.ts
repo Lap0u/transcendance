@@ -7,7 +7,6 @@ import {
   Delete,
   UseGuards,
   Request,
-  Put,
 } from '@nestjs/common';
 import { AuthenticatedGuard, JwtTwoFactorGuard } from 'src/account/auth/guards';
 import { matchesDto } from './matches.dto';
@@ -55,6 +54,24 @@ export class MatchmakingController {
     @Request() req: any,
     @Param('invitedUserId') invitedUserId: string,
   ): Promise<string> {
-    return this.matchmakingService.inviteGame(req.user.id, invitedUserId);
+    return this.matchmakingService.inviteGame(
+      req.user.id,
+      req.user.username,
+      invitedUserId,
+    );
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  @Post('/refuseInviteGame/:sendInvitationUserId')
+  refuseInviteGame(
+    @Request() req: any,
+    @Param('sendInvitationUserId') sendInvitationUserId: string,
+  ): Promise<string> {
+    return this.matchmakingService.refuseInviteGame(
+      req.user.id,
+      req.user.username,
+      sendInvitationUserId,
+    );
   }
 }
