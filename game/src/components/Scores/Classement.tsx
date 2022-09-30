@@ -62,7 +62,11 @@ export function ClassementTab(props: any) {
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-		<ChatAvatar currentUser={user} user={classement} avatarOrUsername={'username'}/>
+		{classement.account_id !== user.account_id ?
+		<UserPopover currentUser={user} user={classement} avatarOrUsername={'username'}/>
+		:
+		<i>{user.accountUsername}</i>
+		}
 		</i>
 	  ))}
 		</li>

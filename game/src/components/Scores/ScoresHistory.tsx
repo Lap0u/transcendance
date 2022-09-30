@@ -1,10 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import ChatAvatar from "../Chat/ChatAvatar";
+import { UserPopover }  from "../utils/UserPopover";
 import handleErrors from "../RequestErrors/handleErrors";
 import './ScoresHistory.css';
 
-const BACK_URL = "http://localhost:4000";
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -23,16 +22,6 @@ const UserDto = {
 	points: "",
   };
 
-const ScoresDto = [{
-	key: "",
-	idWinner: "",
-	idLoser: "",
-	winner: {...UserDto},
-	loser: {...UserDto},
-	ScorePlayer1: null,
-	ScorePlayer2: null,
-	date: undefined,
-  }];
 
 
 const ScoresDto = [
@@ -44,22 +33,11 @@ const ScoresDto = [
     loser: { ...UserDto },
     ScorePlayer1: null,
     ScorePlayer2: null,
+	date: undefined,
   },
 ];
 
 export function ScoreTab(props: any) {
-  const [scores, getScores] = useState(ScoresDto);
-  const [scoreLen, getScoreLen] = useState(0);
-  const [ok, setOk] = useState(false);
-  const [user, getUser] = useState({
-    account_id: '',
-    name: '',
-    username: '',
-    avatar: '',
-    accountUsername: '',
-    isTwoFactorAuthenticationEnabled: false,
-    email: null,
-  });
 
 	const [scores, getScores] = useState(ScoresDto);
 	const [scoreLen, getScoreLen] = useState(0);
@@ -104,14 +82,22 @@ export function ScoreTab(props: any) {
 	<li className='raw'> Winner 
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		<ChatAvatar currentUser={user} user={score.winner} avatarOrUsername={'username'}/>
+		{score.idWinner !== user.account_id ?
+		<UserPopover currentUser={user} user={score.winner} avatarOrUsername={'username'}/>
+		:
+		<i>{user.accountUsername}</i>
+		}
 		</i>
 	  ))}
 	  </li>
 	<li className='raw'> Loser
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		{score.loser.accountUsername}
+		{score.idLoser !== user.account_id ?
+		<UserPopover currentUser={user} user={score.loser} avatarOrUsername={'username'}/>
+		:
+		<i>{user.accountUsername}</i>
+		}
 		</i>
 	  ))}
 	  </li>
