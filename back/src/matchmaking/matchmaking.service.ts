@@ -7,8 +7,10 @@ import { ScoresService } from 'src/game/Scores/scores.service';
 
 @Injectable()
 export class MatchmakingService {
-  constructor(private socketService: SocketService,
-	private scoreService: ScoresService) {}
+  constructor(
+    private socketService: SocketService,
+    private scoreService: ScoresService,
+  ) {}
 
   private matchmakingList: matchmakingDto[] = [];
   private currentMatches: matchesDto[] = [];
@@ -23,38 +25,46 @@ export class MatchmakingService {
       for (const elem of this.currentMatches) {
         if (elem.playerOne.socket === sender) {
           elem.playerOneY = data;
-        //   return; //remettre les return quand on pourra supprimer la game quand elle est finie
+          //   return; //remettre les return quand on pourra supprimer la game quand elle est finie
         }
         if (elem.playerTwo.socket === sender) {
           elem.playerTwoY = data;
-        //   return;
+          //   return;
         }
       }
     }
   }
-  
+
   handlePong(sender: string) {
-	for (const elem of this.currentMatches) {
-		if (elem.playerOne.socket === sender) {
-		elem.playerOne.pongReply = 0;
-		// return;
-		}
-		if (elem.playerTwo.socket === sender) {
-		elem.playerTwo.pongReply = 0;
-		// return;
-		}
-	}
-}
+    for (const elem of this.currentMatches) {
+      if (elem.playerOne.socket === sender) {
+        elem.playerOne.pongReply = 0;
+        // return;
+      }
+      if (elem.playerTwo.socket === sender) {
+        elem.playerTwo.pongReply = 0;
+        // return;
+      }
+    }
+  }
 
   async joinMatchmaking(payload: joinMatchmakingDto): Promise<matchmakingDto> {
-	let newUserInMatchmaking = addUserMatchmakingList(payload, this.matchmakingList)
-  
+    let newUserInMatchmaking = addUserMatchmakingList(
+      payload,
+      this.matchmakingList,
+    );
+
     if (this.matchmakingList.length >= 2) {
-		let toQuit = gameStart(this.matchmakingList, this.socketService, this.currentMatches, this.scoreService)
-		this.quitMatchmaking(toQuit[0])
-		this.quitMatchmaking(toQuit[1])
-	}
-	return newUserInMatchmaking
+      let toQuit = gameStart(
+        this.matchmakingList,
+        this.socketService,
+        this.currentMatches,
+        this.scoreService,
+      );
+      this.quitMatchmaking(toQuit[0]);
+      this.quitMatchmaking(toQuit[1]);
+    }
+    return newUserInMatchmaking;
   }
 
   quitMatchmaking(userId: string): matchmakingDto[] {
@@ -65,5 +75,16 @@ export class MatchmakingService {
     this.matchmakingList = newMatchmakingList;
 
     return newMatchmakingList;
+  }
+
+  async inviteGame(userId: string, invitedUserId: string): Promise<string> {
+    console.log('userID:', userId);
+    console.log('invitedUserId:', invitedUserId);
+
+    this.socketService.socket.emit(`inviteGame:${invitedUserId}`, {
+      senderId: userId,
+    });
+
+    return 'ok';
   }
 }

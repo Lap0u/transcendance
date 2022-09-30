@@ -1,4 +1,3 @@
-import { getDialogContentTextUtilityClass } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ChatAvatar from "../Chat/ChatAvatar";
@@ -7,6 +6,7 @@ import './ScoresHistory.css';
 
 const BACK_URL = "http://localhost:4000";
 
+const BACK_URL = 'http://localhost:4000';
 
 const UserDto = {
 	account_id:"",
@@ -35,8 +35,31 @@ const ScoresDto = [{
   }];
 
 
+const ScoresDto = [
+  {
+    key: '',
+    idWinner: '',
+    idLoser: '',
+    winner: { ...UserDto },
+    loser: { ...UserDto },
+    ScorePlayer1: null,
+    ScorePlayer2: null,
+  },
+];
 
-export function ScoreTab(props: any){
+export function ScoreTab(props: any) {
+  const [scores, getScores] = useState(ScoresDto);
+  const [scoreLen, getScoreLen] = useState(0);
+  const [ok, setOk] = useState(false);
+  const [user, getUser] = useState({
+    account_id: '',
+    name: '',
+    username: '',
+    avatar: '',
+    accountUsername: '',
+    isTwoFactorAuthenticationEnabled: false,
+    email: null,
+  });
 
 	const [scores, getScores] = useState(ScoresDto);
 	const [scoreLen, getScoreLen] = useState(0);
@@ -116,4 +139,3 @@ export function ScoreTab(props: any){
 	<div >No score yet</div>
 	)
 }
-

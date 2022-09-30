@@ -13,11 +13,19 @@ import { ChannelType, CHANNEL_TYPE, CHAT_TYPE } from './const';
 
 const { Header, Sider, Content } = Layout;
 
-const Chat = ({ socket }: { socket: any }) => {
+const Chat = ({
+  socket,
+  currentUser,
+  setCurrentUser,
+}: {
+  socket: any;
+  currentUser: any;
+  setCurrentUser: any;
+}) => {
   const navigate = useNavigate();
 
   const [chatType, setChatType] = useState(CHAT_TYPE.user);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  // const [currentUser, setCurrentUser] = useState<any>(null);
   const [selectUser, setSelectUser] = useState<any>(null);
   const [users, setUsers] = useState<any>([]);
   const [channels, setChannels] = useState<ChannelType[]>([]);
@@ -67,7 +75,7 @@ const Chat = ({ socket }: { socket: any }) => {
 
   useEffect(() => {
     if (currentUser) {
-      const userUpdate = 'userUpdate';
+      const userUpdate = `userUpdate:${currentUser.id}`;
       const updateChannelSocketMessage = 'updateChannel';
       const createNewChannelSocket = 'createChannel';
 

@@ -11,7 +11,7 @@ import { ChannelType, CHAT_TYPE, CHANNEL_TYPE } from './const';
 import ChannelManageUserModal from './ChannelManageUserModal';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
-import ChatAvatar from './ChatAvatar';
+import UserPopover from '../utils/UserPopover';
 
 const { confirm } = Modal;
 
@@ -30,7 +30,7 @@ const UserListItem = ({ user, currentUser, setSelectUser }: any) => {
       }}
       onClick={() => setSelectUser(user)}>
       <div>
-        <ChatAvatar currentUser={currentUser} user={user} />{' '}
+        <UserPopover currentUser={currentUser} user={user} />{' '}
         {user.accountUsername}
       </div>
     </div>
@@ -242,9 +242,8 @@ const ChatSiderList = ({
                 currentUser={currentUser}
                 setSelectUser={setSelectUser}
               />
-            )
-          }
-          )}
+            );
+          })}
         </div>
       )}
       {chatType === CHAT_TYPE.channel && (

@@ -1,34 +1,42 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import handleErrors from "../RequestErrors/handleErrors";
-import { Stats } from "./Stats";
-import './ScoresHistory.css'
-import ChatAvatar from "../Chat/ChatAvatar";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import handleErrors from '../RequestErrors/handleErrors';
+import { Stats } from './Stats';
+import './ScoresHistory.css';
+import UserPopover from '../utils/UserPopover';
 
-const BACK_URL = "http://localhost:4000";
+const BACK_URL = 'http://localhost:4000';
 
-const UserDto = [{
-	account_id:"",
-	id: "",
-	username: "",
-	name: "",
-	accountUsername: "",
-	isTwoFactorAuthenticationEnabled: "",
-	authConfirmToken: "",
-	isVerified: "",
-	twoFactorAuthenticationSecret: "",
-	email: "",
-	avatar: "",
-	points: "",
-  }];
-  
+const UserDto = [
+  {
+    account_id: '',
+    id: '',
+    username: '',
+    name: '',
+    accountUsername: '',
+    isTwoFactorAuthenticationEnabled: '',
+    authConfirmToken: '',
+    isVerified: '',
+    twoFactorAuthenticationSecret: '',
+    email: '',
+    avatar: '',
+    points: '',
+  },
+];
 
-export function ClassementTab(props: any){
-
-	const [Classement, getClassement] = useState(UserDto);
-	const [classementLen, getClassementLen] = useState(0);
-	const [ok, setOk] = useState(false);
-	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
+export function ClassementTab(props: any) {
+  const [Classement, getClassement] = useState(UserDto);
+  const [classementLen, getClassementLen] = useState(0);
+  const [ok, setOk] = useState(false);
+  const [user, getUser] = useState({
+    account_id: '',
+    name: '',
+    username: '',
+    avatar: '',
+    accountUsername: '',
+    isTwoFactorAuthenticationEnabled: false,
+    email: null,
+  });
 
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account`,  {withCredentials:true })

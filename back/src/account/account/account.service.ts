@@ -102,7 +102,7 @@ export class AccountService {
 
     const saveAccount = await this.usersRepository.save(account);
 
-    this.socketService.socket.emit('userUpdate', account);
+    this.socketService.socket.emit(`userUpdate:${account.id}`, account);
 
     return saveAccount;
   }

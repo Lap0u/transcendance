@@ -6,9 +6,8 @@ import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
-import './ProfilPlayer.css'
-import ChatAvatar from './ChatAvatar';
-
+import './ProfilPlayer.css';
+import UserPopover from '../utils/UserPopover';
 
 const MessageContent = ({
   item,
@@ -38,7 +37,7 @@ const MessageContent = ({
   return (
     <div className="chat-window-othermessage-wrapper">
       <div className="chat-window-othermessage-username">
-        <ChatAvatar currentUser={currentUser} user={findUser} />
+        <UserPopover currentUser={currentUser} user={findUser} />
         {findUser.accountUsername}:
       </div>
       <div className="chat-window-othermessage-content">{item.message}</div>
@@ -66,7 +65,9 @@ const ChatContentWindow = ({
           : `${BACK_URL}/chat/channel/${selectedChannel?.id}`;
         const res = await axios.get(getHistoryUrl, { withCredentials: true });
         if (res.data) {
-          const history = res.data.filter((obj: any) => !currentUser.blacklist.includes(obj.senderId));
+          const history = res.data.filter(
+            (obj: any) => !currentUser.blacklist.includes(obj.senderId)
+          );
           setHistory(history);
           scrollToBottom();
         }
@@ -140,8 +141,7 @@ const ChatContentWindow = ({
       return (
         <>
           <Avatar src={BACK_URL + '/account/avatar/' + selectUser.avatar} />
-          <div className='chat-username'>
-			{selectUser.accountUsername} </div>
+          {selectUser.accountUsername}
         </>
       );
     } else {
