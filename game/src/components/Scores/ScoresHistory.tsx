@@ -20,6 +20,7 @@ const UserDto = {
 	email: "",
 	avatar: "",
 	points: "",
+	rank: undefined,
   };
 
 

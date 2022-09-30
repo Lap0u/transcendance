@@ -1,0 +1,29 @@
+.popover-title  .info{
+	font-size: max(1.7vw, 10px);
+	color: crimson;
+	white-space: nowrap;
+	font-style: italic;
+	position: relative;
+	line-height: 1em;
+	top: 5px;
+}
+
+.popover-title > figure{
+	float: center;
+	text-align: center;
+	font-size: smaller;
+	text-indent: 0;
+	border: thin silver solid;
+	padding: 0;
+	position: relative;
+	border: 0;
+} 
+
+.popover-title  .popover-username{
+	font-size: max(2.2vw, 15px);
+
+}
+
+.popover-title .stats .i{
+	padding: 10px;
+}

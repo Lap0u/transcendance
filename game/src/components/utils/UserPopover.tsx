@@ -1,8 +1,12 @@
-import { Avatar, Button, message, Popover } from 'antd';
+import { Avatar, Button, message, Popover, Typography } from 'antd';
 import axios from 'axios';
 import { useMemo, useState } from 'react';
 import { BACK_URL } from '../../global';
 import '../Account/PublicAccount.css';
+import { Stats } from '../Scores/Stats';
+import './UserPopover.css'
+
+const stylePopoverButton={fontSize:'max(2vw, 12px)', height: 'min(2vw, 15px)', lineHeight: '0', padding:'0'}
 
 export const UserPopover = ({
   currentUser,
@@ -64,14 +68,13 @@ export const UserPopover = ({
     console.log('Profile');
 
     try {
-      const res = await axios.post(
+      	await axios.post(
         `${BACK_URL}/matchmaking/inviteGame/${user.id}`,
         {},
         {
           withCredentials: true,
         }
       );
-      console.log('res:', res);
       message.success('Success');
     } catch (error) {
       message.error('Fail!');
@@ -81,12 +84,12 @@ export const UserPopover = ({
   };
 
   const content = (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Button onClick={handleProfileClick}>Profile</Button>
-      <Button style={{ margin: '5px 0' }} onClick={handleInviteClick}>
+    <div className='content' style={{ display: 'flex', flexDirection: 'column'}}>
+      <Button style={stylePopoverButton} onClick={handleProfileClick}>Scores</Button>
+      <Button style={{ margin: '5px 0', ...stylePopoverButton }} onClick={handleInviteClick}>
         Invite to play
       </Button>
-      <Button onClick={inBlacklist ? whitelist : blacklist}>
+      <Button  style={stylePopoverButton}onClick={inBlacklist ? whitelist : blacklist}>
         {inBlacklist ? 'White list' : 'Black list'}
       </Button>
     </div>
@@ -94,12 +97,14 @@ export const UserPopover = ({
 
   return (
     <Popover
+	className='user-popover'
       onVisibleChange={(isVisible) => setIsVisible(isVisible)}
       visible={isVisible}
       placement="right"
       content={content}
-      title="Select your choice"
-      trigger="click">
+      title={<ProfileTitle user={user}/>}
+	  trigger="click"
+	  overlayStyle={{width: "20vw", textAlign:'center'}}>
       <div className="popover-item" style={{ display: 'inline-block' }}>
         {avatarOrUsername === 'username' ? (
           <i> {user.accountUsername} </i>
@@ -113,4 +118,22 @@ export const UserPopover = ({
 UserPopover.defaultProps = {
   avatarOrUsername: 'avatar',
 };
+
+function ProfileTitle({user}: {user: any}){
+	return (
+	<Typography className='popover-title' style={{display: 'flex'}}>
+	<figure>
+		<Avatar  style={{ textAlign:'center', width: '6vw', height:'6vw', maxWidth: '60px', maxHeight:'60px'}} className='popover-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
+		<figcaption>
+		<i className='popover-username'>  {user.accountUsername}</i><br/>
+		<div className='info'>
+		<i>{user.points} points</i>
+		<i><Stats id={user.account_id} tabFormat={0}/></i>
+		<i>rank: {user.rank}</i>
+		</div>
+		</figcaption>
+	</figure>
+	</Typography>
+	)
+}
 export default UserPopover;

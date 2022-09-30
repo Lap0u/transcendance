@@ -21,6 +21,7 @@ const UserDto = [
     email: '',
     avatar: '',
     points: '',
+	rank: undefined,
   },
 ];
 
@@ -80,7 +81,7 @@ export function ClassementTab(props: any) {
 		<li className='raw'> Stats
 	{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-		<Stats id={classement.account_id}/>
+		<Stats id={classement.account_id} tabFormat={1}/>
 		</i>
 	  ))}
 		</li>

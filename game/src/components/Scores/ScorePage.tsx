@@ -21,7 +21,7 @@ export function ScoresPage(props: any){
 	};
 
 	return (
-		<div>
+		<div className='score-page'>
 			<Button className='home-button' shape="circle" icon={<HomeOutlined />} onClick={() => nav('/')} />
 			<div className='score-page' >
 			<Tabs className="box-tab" value={tabIndex} onChange={handleTabChange} variant="fullWidth" centered 
@@ -29,14 +29,14 @@ export function ScoresPage(props: any){
 						'& .MuiTabs-indicator': { backgroundColor: '#536dfe' },
 						'& .MuiTab-root': { color: '#7986cb', fontSize:' min(3vw, 15px)'},
 					  }}>
-				<Tab label="My historique" />
+				<Tab label="Historique" />
         	  	<Tab label="Classement" />
 			</Tabs>
 			<Box sx={{ padding: 2 }}>
         	{tabIndex === 0 && (
         	  <Box >
         	    <ScoreTab id={id}/>
-				<Stats id={id}/>
+				<Stats id={id} tabFormat={1}/>
         	  </Box>
         	)}
         	{tabIndex === 1 && (
