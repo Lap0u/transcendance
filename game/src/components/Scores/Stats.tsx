@@ -19,7 +19,7 @@ export function Stats(props: any){
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
-	<div >
+	<div className='stats'>
 		<i>Game won: {stats.gameWon} </i>
 		<i>| Game lost: {stats.gameLost}</i>
 	</div>

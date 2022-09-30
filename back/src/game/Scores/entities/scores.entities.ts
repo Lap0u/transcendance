@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
   ManyToOne,
+  CreateDateColumn,
 } from 'typeorm';
 import { Accounts } from '../../../account/entities/accounts.entity';
 
@@ -31,4 +32,7 @@ export class Scores {
 
   @Column({ nullable: true })
   ScorePlayer2: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  date!: Date;
 }

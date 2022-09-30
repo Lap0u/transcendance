@@ -3,10 +3,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
-  OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { Scores } from '../../game/Scores/entities/scores.entities';
 import DatabaseFile from './files.entity';
 
 @Entity({ name: 'Accounts' })

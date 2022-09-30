@@ -1,7 +1,8 @@
 :root {
 	--background: #1e253b;
 	--mid-backgroud: #2f3649;
-	--text-1: rgb(62, 88, 161);
+	--button: #BBC1C2;
+	--text-1: #657CC7;
 	--transparent : #11ffee00;
-	--light-grey : hsl(224, 16%, 44%);
+	--light-grey : #8C93A8;
   }
