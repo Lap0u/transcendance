@@ -8,6 +8,7 @@ import Customization from '../customization/Customization';
 import './CustomMenu.css'
 import GamePreview from '../game_menu/GamePreview';
 import { NavigationBarre } from '../Accueil';
+import GameSettings from './GameSettings';
 
 const CustomMenu = (props : any) => {
 	
@@ -75,9 +76,8 @@ const CustomMenu = (props : any) => {
 
 	async function startCustom(currentUser : any, secondPlayer : any, settings: any) {
 		try {
-			await axios.post(`${BACK_URL}/customGame`, { playerOne: currentUser, playerTwo: secondPlayer, settings: settings}, {withCredentials:true});
+			await axios.post(`${BACK_URL}/matchmaking/customGame`, { playerOne: currentUser, playerTwo: secondPlayer, settings: settings}, {withCredentials:true});
 		} catch(e) {
-		console.log(e);
 		handleErrors(e);
 		}
 	}
@@ -115,7 +115,7 @@ const CustomMenu = (props : any) => {
 	 	 	opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
 	 	 	ballColor={ballColor} setBallColor={setBallColor}
 		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
-      
+      <GameSettings settings={settings} setSettings={setSettings} />
 			<div className='preview-box'>
         <div>Live game preview</div>
 	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}

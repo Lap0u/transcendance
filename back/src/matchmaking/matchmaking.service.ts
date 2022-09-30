@@ -4,6 +4,7 @@ import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
 import { addUserMatchmakingList, gameStart } from './matchmaking.utils';
 import { ScoresService } from 'src/game/Scores/scores.service';
+import { launchCustom } from 'src/gameCustom/launchCustom';
 
 @Injectable()
 export class MatchmakingService {
@@ -78,7 +79,7 @@ export class MatchmakingService {
   }
 
 	async launchCustomGame(payload: customGameDto) {
-		this.launchCustomGame(payload);
+		launchCustom(payload);
 	}
 
   async inviteGame(userId: string, invitedUserId: string): Promise<string> {
