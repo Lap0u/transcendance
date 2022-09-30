@@ -12,6 +12,8 @@ export type IntraUserDetails = {
   email: string;
   avatar: string;
   points: number;
+  rank?: number;
+  status?: number;
 };
 
 export type DatabaseFile = {

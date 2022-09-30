@@ -85,7 +85,7 @@ export class TwoFactorAuthenticationController {
     }
 
     const accessTokenCookie =
-      this.twoFactorAuthenticationService.getCookieWithJwtAccessToken(
+      await this.twoFactorAuthenticationService.getCookieWithJwtAccessToken(
         user.id,
         true,
       );

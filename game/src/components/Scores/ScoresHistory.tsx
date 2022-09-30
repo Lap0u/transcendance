@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { UserPopover }  from "../utils/UserPopover";
 import handleErrors from "../RequestErrors/handleErrors";
 import './ScoresHistory.css';
+import { BACK_URL } from "../../global";
 
 
-const BACK_URL = 'http://localhost:4000';
 
 const UserDto = {
 	account_id:"",
@@ -21,8 +21,8 @@ const UserDto = {
 	avatar: "",
 	points: "",
 	rank: undefined,
+	status: undefined,
   };
-
 
 
 const ScoresDto = [
@@ -43,30 +43,20 @@ export function ScoreTab(props: any) {
 	const [scores, getScores] = useState(ScoresDto);
 	const [scoreLen, getScoreLen] = useState(0);
 	const [ok, setOk] = useState(false);
-	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
+	const user= props.user;
+	const currentUser= props.currentUser;
 
 	useEffect(() => {
-		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
-			.then((response) => {
-				getUser(response.data);
-				setOk(true);
-			})
-			.catch((error) => {
-				handleErrors(error)
-			})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/history/${props.id}`,  {withCredentials:true })
-			.then((response) => {
-				console.log("scooroe", response.data);
-				getScores(response.data);
-				getScoreLen(response.data.length);
-				setOk(true);
-			})
-			.catch((error) => {
-				handleErrors(error)
-			})
+		.then((response) => {
+			getScores(response.data);
+			console.log("scooroe", scores);
+			getScoreLen(response.data.length);
+			setOk(true);
+		})
+		.catch((error) => {
+			handleErrors(error)
+		})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -83,10 +73,10 @@ export function ScoreTab(props: any) {
 	<li className='raw'> Winner 
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		{score.idWinner !== user.account_id ?
-		<UserPopover currentUser={user} user={score.winner} avatarOrUsername={'username'}/>
+		{score.idWinner !== currentUser.account_id ?
+		<UserPopover currentUser={currentUser} user={score.winner} avatarOrUsername={'username'}/>
 		:
-		<i>{user.accountUsername}</i>
+		<i>{currentUser.accountUsername}</i>
 		}
 		</i>
 	  ))}
@@ -94,10 +84,10 @@ export function ScoreTab(props: any) {
 	<li className='raw'> Loser
 		{scores.map((score) => (
 		<i key={score.key} className="data">
-		{score.idLoser !== user.account_id ?
-		<UserPopover currentUser={user} user={score.loser} avatarOrUsername={'username'}/>
+		{score.idLoser !== currentUser.account_id ?
+		<UserPopover currentUser={currentUser} user={score.loser} avatarOrUsername={'username'}/>
 		:
-		<i>{user.accountUsername}</i>
+		<i>{currentUser.accountUsername}</i>
 		}
 		</i>
 	  ))}

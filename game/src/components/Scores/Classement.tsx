@@ -21,7 +21,8 @@ const UserDto = [
     email: '',
     avatar: '',
     points: '',
-	rank: undefined,
+	rank: '',
+	status: undefined,
   },
 ];
 
@@ -29,27 +30,16 @@ export function ClassementTab(props: any) {
   const [Classement, getClassement] = useState(UserDto);
   const [classementLen, getClassementLen] = useState(0);
   const [ok, setOk] = useState(false);
-  const [user, getUser] = useState({
-    account_id: '',
-    name: '',
-    username: '',
-    avatar: '',
-    accountUsername: '',
-    isTwoFactorAuthenticationEnabled: false,
-    email: null,
-  });
+  const user=props.user;
+  const currentUser=props.currentUser;
 
 	useEffect(() => {
-		axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
 			.then((response) => {
-				getUser(response.data);
-				axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
-					.then((response) => {
-					getClassement(response.data);
-					getClassementLen(response.data.length);
+				getClassement(response.data);
+				getClassementLen(response.data.length);
 					setOk(true);
 				})
-			})
 			.catch((error) => {
 				handleErrors(error)
 			})
@@ -63,10 +53,10 @@ export function ClassementTab(props: any) {
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">
-		{classement.account_id !== user.account_id ?
-		<UserPopover currentUser={user} user={classement} avatarOrUsername={'username'}/>
+		{classement.account_id !== currentUser.account_id ?
+		<UserPopover currentUser={currentUser} user={classement} avatarOrUsername={'username'}/>
 		:
-		<i>{user.accountUsername}</i>
+		<i>{currentUser.accountUsername}</i>
 		}
 		</i>
 	  ))}

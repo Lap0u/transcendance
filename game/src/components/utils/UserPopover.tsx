@@ -1,12 +1,15 @@
+import { CheckCircleFilled, ExclamationCircleFilled, MinusCircleFilled } from '@ant-design/icons';
 import { Avatar, Button, message, Popover, Typography } from 'antd';
 import axios from 'axios';
 import { useMemo, useState } from 'react';
-import { BACK_URL } from '../../global';
+import { useNavigate, useNavigationType } from 'react-router-dom';
+import { BACK_URL, FRONT_URL } from '../../global';
 import '../Account/PublicAccount.css';
+import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from '../Scores/Stats';
 import './UserPopover.css'
 
-const stylePopoverButton={fontSize:'max(2vw, 12px)', height: 'min(2vw, 15px)', lineHeight: '0', padding:'0'}
+const stylePopoverButton={fontSize:'13px', height: '15px', lineHeight: '0', padding:'0'}
 
 export const UserPopover = ({
   currentUser,
@@ -21,6 +24,8 @@ export const UserPopover = ({
     return currentUser.blacklist.includes(user.id);
   }, [currentUser.blacklist, user.id]);
 
+  	const nav = useNavigate();
+ 
   const [isVisible, setIsVisible] = useState(false);
 
   const blacklist = async () => {
@@ -59,9 +64,9 @@ export const UserPopover = ({
     setIsVisible(false);
   };
 
-  const handleProfileClick = () => {
-    console.log('Profile');
-    setIsVisible(false);
+  const handleScoresClick = (nav: any) => {
+	  console.log(`/scores/${user.account_id}`);
+	nav(`/scores/${user.account_id}`)
   };
 
   const handleInviteClick = async () => {
@@ -85,7 +90,7 @@ export const UserPopover = ({
 
   const content = (
     <div className='content' style={{ display: 'flex', flexDirection: 'column'}}>
-      <Button style={stylePopoverButton} onClick={handleProfileClick}>Scores</Button>
+      <Button style={stylePopoverButton} onClick={() => handleScoresClick(nav)}>Scores</Button>
       <Button style={{ margin: '5px 0', ...stylePopoverButton }} onClick={handleInviteClick}>
         Invite to play
       </Button>
@@ -104,7 +109,7 @@ export const UserPopover = ({
       content={content}
       title={<ProfileTitle user={user}/>}
 	  trigger="click"
-	  overlayStyle={{width: "20vw", textAlign:'center'}}>
+	  overlayStyle={{width: "170px", textAlign:'center'}}>
       <div className="popover-item" style={{ display: 'inline-block' }}>
         {avatarOrUsername === 'username' ? (
           <i> {user.accountUsername} </i>
@@ -121,11 +126,11 @@ UserPopover.defaultProps = {
 
 function ProfileTitle({user}: {user: any}){
 	return (
-	<Typography className='popover-title' style={{display: 'flex'}}>
+	<Typography className='popover-title' style={{ width: '100%'}}>
 	<figure>
-		<Avatar  style={{ textAlign:'center', width: '6vw', height:'6vw', maxWidth: '60px', maxHeight:'60px'}} className='popover-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
+		<Avatar  size={50} style={{ textAlign:'center'}} className='popover-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
 		<figcaption>
-		<i className='popover-username'>  {user.accountUsername}</i><br/>
+		<i className='popover-username'><Status status={user.status}/>{user.accountUsername}</i><br/>
 		<div className='info'>
 		<i>{user.points} points</i>
 		<i><Stats id={user.account_id} tabFormat={0}/></i>
@@ -134,6 +139,27 @@ function ProfileTitle({user}: {user: any}){
 		</figcaption>
 	</figure>
 	</Typography>
+	)
+}
+
+function Status(props: any){
+	console.log("stat", props.status);
+	if (props.status === 0)
+		return (
+		<i className='status'>
+			<MinusCircleFilled style={{color:'red'}} />
+		</i>
+	)
+	if (props.status === 1)
+		return (
+			<i className='status'>
+				<CheckCircleFilled style={{color:'green'}} />
+			</i>
+		)
+	return (
+		<i className='status'>
+			<ExclamationCircleFilled style={{color:'grey'}} />
+		</i>
 	)
 }
 export default UserPopover;

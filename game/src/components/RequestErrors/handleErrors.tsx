@@ -35,6 +35,7 @@ export default async function handleErrors(error : any)
 
 	}
 	else{
+		console.log("errror", error);
 		window.location.href = 'http://localhost:3000/error500'
 	}
 }
