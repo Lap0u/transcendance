@@ -38,11 +38,11 @@ export class AccountController {
     return this.authService.findUser(id);
   }
 
-  @Get('/:id')
+  @Get('/id/:id')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
-  getAccountInfoById(@Param() param) {
-    return this.authService.findUser(param.id);
+  async getAccountInfoById(@Param() param) {
+    return await this.usersService.findUserById(param.id);
   }
 
   @Post('avatar')
@@ -134,12 +134,5 @@ export class AccountController {
   async getAllAccounts() {
     const users = await this.usersService.getAllAccount();
     return users;
-  }
-
-  @Get('status')
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtTwoFactorGuard)
-  status() {
-    return 'ok';
   }
 }

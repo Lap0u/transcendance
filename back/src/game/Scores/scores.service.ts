@@ -42,7 +42,21 @@ export class ScoresService {
     };
     const newScore = this.scoresRepo.create(scoreDb);
     await this.addPoint(scores.idWinner, scores.ScorePlayer1);
-    return this.scoresRepo.save(newScore);
+    const res = this.scoresRepo.save(newScore);
+    await this.userRepo.save({
+      ...scoreDb.winner,
+      rank: await this.getRank(scoreDb.winner.account_id),
+    });
+    await this.userRepo.save({
+      ...scoreDb.loser,
+      rank: await this.getRank(scoreDb.loser.account_id),
+    });
+    return res;
+  }
+
+  async getRank(account_id: string) {
+    const classement: Accounts[] = await this.getClassement();
+    return classement.findIndex((elem) => elem.account_id === account_id) + 1;
   }
 
   async statsById(id: string) {

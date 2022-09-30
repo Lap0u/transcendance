@@ -9,7 +9,7 @@ export class AuthController {
 
 	constructor(
 		private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
-	  ) {}
+		) {}
 	
 	//This route will send the 42 0auth login page 
 	@Get('login')
@@ -22,7 +22,7 @@ export class AuthController {
 	async redirect(@Res() res: Response, @Req() req : Request) {
 		const user = req.session['passport'].user;
 		const accessTokenCookie =
-		this.twoFactorAuthenticationService.getCookieWithJwtAccessToken(
+		await this.twoFactorAuthenticationService.getCookieWithJwtAccessToken(
 		  user.id,
 		  false,
 		);
@@ -46,9 +46,12 @@ export class AuthController {
 	@Get('logout')
 	@UseGuards(AuthenticatedGuard)
 	@UseGuards(JwtTwoFactorGuard)
-	logout(@Req() req: Request, @Res() res: Response, @Next() next : NextFunction){
-      req.logOut(function(err) {
+	async logout(@Req() req: Request, @Res() res: Response, @Next() next : NextFunction){
+		const id = req.session['passport'].user.id;
+		const twoFactorAuthenticationService = this.twoFactorAuthenticationService;
+		req.logOut(async function(err) {
 		if (err) {  return next(err); }
+			await twoFactorAuthenticationService.setLoggout(id);
 			res.clearCookie("Authentication", {domain: 'localhost', path:'/'});
 			return res.sendStatus(200);
 		});

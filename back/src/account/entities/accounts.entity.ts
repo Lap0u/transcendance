@@ -51,4 +51,10 @@ export class Accounts {
 
   @Column({ nullable: true, default: 1000 })
   public points?: number;
+
+  @Column({ nullable: true })
+  public rank?: number;
+
+  @Column({ nullable: true, default: 0 })
+  public status?: number;
 }

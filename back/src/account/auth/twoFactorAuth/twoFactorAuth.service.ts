@@ -81,7 +81,10 @@ export class TwoFactorAuthenticationService {
         { authConfirmToken: user.authConfirmToken },
         { isVerified: true, authConfirmToken: undefined },
       );
-      const accessTokenCookie = this.getCookieWithJwtAccessToken(user.id, true);
+      const accessTokenCookie = await this.getCookieWithJwtAccessToken(
+        user.id,
+        true,
+      );
       req.res.setHeader('Set-Cookie', [accessTokenCookie]);
       await this.sendConfirmedEmail(user);
       return true;
@@ -119,7 +122,23 @@ export class TwoFactorAuthenticationService {
     );
   }
 
-  public getCookieWithJwtAccessToken(
+  async setLogged(id: string) {
+    const user = await this.authService.findUser(id);
+    return await this.userRepository.save({
+      ...user,
+      status: 1,
+    });
+  }
+
+  async setLoggout(id: string) {
+    const user = await this.authService.findUser(id);
+    return await this.userRepository.save({
+      ...user,
+      status: 0,
+    });
+  }
+
+  public async getCookieWithJwtAccessToken(
     id: string,
     isSecondFactorAuthenticated = false,
   ) {
@@ -130,6 +149,7 @@ export class TwoFactorAuthenticationService {
         'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
       )}s`,
     });
+    await this.setLogged(id);
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
       'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
     )}`;
@@ -197,61 +217,3 @@ export class TwoFactorAuthenticationService {
     return hash;
   }
 }
-
-/*@Injectable()
-export class TwoFactorAuthenticationService {
-  constructor(
-    private readonly usersService: AccountService,
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
-  ) {}
-
-  public async generateTwoFactorAuthenticationSecret(user: Accounts) {
-    const secret = authenticator.generateSecret();
-
-    const otpauthUrl = authenticator.keyuri(
-      user.email,
-      this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
-      secret,
-    );
-
-    await this.usersService.setTwoFactorAuthenticationSecret(secret, user.id);
-
-    return {
-      secret,
-      otpauthUrl,
-    };
-  }
-
-  public async pipeQrCodeStream(stream: Response, otpauthUrl: string) {
-    return toFileStream(stream, otpauthUrl);
-  }
-
-  public isTwoFactorAuthenticationCodeValid(
-    twoFactorAuthenticationCode: string,
-    user: Accounts,
-  ) {
-    return authenticator.verify({
-      token: twoFactorAuthenticationCode,
-      secret: user.twoFactorAuthenticationSecret,
-    });
-  }
-
-  public getCookieWithJwtAccessToken(
-    id: string,
-    isSecondFactorAuthenticated = false,
-  ) {
-	  console.log("aaaaaaaaaaa", this.configService.get('JWT_ACCESS_TOKEN_SECRET'))
-    const payload: TokenPayload = { id, isSecondFactorAuthenticated };
-    const token = this.jwtService.sign(payload, {
-      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
-      expiresIn: `${this.configService.get(
-        'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-      )}s`,
-    });
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-    )}`;
-  }
-}
-*/

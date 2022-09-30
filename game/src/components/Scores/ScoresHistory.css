@@ -57,6 +57,14 @@
 	margin: 10px;
 }
 
-.stats {
+.score-page  .stats{
+	color: white;
+	display: inline;
+}
+.score-page  .stats i{
+	padding: 10px;
+}
+
+.score-page  .title-scores {
 	color: white;
 }

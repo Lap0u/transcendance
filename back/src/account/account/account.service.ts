@@ -106,4 +106,8 @@ export class AccountService {
 
     return saveAccount;
   }
+
+  async findUserById(account_id: string) {
+    return await this.usersRepository.findOneBy({ account_id });
+  }
 }
