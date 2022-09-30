@@ -18,6 +18,7 @@ import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate'
 import Forrbidden from './components/ErrorPage/Forbidden';
 import PublicInfo from './components/Account/PublicAccount';
 import { ScoresPage } from './components/Scores/ScorePage';
+import CustomMenu from './components/Custom_game_menu/CustomMenu';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -57,6 +58,7 @@ function App() {
             }
           />
           <Route path="/menu" element={<GameMenu socket={socket} />} />
+		  <Route path='/custom_game' element={<CustomMenu socket={socket} />} />
           <Route
             path="/singleGame/:id"
             element={<SingleGame socket={socket} />}

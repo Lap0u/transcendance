@@ -70,7 +70,7 @@ function Accueil() {
 
 
 
-function NavigationBarre(props : any) {
+export function NavigationBarre(props : any) {
 	return(
 	<div>
 	{props.isLoginActive ?
@@ -103,7 +103,11 @@ function LoginPlayButton(props: any) {
 
 				<ButtonTemplate text="Login" onClick={() => window.location.href = 'http://localhost:4000/auth/login'} buttonClass={'login-button'} />
 			:
-			<ButtonTemplate  text="Enter game" onClick={() => nav("/menu")} buttonClass={'play-button'} />}
+			<div>
+				<ButtonTemplate  text="Matchmaking" onClick={() => nav("/menu")} buttonClass={'play-button'} />
+				<ButtonTemplate  text="Custom game" onClick={() => nav("/custom_game")} buttonClass={'play-button'} />
+			</div>
+			}
 		</div>
 	)
 }

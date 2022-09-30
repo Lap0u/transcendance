@@ -14,3 +14,9 @@ export class quitMatchmakingDto {
   id: string;
   socket: string;
 }
+
+export class customGameDto {
+	playerOne: matchmakingDto;
+	playerTwo: matchmakingDto;
+	settings: any;
+}

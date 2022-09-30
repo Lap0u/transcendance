@@ -2,28 +2,28 @@ import {useState, useEffect} from 'react'
 import { Button, Space, version } from "antd";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { GameList, game } from './GameList';
 import { BACK_URL } from '../constants';
 import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
-import GamePreview from './GamePreview';
-import './Game_menu.css'
+import './CustomMenu.css'
+import GamePreview from '../game_menu/GamePreview';
 import { NavigationBarre } from '../Accueil';
 
-const GameMenu = (props : any) => {
+const CustomMenu = (props : any) => {
 	
 	const [ownPaddleColor, setOwnPaddleColor] = useState("#ffffff")
 	const [opponentPaddleColor, setOpponentPaddleColor] = useState("#ffffff")
 	const [ballColor, setBallColor] = useState("#ffffff")
 	const [gameBackground, setGameBackground] = useState("#000000")
-	const [inMatchmaking, setMatchmaking] = useState(false);
-	const [ gamesList, setGamesList] = useState<game[]>([]);
+	const [secondPlayer, setSecondPlayer] = useState("");
+	const [settings, setSettings] = useState(null)
 	const socket = props.socket;
-  const [currentUser, setCurrentUser] = useState<any>(null);
+	const [currentUser, setCurrentUser] = useState<any>(null);
 	const navigate = useNavigate();
 	const [isLoginActive, setIsLogin] = useState(false);
 	const [ok, setOk] = useState(false);
 	const [user, setUser] = useState({account_id: ""});
+
 	useEffect(() => {
 		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
@@ -73,75 +73,50 @@ const GameMenu = (props : any) => {
     initData();
   }, [navigate]);
 
-  const joinMatchmaking = () =>{
-    setMatchmaking(!inMatchmaking)
-  }
-  const quitMatchmakingList = async(userId: string) => {
-    try {
-         await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
-    } catch(e) {
-      handleErrors(e);
-    }
-  }
-
-  const joinMatchmakingList = async(userLogin: string, userId: string, socket: string) => {
-    try {
-        await axios.post(`${BACK_URL}/matchmaking`, { login: userLogin, accountUsername: userId, socket: socket}, {withCredentials:true});
-    } catch(e) {
-      handleErrors(e);
-    }
-  }
-  const getMatchesList = async () => {
-    try {
-        const res = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
-        setGamesList(res.data)
-      }
-      catch(e) {
+	async function startCustom(currentUser : any, secondPlayer : any, settings: any) {
+		try {
+			await axios.post(`${BACK_URL}/customGame`, { playerOne: currentUser, playerTwo: secondPlayer, settings: settings}, {withCredentials:true});
+		} catch(e) {
 		console.log(e);
-		
-        handleErrors(e);
-    }
-  }
-  useEffect(() => {
-    const interval = setInterval(getMatchesList, 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
+		handleErrors(e);
+		}
+	}
+
+	function startGame() {
+		if (secondPlayer != ""){
+			startCustom(currentUser, secondPlayer, settings);
+		}
+		else
+			setSecondPlayer(currentUser)
+		// else
+		// 	openFriendList("Second")
+	}
+
+
 
 	useEffect(() => {
 		socket.on(`matchFound:`, (gameId : string) => {
 			navigate(`/singleGame/${gameId}`, {state: customGameValues});
 		return () => 
 			socket.off(`matchFound:`)
-	})
-
+		})
 	});
-  useEffect(() => {
-		if (currentUser) {
-      if (inMatchmaking)
-        joinMatchmakingList(currentUser.account_id, currentUser.accountUsername, socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
-      if (!inMatchmaking)
-        quitMatchmakingList(currentUser.account_id)
-        return () => {
-          quitMatchmakingList(currentUser.account_id)
-	  }
-  }
-  }, [inMatchmaking, currentUser]);
 
-	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
+	var launchGame = secondPlayer != "" ? "Start Game" : "Invite player"
   return (
-    <div>
+
+    <div className='global-div'>
 			<NavigationBarre nav={navigate} isLoginActive={isLoginActive} userId={user.account_id}/>
       <Space>
-        <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
+        <Button onClick={startGame} type="primary">{launchGame}</Button>
       </Space>
-	  <Customization ownPaddleColor={ownPaddleColor} setOwnPaddleColor={setOwnPaddleColor}
-	 	 opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
-	 	 ballColor={ballColor} setBallColor={setBallColor}
+	  	
+			<Customization ownPaddleColor={ownPaddleColor} setOwnPaddleColor={setOwnPaddleColor}
+	 	 	opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
+	 	 	ballColor={ballColor} setBallColor={setBallColor}
 		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
-      <GameList games={gamesList} customGameValues={customGameValues}/>
-      <div className='preview-box'>
+      
+			<div className='preview-box'>
         <div>Live game preview</div>
 	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
         ballColor={ballColor} backgroundColor ={gameBackground} />
@@ -150,4 +125,4 @@ const GameMenu = (props : any) => {
   );
 };
 
-export default GameMenu;
+export default CustomMenu;

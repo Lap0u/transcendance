@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
+import { matchmakingDto, joinMatchmakingDto, customGameDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
 import { addUserMatchmakingList, gameStart } from './matchmaking.utils';
@@ -76,6 +76,10 @@ export class MatchmakingService {
 
     return newMatchmakingList;
   }
+
+	async launchCustomGame(payload: customGameDto) {
+		this.launchCustomGame(payload);
+	}
 
   async inviteGame(userId: string, invitedUserId: string): Promise<string> {
     console.log('userID:', userId);
