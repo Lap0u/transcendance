@@ -63,6 +63,20 @@ export class MatchmakingController {
 
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
+  @Post('/acceptInviteGame/:sendInvitationUserId')
+  acceptInviteGame(
+    @Request() req: any,
+    @Param('sendInvitationUserId') sendInvitationUserId: string,
+  ): Promise<string> {
+    return this.matchmakingService.acceptInviteGame(
+      req.user.id,
+      req.user.username,
+      sendInvitationUserId,
+    );
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Post('/refuseInviteGame/:sendInvitationUserId')
   refuseInviteGame(
     @Request() req: any,

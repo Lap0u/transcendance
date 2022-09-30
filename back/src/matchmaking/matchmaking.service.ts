@@ -90,6 +90,19 @@ export class MatchmakingService {
     return 'ok';
   }
 
+  async acceptInviteGame(
+    userId: string,
+    username: string,
+    sendInvitationUserId: string,
+  ): Promise<string> {
+    this.socketService.socket.emit(`acceptInviteGame:${sendInvitationUserId}`, {
+      senderId: userId,
+      senderUsername: username,
+    });
+
+    return 'ok';
+  }
+
   async refuseInviteGame(
     userId: string,
     username: string,

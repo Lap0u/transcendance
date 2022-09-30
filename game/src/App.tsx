@@ -49,6 +49,7 @@ function App() {
     if (currentUser) {
       const userUpdate = `userUpdate:${currentUser.id}`;
       const receiveInviteGame = `inviteGame:${currentUser.id}`;
+      const acceptInviteGame = `acceptInviteGame:${currentUser.id}`;
       const refuseInviteGame = `refuseInviteGame:${currentUser.id}`;
 
       socket.on(userUpdate, (newCurrentUser: any) => {
@@ -62,13 +63,19 @@ function App() {
         setInvitor(invitor);
       });
 
-      socket.on(refuseInviteGame, (refusor: any) => {
-        message.error(`${refusor.senderUsername} refuse to play with you`);
+      socket.on(acceptInviteGame, (accept: any) => {
+        message.success(`${accept.senderUsername} accept to play with you`);
+        window.location.href = '/menu';
+      });
+
+      socket.on(refuseInviteGame, (refuse: any) => {
+        message.error(`${refuse.senderUsername} refuse to play with you`);
       });
 
       return () => {
         socket.off(userUpdate);
         socket.off(receiveInviteGame);
+        socket.off(acceptInviteGame);
         socket.off(refuseInviteGame);
       };
     }

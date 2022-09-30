@@ -11,7 +11,19 @@ const InviteGameModal = ({
 }: inviteGameModalProps) => {
   const navigate = useNavigate();
 
-  const handleOk = () => {
+  const handleOk = async () => {
+    try {
+      await axios.post(
+        `${BACK_URL}/matchmaking/acceptInviteGame/${invitor.senderId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      message.success('Success');
+    } catch (error) {
+      message.error('Fail!');
+    }
     navigate('/menu');
     setIsInviteGameModalOpen(false);
   };
