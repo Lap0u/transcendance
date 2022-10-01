@@ -5,48 +5,90 @@ import { ClassementTab } from "./Classement";
 import { ScoreTab } from "./ScoresHistory";
 import { Stats } from "./Stats";
 import { Tabs, Tab, Box } from '@mui/material';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from 'react';
 import '../Account/PublicAccount.css'
+import axios from "axios";
+import { BACK_URL } from "../../global";
+import handleErrors from "../RequestErrors/handleErrors";
 
+const UserDto = {
+	account_id:"",
+	id: "",
+	username: "",
+	name: "",
+	accountUsername: "",
+	isTwoFactorAuthenticationEnabled: "",
+	authConfirmToken: "",
+	isVerified: "",
+	twoFactorAuthenticationSecret: "",
+	email: "",
+	avatar: "",
+	points: "",
+	rank: undefined,
+	status: undefined,
+  };
 
 export function ScoresPage(props: any){
 	const params = useParams();
 	const id= params.id;
 	const nav = useNavigate();
 	const [tabIndex, setTabIndex] = useState(0);
-
+	const [ok, setOk] = useState(false);
 	const handleTabChange = (event :any, newTabIndex: any) => {
 	  setTabIndex(newTabIndex);
 	};
 
+	const [user, getUser] = useState({...UserDto});
+	const [currentUser, getCurrentUser] = useState({...UserDto});
+	useEffect(() => {
+		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
+			.then((response) => {
+				console.log("aaazzzs", response.data);
+				getUser(response.data);
+				axios.get(`${BACK_URL}/account`,  {withCredentials:true })
+					.then((response) => {
+						getCurrentUser(response.data);
+						setOk(true);
+					})
+			})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [id]);
+
 	return (
-		<div>
+		ok?
+		<div className='score-page'>
 			<Button className='home-button' shape="circle" icon={<HomeOutlined />} onClick={() => nav('/')} />
 			<div className='score-page' >
+			<i className='title-scores'>Scores page of user {user.accountUsername} </i>
 			<Tabs className="box-tab" value={tabIndex} onChange={handleTabChange} variant="fullWidth" centered 
 					  sx={{
 						'& .MuiTabs-indicator': { backgroundColor: '#536dfe' },
 						'& .MuiTab-root': { color: '#7986cb', fontSize:' min(3vw, 15px)'},
 					  }}>
-				<Tab label="My historique" />
-        	  	<Tab label="Classement" />
+				<Tab label="Historique" />
+        	  	<Tab label="Leaderboard" />
 			</Tabs>
 			<Box sx={{ padding: 2 }}>
         	{tabIndex === 0 && (
         	  <Box >
-        	    <ScoreTab id={id}/>
-				<Stats id={id}/>
+        	    <ScoreTab user={user} id={id} currentUser={currentUser}/>
+				<Stats id={id} tabFormat={1}/>
         	  </Box>
         	)}
         	{tabIndex === 1 && (
         	  <Box>
-        	    <ClassementTab/>
+        	    <ClassementTab user={user} currentUser={currentUser}/>
         	  </Box>
         	)}
       		</Box>
 			</div>
-		</div>	
+		</div>
+		: 
+		null
 	  );
 
 }

@@ -100,10 +100,14 @@ export class AccountService {
     }
     account.blacklist = newBlacklist;
 
-    const saveAccount = this.usersRepository.save(account);
+    const saveAccount = await this.usersRepository.save(account);
 
     this.socketService.socket.emit(`userUpdate:${account.id}`, account);
 
     return saveAccount;
+  }
+
+  async findUserById(account_id: string) {
+    return await this.usersRepository.findOneBy({ account_id });
   }
 }

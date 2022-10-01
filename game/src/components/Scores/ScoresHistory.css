@@ -56,3 +56,15 @@
 	position: relative;
 	margin: 10px;
 }
+
+.score-page  .stats{
+	color: white;
+	display: inline;
+}
+.score-page  .stats i{
+	padding: 10px;
+}
+
+.score-page  .title-scores {
+	color: white;
+}

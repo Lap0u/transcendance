@@ -21,6 +21,8 @@ const UserDto = [
     email: '',
     avatar: '',
     points: '',
+	rank: '',
+	status: undefined,
   },
 ];
 
@@ -28,79 +30,54 @@ export function ClassementTab(props: any) {
   const [Classement, getClassement] = useState(UserDto);
   const [classementLen, getClassementLen] = useState(0);
   const [ok, setOk] = useState(false);
-  const [user, getUser] = useState({
-    account_id: '',
-    name: '',
-    username: '',
-    avatar: '',
-    accountUsername: '',
-    isTwoFactorAuthenticationEnabled: false,
-    email: null,
-  });
+  const user=props.user;
+  const currentUser=props.currentUser;
 
-  useEffect(() => {
-    axios
-      .get(`${BACK_URL}/account`, { withCredentials: true })
-      .then((response) => {
-        getUser(response.data);
-        setOk(true);
-      })
-      .catch((error) => {
-        handleErrors(error);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+	useEffect(() => {
+		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
+			.then((response) => {
+				getClassement(response.data);
+				getClassementLen(response.data.length);
+					setOk(true);
+				})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-  useEffect(() => {
-    axios
-      .get(`${BACK_URL}/scores/classement`, { withCredentials: true })
-      .then((response) => {
-        getClassement(response.data);
-        getClassementLen(response.data.length);
-        setOk(true);
-      })
-      .catch((error) => {
-        handleErrors(error);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return ok && classementLen ? (
-    <div className="tab">
-      <ul className="classement-tab">
-        <li className="raw">
-          {' '}
-          Username
-          {Classement.map((classement) => (
-            <i key={classement.account_id} className="data">
-              <UserPopover
-                currentUser={user}
-                user={classement}
-                avatarOrUsername={'username'}
-              />
-            </i>
-          ))}
-        </li>
-        <li className="raw">
-          {' '}
-          Points
-          {Classement.map((classement) => (
-            <i key={classement.account_id} className="data">
-              {classement.points}
-            </i>
-          ))}
-        </li>
-        <li className="raw">
-          {' '}
-          Stats
-          {Classement.map((classement) => (
-            <i key={classement.account_id} className="data">
-              <Stats id={classement.account_id} />
-            </i>
-          ))}
-        </li>
-      </ul>
-    </div>
-  ) : (
-    <div>No score yet</div>
-  );
+	return(
+		ok && classementLen?
+	<div className='tab'>
+	<ul className="classement-tab">
+		<li className='raw' > Username 
+		{Classement.map((classement) => (
+		<i key={classement.account_id} className="data">
+		{classement.account_id !== currentUser.account_id ?
+		<UserPopover currentUser={currentUser} user={classement} avatarOrUsername={'username'}/>
+		:
+		<i>{currentUser.accountUsername}</i>
+		}
+		</i>
+	  ))}
+		</li>
+		<li className='raw'> Points
+		{Classement.map((classement) => (
+		<i key={classement.account_id} className="data">
+		{classement.points}
+		</i>
+	  ))}
+	  	</li>
+		<li className='raw'> Stats
+	{Classement.map((classement) => (
+		<i key={classement.account_id} className="data">
+		<Stats id={classement.account_id} tabFormat={1}/>
+		</i>
+	  ))}
+		</li>
+	</ul>
+	</div>
+		: 
+	<div>No score yet</div>
+	)
 }

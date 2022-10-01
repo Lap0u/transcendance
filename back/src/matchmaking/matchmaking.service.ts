@@ -50,13 +50,13 @@ export class MatchmakingService {
   }
 
   async joinMatchmaking(payload: joinMatchmakingDto): Promise<matchmakingDto> {
-    let newUserInMatchmaking = addUserMatchmakingList(
+    const newUserInMatchmaking = addUserMatchmakingList(
       payload,
       this.matchmakingList,
     );
 
     if (this.matchmakingList.length >= 2) {
-      let toQuit = gameStart(
+      const toQuit = gameStart(
         this.matchmakingList,
         this.socketService,
         this.currentMatches,
@@ -82,12 +82,40 @@ export class MatchmakingService {
 		launchCustom(payload);
 	}
 
-  async inviteGame(userId: string, invitedUserId: string): Promise<string> {
-    console.log('userID:', userId);
-    console.log('invitedUserId:', invitedUserId);
-
+  async inviteGame(
+    userId: string,
+    username: string,
+    invitedUserId: string,
+  ): Promise<string> {
     this.socketService.socket.emit(`inviteGame:${invitedUserId}`, {
       senderId: userId,
+      senderUsername: username,
+    });
+
+    return 'ok';
+  }
+
+  async acceptInviteGame(
+    userId: string,
+    username: string,
+    sendInvitationUserId: string,
+  ): Promise<string> {
+    this.socketService.socket.emit(`acceptInviteGame:${sendInvitationUserId}`, {
+      senderId: userId,
+      senderUsername: username,
+    });
+
+    return 'ok';
+  }
+
+  async refuseInviteGame(
+    userId: string,
+    username: string,
+    sendInvitationUserId: string,
+  ): Promise<string> {
+    this.socketService.socket.emit(`refuseInviteGame:${sendInvitationUserId}`, {
+      senderId: userId,
+      senderUsername: username,
     });
 
     return 'ok';

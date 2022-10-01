@@ -13,19 +13,10 @@ import { ChannelType, CHANNEL_TYPE, CHAT_TYPE } from './const';
 
 const { Header, Sider, Content } = Layout;
 
-const Chat = ({
-  socket,
-  currentUser,
-  setCurrentUser,
-}: {
-  socket: any;
-  currentUser: any;
-  setCurrentUser: any;
-}) => {
+const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
   const navigate = useNavigate();
 
   const [chatType, setChatType] = useState(CHAT_TYPE.user);
-  // const [currentUser, setCurrentUser] = useState<any>(null);
   const [selectUser, setSelectUser] = useState<any>(null);
   const [users, setUsers] = useState<any>([]);
   const [channels, setChannels] = useState<ChannelType[]>([]);
@@ -59,10 +50,6 @@ const Chat = ({
   useEffect(() => {
     const initData = async () => {
       try {
-        const res = await axios.get(`${BACK_URL}/account`, {
-          withCredentials: true,
-        });
-        setCurrentUser(res.data);
         getAllUsers();
         getAllChannels();
       } catch {
@@ -75,13 +62,8 @@ const Chat = ({
 
   useEffect(() => {
     if (currentUser) {
-      const userUpdate = `userUpdate:${currentUser.id}`;
       const updateChannelSocketMessage = 'updateChannel';
       const createNewChannelSocket = 'createChannel';
-
-      socket.on(userUpdate, (newCurrentUser: any) => {
-        setCurrentUser(newCurrentUser);
-      });
 
       socket.on(updateChannelSocketMessage, (updateChannel: ChannelType) => {
         setChannels((oldChannels: ChannelType[]) => {
@@ -125,7 +107,6 @@ const Chat = ({
       });
 
       return () => {
-        socket.off(userUpdate);
         socket.off(updateChannelSocketMessage);
         socket.off(createNewChannelSocket);
       };

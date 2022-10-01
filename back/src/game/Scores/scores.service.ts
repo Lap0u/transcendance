@@ -17,13 +17,11 @@ export class ScoresService {
   }
 
   async historyById(account_id: string) {
-    const player1: ScoresDbDto[] = await this.scoresRepo.find({
-      where: { idWinner: account_id },
+    const total: ScoresDbDto[] = await this.scoresRepo.find({
+      where: [{ idWinner: account_id }, { idLoser: account_id }],
+      order: { date: 'DESC' },
     });
-    const player2: ScoresDbDto[] = await this.scoresRepo.find({
-      where: { idLoser: account_id },
-    });
-    for (const player of player1) {
+    for (const player of total) {
       player.winner = await this.userRepo.findOneBy({
         account_id: player.idWinner,
       });
@@ -31,15 +29,7 @@ export class ScoresService {
         account_id: player.idLoser,
       });
     }
-    for (const player of player2) {
-      player.loser = await this.userRepo.findOneBy({
-        account_id: player.idLoser,
-      });
-      player.winner = await this.userRepo.findOneBy({
-        account_id: player.idWinner,
-      });
-    }
-    return [...player1, ...player2];
+    return total;
   }
 
   async addScore(scores: ScoresDto) {
@@ -52,7 +42,21 @@ export class ScoresService {
     };
     const newScore = this.scoresRepo.create(scoreDb);
     await this.addPoint(scores.idWinner, scores.ScorePlayer1);
-    return this.scoresRepo.save(newScore);
+    const res = this.scoresRepo.save(newScore);
+    await this.userRepo.save({
+      ...scoreDb.winner,
+      rank: await this.getRank(scoreDb.winner.account_id),
+    });
+    await this.userRepo.save({
+      ...scoreDb.loser,
+      rank: await this.getRank(scoreDb.loser.account_id),
+    });
+    return res;
+  }
+
+  async getRank(account_id: string) {
+    const classement: Accounts[] = await this.getClassement();
+    return classement.findIndex((elem) => elem.account_id === account_id) + 1;
   }
 
   async statsById(id: string) {
