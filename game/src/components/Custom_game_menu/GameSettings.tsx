@@ -1,20 +1,21 @@
-import { Row, Col } from "antd";
+import { Row, Col, Select } from "antd";
 import { useState } from "react";
 import './gamesettings.css'
+const { Option } = Select;
 
 const GameSettings = (props : any) => {
 	const [set, setSet] = useState(false);
 
-	function handleLimit(event : any) {
+	function handleLimit(value : string) {
 		const newObj = props.settings;
-		newObj.point_limit = event.target.value;
+		newObj.point_limit = value;
 		setSet(!set)
 		props.setSettings(newObj);
 	}
 	
-	function handleSpeed(event : any) {
+	function handleSpeed(value : string) {
 		const newObj = props.settings;
-		newObj.ball_speed = event.target.value;
+		newObj.ball_speed = value;
 		setSet(!set)
 		props.setSettings(newObj);
 	}
@@ -41,25 +42,25 @@ const GameSettings = (props : any) => {
 			<Row className="settings-raw">
 				<Col span={12}>Point limit</Col>
 				<Col span={12}>
-					<select onChange={handleLimit} defaultValue={"20"}>
-						<option value="1">1</option>
-						<option value="10">10</option>
-						<option value="20">20</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-					</select>
+					<Select onChange={handleLimit} defaultValue={"20"}>
+						<Option value="1">1</Option>
+						<Option value="10">10</Option>
+						<Option value="20">20</Option>
+						<Option value="50">50</Option>
+						<Option value="100">100</Option>
+					</Select>
 				</Col>
 			</Row>
 			<Row className="settings-raw">
 				<Col span={12}>Ball speed</Col>
 				<Col span={12}>
-				<select onChange={handleSpeed} defaultValue={"100"}>
-						<option value="50">50 %</option>
-						<option value="75">75 %</option>
-						<option value="100">100 %</option>
-						<option value="125">125 %</option>
-						<option value="150">150 %</option>
-					</select>
+				<Select onChange={handleSpeed} defaultValue={"100"}>
+						<Option value="50">50 %</Option>
+						<Option value="75">75 %</Option>
+						<Option value="100">100 %</Option>
+						<Option value="125">125 %</Option>
+						<Option value="150">150 %</Option>
+					</Select>
 				</Col>
 			</Row>
 		</div>
