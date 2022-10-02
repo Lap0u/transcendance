@@ -17,7 +17,7 @@ const CustomMenu = (props : any) => {
 	const [ballColor, setBallColor] = useState("#ffffff")
 	const [gameBackground, setGameBackground] = useState("#000000")
 	const [secondPlayer, setSecondPlayer] = useState("");
-	const [settings, setSettings] = useState(null)
+	const [settings, setSettings] = useState({powerup: false, point_limit: 20, ball_speed: 100})
 	const socket = props.socket;
 	const [currentUser, setCurrentUser] = useState<any>(null);
 	const navigate = useNavigate();
@@ -102,7 +102,7 @@ const CustomMenu = (props : any) => {
 		})
 	});
 
-	var launchGame = secondPlayer != "" ? "Start Game" : "Invite player"
+	let launchGame = secondPlayer != "" ? "Start Game" : "Invite player"
   return (
 
     <div className='global-div'>
