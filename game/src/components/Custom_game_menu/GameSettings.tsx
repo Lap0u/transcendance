@@ -5,12 +5,23 @@ import './gamesettings.css'
 const GameSettings = (props : any) => {
 	const [set, setSet] = useState(false);
 
-	console.log('props', props);
+	function handleLimit(event : any) {
+		const newObj = props.settings;
+		newObj.point_limit = event.target.value;
+		setSet(!set)
+		props.setSettings(newObj);
+	}
+	
+	function handleSpeed(event : any) {
+		const newObj = props.settings;
+		newObj.ball_speed = event.target.value;
+		setSet(!set)
+		props.setSettings(newObj);
+	}
+
 	function powerupClick() {
 		const newObj = props.settings;
 		newObj.powerup = !props.settings.powerup
-		console.log('pro', props);
-		console.log('new', newObj);
 		setSet(!set)
 		props.setSettings(newObj);
 	}
@@ -30,7 +41,7 @@ const GameSettings = (props : any) => {
 			<Row className="settings-raw">
 				<Col span={12}>Point limit</Col>
 				<Col span={12}>
-					<select>
+					<select onChange={handleLimit} defaultValue={"20"}>
 						<option value="1">1</option>
 						<option value="10">10</option>
 						<option value="20">20</option>
@@ -42,12 +53,12 @@ const GameSettings = (props : any) => {
 			<Row className="settings-raw">
 				<Col span={12}>Ball speed</Col>
 				<Col span={12}>
-				<select>
-						<option value="50">50</option>
-						<option value="75">75</option>
-						<option value="100">100</option>
-						<option value="125">125</option>
-						<option value="150">150</option>
+				<select onChange={handleSpeed} defaultValue={"100"}>
+						<option value="50">50 %</option>
+						<option value="75">75 %</option>
+						<option value="100">100 %</option>
+						<option value="125">125 %</option>
+						<option value="150">150 %</option>
 					</select>
 				</Col>
 			</Row>
