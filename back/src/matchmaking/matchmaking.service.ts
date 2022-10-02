@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { matchmakingDto, joinMatchmakingDto, customGameDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
-import { addUserMatchmakingList, gameStart } from './matchmaking.utils';
+import { addUserMatchmakingList, gameStart, generateNewGame } from './matchmaking.utils';
 import { ScoresService } from 'src/game/Scores/scores.service';
-import { launchCustom } from 'src/gameCustom/launchCustom';
+import { v4 as uuid} from 'uuid';
+import { launchGame } from 'src/game/game';
 
 @Injectable()
 export class MatchmakingService {
@@ -79,7 +80,21 @@ export class MatchmakingService {
   }
 
 	async launchCustomGame(payload: customGameDto) {
-		launchCustom(payload);
+
+    const gameId = uuid()
+
+    console.log(payload);
+    const playerOne = payload.playerOne;
+    const playerTwo = payload.playerTwo;
+    const settings = payload.settings;
+    const newGame = generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, settings)
+	  launchGame(playerOne, playerTwo, this.socketService.socket, newGame, this.currentMatches, this.scoreService)
+  // gameStart(
+    //   this.matchmakingList,
+    //   this.socketService,
+    //   this.currentMatches,
+    //   this.scoreService,
+    // );
 	}
 
   async inviteGame(

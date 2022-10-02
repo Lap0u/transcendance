@@ -32,9 +32,15 @@ return ball;
 }
 
 export function checkGameEnd(state: any) {
-	if (state.score.playerOne >= SCORE_LIMIT)
+	
+	let lim : number;
+	if (state.settings)
+		lim = state.settings.point_limit
+	else
+		lim = SCORE_LIMIT
+	if (state.score.playerOne >= lim)
 		return -1
-	if (state.score.playerTwo >= SCORE_LIMIT)
+	if (state.score.playerTwo >= lim)
 		return -2
 	return 1
 }
@@ -87,7 +93,7 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 	//call addscore
 }
 
-export function createGameState() {
+export function createGameState(settings: any) {
     return {
         powerup : createPowerup(),
         leftPlayer : {
@@ -112,6 +118,7 @@ export function createGameState() {
             playerOne: 0,
             playerTwo: 0,
         },
-        frameDelay: 0
+        frameDelay: 0,
+				settings: settings
     }
 }
