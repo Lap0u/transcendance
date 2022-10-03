@@ -45,6 +45,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 			.then((response) => {
 				console.log("aaazzzs", response.data);
 				getUser(response.data);
+				setOk(true);
 			})
 			.catch((error) => {
 				handleErrors(error)
