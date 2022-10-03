@@ -66,7 +66,8 @@ function App() {
 
       socket.on(acceptInviteGame, (accept: any) => {
         message.success(`${accept.senderUsername} accept to play with you`);
-        window.location.href = '/menu';
+				
+        window.location.href = '/custom_game';
       });
 
       socket.on(refuseInviteGame, (refuse: any) => {

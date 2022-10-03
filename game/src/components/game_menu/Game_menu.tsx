@@ -24,6 +24,7 @@ const GameMenu = (props : any) => {
 	const [isLoginActive, setIsLogin] = useState(false);
 	const [ok, setOk] = useState(false);
 	const [user, setUser] = useState({account_id: ""});
+
 	useEffect(() => {
 		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
@@ -64,6 +65,8 @@ const GameMenu = (props : any) => {
         const res = await axios.get(`${BACK_URL}/account`, {
           withCredentials: true,
         });
+				console.log('fruser', res.data);
+				
         setCurrentUser(res.data);
       } catch {
         console.log('Must be connect to use chat!');
@@ -78,7 +81,7 @@ const GameMenu = (props : any) => {
   }
   const quitMatchmakingList = async(userId: string) => {
     try {
-         await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
+        await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
     } catch(e) {
       handleErrors(e);
     }

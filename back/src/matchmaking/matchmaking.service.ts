@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { matchmakingDto, joinMatchmakingDto, customGameDto } from './matchmaking.dto';
+import { matchmakingDto, joinMatchmakingDto, customGameDto, customMatchDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
 import { addUserMatchmakingList, gameStart, generateNewGame } from './matchmaking.utils';
@@ -15,6 +15,7 @@ export class MatchmakingService {
   ) {}
 
   private matchmakingList: matchmakingDto[] = [];
+  private customMatchesList: customMatchDto[] = [];
   private currentMatches: matchesDto[] = [];
   getMatchmakingList(): matchmakingDto[] {
     return this.matchmakingList;
@@ -122,7 +123,7 @@ export class MatchmakingService {
       senderId: userId,
       senderUsername: username,
     });
-
+		this.customMatchesList.push({playerOne: sendInvitationUserId, playerTwo: userId, gameId: uuid()})
     return 'ok';
   }
 

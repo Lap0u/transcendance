@@ -87,11 +87,8 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 			ScorePlayer2: state.score.playerTwo,
 		}
 	}
-	console.log('score', score);
 	const isCustom = game.settings === null ? true : false
 	scoreService.addScore(score, isCustom)
-	
-	//call addscore
 }
 
 export function createGameState(settings: any) {
