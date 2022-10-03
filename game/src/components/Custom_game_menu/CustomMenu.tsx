@@ -75,8 +75,10 @@ const CustomMenu = (props : any) => {
   }, [navigate]);
 
 	async function startCustom(currentUser : any, secondPlayer : any, settings: any) {
+		const playerOne = {login: currentUser.account_id , accountUsername: currentUser.accountUsername , socket: socket.id}
+		const playerTwo = {login: secondPlayer.account_id , accountUsername: secondPlayer.accountUsername , socket: socket.id}
 		try {
-			await axios.post(`${BACK_URL}/matchmaking/customGame`, { playerOne: currentUser, playerTwo: secondPlayer, settings: settings}, {withCredentials:true});
+			await axios.post(`${BACK_URL}/matchmaking/customGame`, { playerOne: playerOne, playerTwo: playerTwo, settings: settings}, {withCredentials:true});
 		} catch(e) {
 		handleErrors(e);
 		}
@@ -95,10 +97,10 @@ const CustomMenu = (props : any) => {
 
 
 	useEffect(() => {
-		socket.on(`matchFound:`, (gameId : string) => {
+		socket.on(`customFound:`, (gameId : string) => {
 			navigate(`/singleGame/${gameId}`, {state: customGameValues});
 		return () => 
-			socket.off(`matchFound:`)
+			socket.off(`customFound:`)
 		})
 	});
 

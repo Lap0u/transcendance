@@ -38,10 +38,12 @@ export class MatchmakingService {
   }
 
   handlePong(sender: string) {
+		console.log('match', this.currentMatches);
+		
     for (const elem of this.currentMatches) {
       if (elem.playerOne.socket === sender) {
         elem.playerOne.pongReply = 0;
-        // return;
+        // return; remettre quand on pourra inviter a faire une custom
       }
       if (elem.playerTwo.socket === sender) {
         elem.playerTwo.pongReply = 0;
@@ -55,6 +57,7 @@ export class MatchmakingService {
       payload,
       this.matchmakingList,
     );
+		
 
     if (this.matchmakingList.length >= 2) {
       const toQuit = gameStart(
@@ -83,18 +86,20 @@ export class MatchmakingService {
 
     const gameId = uuid()
 
-    console.log(payload);
-    const playerOne = payload.playerOne;
-    const playerTwo = payload.playerTwo;
+    const playerOne = { 
+			pongReply: 0,
+			...payload.playerOne
+		}
+    const playerTwo = { 
+			pongReply: 0,
+			...payload.playerTwo
+		}
+		this.socketService.socket.to(playerOne.socket).emit(`customFound:`, gameId);
+    this.socketService.socket.to(playerTwo.socket).emit(`customFound:`, gameId);
     const settings = payload.settings;
     const newGame = generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, settings)
 	  launchGame(playerOne, playerTwo, this.socketService.socket, newGame, this.currentMatches, this.scoreService)
-  // gameStart(
-    //   this.matchmakingList,
-    //   this.socketService,
-    //   this.currentMatches,
-    //   this.scoreService,
-    // );
+
 	}
 
   async inviteGame(

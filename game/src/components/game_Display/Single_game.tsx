@@ -27,9 +27,6 @@ const SingleGame = (props : any) => {
 	const socket = props.socket;
 
 	const powerupSprite = new Image();
-	// powerupSprite.onload = () => {
-	// 	console.log('image loaded')
-	// }
 	powerupSprite.src = myImg
 
 	console.log('updated')
@@ -41,7 +38,6 @@ const SingleGame = (props : any) => {
 			ballColor: "#ffffff",
 			gameBackground: "#000000"
 		}
-	console.log('gaaa', gameCustomization);
 	
 	function searchId(allGames : any){
 		for (const game of allGames) {
@@ -65,25 +61,25 @@ const SingleGame = (props : any) => {
 
 	//Game Display
     function updateGame (gameState: any) {
-        const canvas : any = canvasRef.current
-		if (canvas === null)
-			return
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        if (window.innerHeight * 2 > window.innerWidth) {
-            canvas.style.width = "90vw";
-            canvas.style.height = "45vw";
-        } else {
-            canvas.style.width = "180vh";
-            canvas.style.height = "90vh";
-        }
-        const context : any = canvas.getContext('2d')
-        drawBackground(context, gameCustomization.background)
-        drawScore(context, gameState.score)
-		drawPowerup(context, powerupSprite, gameState.powerup)
-        drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
-        drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
-        drawBall(context, gameState.ball, gameCustomization.ballColor)
+      const canvas : any = canvasRef.current
+			if (canvas === null)
+				return
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			if (window.innerHeight * 2 > window.innerWidth) {
+					canvas.style.width = "90vw";
+					canvas.style.height = "45vw";
+			} else {
+					canvas.style.width = "180vh";
+					canvas.style.height = "90vh";
+			}
+			const context : any = canvas.getContext('2d')
+			drawBackground(context, gameCustomization.background)
+			drawScore(context, gameState.score)
+			drawPowerup(context, powerupSprite, gameState.powerup)
+			drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
+			drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
+			drawBall(context, gameState.ball, gameCustomization.ballColor)
     }
 
 	//winMenu
@@ -118,10 +114,12 @@ const SingleGame = (props : any) => {
 
 
 	function sendPong() {
+		console.log('got ponged');
+		
 		socket.emit(`pong`)
 	}
 	useEffect(() => {
-        socket.on(gameSocket, handleGameState)
+    socket.on(gameSocket, handleGameState)
 		socket.on(`ping`, sendPong)
 		socket.on(`winner`, handleWinner)
 		return () => {

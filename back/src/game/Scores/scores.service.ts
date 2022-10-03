@@ -33,6 +33,8 @@ export class ScoresService {
   }
 
   async addScore(scores: ScoresDto) {
+		console.log('sc', scores);
+	
     const idWinner = scores.idWinner;
     const idLoser = scores.idLoser;
     const scoreDb: ScoresDbDto = {
