@@ -72,8 +72,11 @@ export class MatchmakingService {
   }
 
   quitMatchmaking(userId: string): matchmakingDto[] {
+		console.log(',usid', userId);
+		console.log('li', this.matchmakingList);
+
     const newMatchmakingList = this.matchmakingList.filter((user) => {
-      return user.socket != userId;
+      return user.login != userId;
     });
 
     this.matchmakingList = newMatchmakingList;
