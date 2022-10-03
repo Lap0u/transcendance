@@ -16,14 +16,14 @@ import myImg from '../../assets/spreadsheet.png';
 
 const SingleGame = (props : any) => {
 	const [quitPressed, setQuitPressed] = useState(false);
-    const canvasRef = useRef(null);
-    const [newState, setNewState] = useState();
+  const canvasRef = useRef(null);
+  const [newState, setNewState] = useState();
 	const [haveWinner, setHaveWinner] = useState(false)
-    const winner = useRef("")
+  const winner = useRef("")
 	const pageLocation = useLocation();
-    const path = pageLocation.pathname.split('/')
-    const gameSocket = path[path.length - 1]
-    const navigate = useNavigate();
+  const path = pageLocation.pathname.split('/')
+  const gameSocket = path[path.length - 1]
+  const navigate = useNavigate();
 	const socket = props.socket;
 
 	const powerupSprite = new Image();
