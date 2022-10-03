@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Accueil from './components/Accueil';
@@ -18,6 +18,9 @@ import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate'
 import Forrbidden from './components/ErrorPage/Forbidden';
 import PublicInfo from './components/Account/PublicAccount';
 import { ScoresPage } from './components/Scores/ScorePage';
+import InviteGameModal from './components/utils/InviteGameModal';
+import axios from 'axios';
+import { message } from 'antd';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -25,16 +28,58 @@ const socket = io(BACK_URL).connect();
 
 function App() {
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isInviteGameModalOpen, setIsInviteGameModalOpen] = useState(false);
+  const [invitor, setInvitor] = useState<string>('');
+
+  useEffect(() => {
+    	axios.get(`${BACK_URL}/account`, {
+          withCredentials: true,
+       	})
+		.then(res=>{
+        	setCurrentUser(res.data)
+	    })
+      	.catch (async error => {
+			if (error.response.status === 401 || error.response.status === 403){
+				message.error("Vous n'etes pas connecté");
+			}
+			else{
+				window.location.href = 'http://localhost:3000/error500';
+			}
+		});
+  	}, []);
 
   useEffect(() => {
     if (currentUser) {
-      const receiveMessage = `inviteGame:${currentUser.id}`;
-      socket.on(receiveMessage, (message: any) => {
-        console.log(`${message.senderId} invite you to play game`);
+      const userUpdate = `userUpdate:${currentUser.id}`;
+      const receiveInviteGame = `inviteGame:${currentUser.id}`;
+      const acceptInviteGame = `acceptInviteGame:${currentUser.id}`;
+      const refuseInviteGame = `refuseInviteGame:${currentUser.id}`;
+
+      socket.on(userUpdate, (newCurrentUser: any) => {
+        if (newCurrentUser.id === currentUser.id) {
+          setCurrentUser(newCurrentUser);
+        }
+      });
+
+      socket.on(receiveInviteGame, (invitor: any) => {
+        setIsInviteGameModalOpen(true);
+        setInvitor(invitor);
+      });
+
+      socket.on(acceptInviteGame, (accept: any) => {
+        message.success(`${accept.senderUsername} accept to play with you`);
+        window.location.href = '/menu';
+      });
+
+      socket.on(refuseInviteGame, (refuse: any) => {
+        message.error(`${refuse.senderUsername} refuse to play with you`);
       });
 
       return () => {
-        socket.off(receiveMessage);
+        socket.off(userUpdate);
+        socket.off(receiveInviteGame);
+        socket.off(acceptInviteGame);
+        socket.off(refuseInviteGame);
       };
     }
   }, [currentUser]);
@@ -42,19 +87,19 @@ function App() {
   return (
     <div id="wholepage">
       <BrowserRouter>
+        <InviteGameModal
+          isInviteGameModalOpen={isInviteGameModalOpen}
+          setIsInviteGameModalOpen={setIsInviteGameModalOpen}
+          currentUser={currentUser}
+          invitor={invitor}
+        />
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/logout" element={<Logout />} />
           <Route
             path="/chat"
-            element={
-              <Chat
-                socket={socket}
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser}
-              />
-            }
+            element={<Chat socket={socket} currentUser={currentUser} />}
           />
           <Route path="/menu" element={<GameMenu socket={socket} />} />
           <Route
