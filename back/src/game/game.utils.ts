@@ -88,7 +88,8 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 		}
 	}
 	console.log('score', score);
-	scoreService.addScore(score)
+	const isCustom = game.settings === null ? true : false
+	scoreService.addScore(score, isCustom)
 	
 	//call addscore
 }

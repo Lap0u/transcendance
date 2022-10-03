@@ -59,10 +59,10 @@ export class ScoresController {
     return await this.scoresService.getClassement();
   }
 
-  @Post()
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtTwoFactorGuard)
-  async addScore(@Req() req: Request, @Body() body: ScoresDto) {
-    return await this.scoresService.addScore(body);
-  }
+  // @Post()
+  // @UseGuards(AuthenticatedGuard)
+  // @UseGuards(JwtTwoFactorGuard)
+  // async addScore(@Req() req: Request, @Body() body: ScoresDto) {
+  //   return await this.scoresService.addScore(body);
+  // }
 }
