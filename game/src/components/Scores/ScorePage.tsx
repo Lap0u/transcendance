@@ -29,7 +29,7 @@ const UserDto = {
 	status: undefined,
   };
 
-export function ScoresPage(props: any){
+export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	const params = useParams();
 	const id= params.id;
 	const nav = useNavigate();
@@ -40,17 +40,11 @@ export function ScoresPage(props: any){
 	};
 
 	const [user, getUser] = useState({...UserDto});
-	const [currentUser, getCurrentUser] = useState({...UserDto});
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
 			.then((response) => {
 				console.log("aaazzzs", response.data);
 				getUser(response.data);
-				axios.get(`${BACK_URL}/account`,  {withCredentials:true })
-					.then((response) => {
-						getCurrentUser(response.data);
-						setOk(true);
-					})
 			})
 			.catch((error) => {
 				handleErrors(error)

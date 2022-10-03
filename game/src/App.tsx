@@ -94,8 +94,8 @@ function App() {
           invitor={invitor}
         />
         <Routes>
-          <Route path="/" element={<Accueil />} />
-          <Route path="/account" element={<AccountPage />} />
+          <Route path="/" element={<Accueil/>} />
+          <Route path="/account" element={<AccountPage user={currentUser} />} />
           <Route path="/logout" element={<Logout />} />
           <Route
             path="/chat"
@@ -108,12 +108,12 @@ function App() {
           />
           <Route path="/error403" element={<Disconnected />} />
           <Route path="/error500" element={<InternalError />} />
-          <Route path="/wrongGameId" element={<WrongGameId />} />
+          <Route path="/wrongGameId" element={<WrongGameId/>} />
           <Route path="/login" element={<LoginSuccess />} />
           <Route path="/emailverify" element={<EmailConfirm />} />
           <Route path="/2fa" element={<TwoAuthAutenticatePage />} />
-          <Route path="/scores/:id" element={<ScoresPage />} />
-          <Route path="/playerinfo" element={<PublicInfo />} />
+          <Route path="/scores/:id" element={<ScoresPage currentUser={currentUser} />} />
+          <Route path="/playerinfo" element={<PublicInfo/>} />
           <Route path="/forbidden" element={<Forrbidden />} />
           {/* If no route match, then return 404 page */}
           <Route path="*" element={<Page404 />} />
