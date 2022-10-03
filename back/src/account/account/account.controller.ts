@@ -135,4 +135,11 @@ export class AccountController {
     const users = await this.usersService.getAllAccount();
     return users;
   }
+
+  @Get('status')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  status() {
+    return 'ok';
+  }
 }
