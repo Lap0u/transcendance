@@ -134,7 +134,7 @@ const SingleGame = (props : any) => {
             <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
                 There should be the canvas of the full game
             </canvas>
-			{quitPressed && <QuitBox setQuitPressed={setQuitPressed} quitPressed={quitPressed} />}
+			{quitPressed && <QuitBox setQuitPressed={setQuitPressed} quitPressed={quitPressed} socket={socket} />}
 			{winner.current !== "" && < WinnerBox message={winner.current} />}
         </div>
     )

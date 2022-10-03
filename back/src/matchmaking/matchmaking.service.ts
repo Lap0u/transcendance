@@ -38,8 +38,20 @@ export class MatchmakingService {
     }
   }
 
+	handleQuit(sender: string) {
+    for (const elem of this.currentMatches) {
+      if (elem.playerOne.socket === sender) {
+        elem.playerOne.pongReply = 100000;
+        // return; remettre quand on pourra inviter a faire une custom
+      }
+      if (elem.playerTwo.socket === sender) {
+        elem.playerTwo.pongReply = 100000;
+        // return;
+      }
+    }
+	}
+
   handlePong(sender: string) {
-		
     for (const elem of this.currentMatches) {
       if (elem.playerOne.socket === sender) {
         elem.playerOne.pongReply = 0;

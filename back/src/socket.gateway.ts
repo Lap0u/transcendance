@@ -48,4 +48,10 @@ export class SocketGateway
     @ConnectedSocket() client: Socket): any {
       this.matchmakingService.handlePong(client.id)
     }
+	
+	@SubscribeMessage('leave')
+	handleQuit(
+	@ConnectedSocket() client: Socket): any {
+		this.matchmakingService.handleQuit(client.id)
+	}
 }
