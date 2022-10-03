@@ -38,7 +38,6 @@ export class MatchmakingService {
   }
 
   handlePong(sender: string) {
-		console.log('match', this.currentMatches);
 		
     for (const elem of this.currentMatches) {
       if (elem.playerOne.socket === sender) {
@@ -57,7 +56,6 @@ export class MatchmakingService {
       payload,
       this.matchmakingList,
     );
-		
 
     if (this.matchmakingList.length >= 2) {
       const toQuit = gameStart(
