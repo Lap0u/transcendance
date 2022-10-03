@@ -32,18 +32,21 @@ function App() {
   const [invitor, setInvitor] = useState<string>('');
 
   useEffect(() => {
-    const initUser = async () => {
-      try {
-        const res = await axios.get(`${BACK_URL}/account`, {
+    	axios.get(`${BACK_URL}/account`, {
           withCredentials: true,
-        });
-        setCurrentUser(res.data);
-      } catch {
-        message.error("Une erreur s'est passée");
-      }
-    };
-    initUser();
-  }, []);
+       	})
+		.then(res=>{
+        	setCurrentUser(res.data)
+	    })
+      	.catch (async error => {
+			if (error.response.status === 401 || error.response.status === 403){
+				message.error("Vous n'etes pas connecté");
+			}
+			else{
+				window.location.href = 'http://localhost:3000/error500';
+			}
+		});
+  	}, []);
 
   useEffect(() => {
     if (currentUser) {
