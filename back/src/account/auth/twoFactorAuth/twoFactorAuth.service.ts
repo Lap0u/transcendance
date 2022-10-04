@@ -122,22 +122,6 @@ export class TwoFactorAuthenticationService {
     );
   }
 
-  async setLogged(id: string) {
-    const user = await this.authService.findUser(id);
-    return await this.userRepository.save({
-      ...user,
-      status: 1,
-    });
-  }
-
-  async setLoggout(id: string) {
-    const user = await this.authService.findUser(id);
-    return await this.userRepository.save({
-      ...user,
-      status: 0,
-    });
-  }
-
   public async getCookieWithJwtAccessToken(
     id: string,
     isSecondFactorAuthenticated = false,
@@ -149,7 +133,6 @@ export class TwoFactorAuthenticationService {
         'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
       )}s`,
     });
-    await this.setLogged(id);
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
       'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
     )}`;

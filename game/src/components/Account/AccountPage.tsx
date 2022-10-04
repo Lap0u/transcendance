@@ -178,22 +178,25 @@ const AccountInfo = ({user}: {user: typeof UserDto}) => {
 	const [username,  updateUsername] = useState('');
 	const [avatar, updateAvatar] = useState("");
 	const [twoAuth, turnTwoAuth] = useState(false);
-
+	const u = user;
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
 			.then(()=>{
-				console.log("conneceteeeeed");
-				updateUsername(user.accountUsername);
-				updateAvatar(user.avatar);
-				turnTwoAuth(user.isTwoFactorAuthenticationEnabled);
-				setOk(true);
+				console.log("conneceteeeeed", u);
+				if (user)
+				{
+					updateUsername(user.accountUsername);
+					updateAvatar(user.avatar);
+					turnTwoAuth(user.isTwoFactorAuthenticationEnabled);
+					setOk(true);
+				}
 			})
 			.catch((error) => {
-				console.log("dissssconneceteeeeed");
+				console.log("dissssconneceteeeeed", error);
 				handleErrors(error)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [user]);
 
 
 	function isJson(str: string) {

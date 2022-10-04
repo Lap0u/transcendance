@@ -56,7 +56,7 @@
 	text-align: center;
 	line-height: 0;
 	width: 120px;
-	height: max(2.2vh, 15px);
+	height: max(2.5vh, 19px);
 	position: relative;
 	color: var(--text-1);
 	bottom: 0px;
@@ -93,7 +93,7 @@
 	text-align: center;
 	line-height: 1;
 	width: 120px;
-	height: max(2.2vh, 17px);
+	height: max(2.5vh, 19px);
 	position: relative;
 	color: var(--text-1);
 }
@@ -160,20 +160,26 @@
 	background-color:rgb(201, 199, 199);
 	text-align: center;
 	color:white;
-	width: 250px;
+	width: 285px;
 	height: 120px;
+}
+
+.two-auth .two-auth-form input{
+	margin-right: 15px;
 }
 .two-auth .two-auth-form button{
 	color:var(--text-1);
+	line-height: 0;
+	height: 23px;
 }
 .two-auth .button-activate-two-auth{
 	font-size: 13px;
 	color:var(--text-1);
 	float:right;
 	position: relative;
-	bottom: 20px;
+	bottom: 23px;
 	line-height: 0;
-	height: max(2.2vh, 15px);
+	height: max(2.5vh, 19px);
 }
 
 .two-auth .input-email{

@@ -47,11 +47,8 @@ export class AuthController {
 	@UseGuards(AuthenticatedGuard)
 	@UseGuards(JwtTwoFactorGuard)
 	async logout(@Req() req: Request, @Res() res: Response, @Next() next : NextFunction){
-		const id = req.session['passport'].user.id;
-		const twoFactorAuthenticationService = this.twoFactorAuthenticationService;
 		req.logOut(async function(err) {
 		if (err) {  return next(err); }
-			await twoFactorAuthenticationService.setLoggout(id);
 			res.clearCookie("Authentication", {domain: 'localhost', path:'/'});
 			return res.sendStatus(200);
 		});
