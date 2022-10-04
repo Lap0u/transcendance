@@ -35,4 +35,10 @@ export class Scores {
 
   @CreateDateColumn({ type: 'timestamp' })
   date!: Date;
+
+  @Column({ nullable: true })
+  PointsWon: number;
+
+  @Column({ nullable: true })
+  PointsLost: number;
 }

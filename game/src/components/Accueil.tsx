@@ -4,12 +4,15 @@ import LoginPopup from './login/Login'
 import ButtonTemplate from './ButtonTemplate'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Modal } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import { BACK_URL } from '../global';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { LogoutButton } from './Account/AccountPage';
 import handleErrors from './RequestErrors/handleErrors';
+import { HomeOutlined } from '@ant-design/icons';
+import Avatar from 'antd/lib/avatar/avatar';
+import UserDto from './utils/UserDto';
 // import backgroundImage from '../assets/pong_wallpaper'
 
 const socket = io('http://localhost:3000');
@@ -18,34 +21,32 @@ socket.on('init', handleInit);
 function handleInit(msg: string) {
 	console.log(msg);
 }
-function Accueil() {
-	const navigate = useNavigate();
+function Accueil(props: any) {
 	const [isLoginActive, setIsLogin] = useState(false);
 	const [ok, setOk] = useState(false);
-	const [user, setUser] = useState({account_id: ""});
 	useEffect(() => {
 		console.log("useefect");
 		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
 			.then((res) => {
-				console.log("ress acceuirl", res);
-				setOk(true);
 				axios.get(`${BACK_URL}/2fa/status`, {
 					withCredentials:true ,
 				})
 				.then((res) => {
-					setUser(res.data)
+					setOk(true);
 				})
 				.catch(error => {
 					handleErrors(error)
 				})
 				setIsLogin(true);
+				setOk(true);
 			})
 			.catch((error) => {
-				if (error.response.status === 403)
+				if (error.response.status === 403){
 					setIsLogin(false);
+					setOk(true);
+				}
 				else
 					handleErrors(error);
-				setOk(true);
 		})	
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -59,7 +60,7 @@ function Accueil() {
 				<div>
 					<Welcome />
 					<LoginPlayButton isLoginActive={isLoginActive} />
-					<NavigationBarre nav={navigate} isLoginActive={isLoginActive} userId={user.account_id}/>
+					<NavigationBarre isLoginActive={isLoginActive} user={props.currentUser}/>
 
 				</div>
 		</div>
@@ -70,14 +71,26 @@ function Accueil() {
 
 
 
-function NavigationBarre(props : any) {
+export function NavigationBarre({user, isLoginActive = true}: {user: typeof UserDto, isLoginActive: any}) {
+	const nav = useNavigate();
+
+	if (!user)
+		return (
+			null
+		)
+
 	return(
 	<div>
-	{props.isLoginActive ?
+	{isLoginActive ?
 	<ul className='nav-barre'>
+		<HomeOutlined className='home-button' shape="circle" onClick={() => nav('/')} />
+		<div className='nav-barre-user-info'>
+		<Avatar style={{ bottom:'0.8vw', width:'max(4vw, 20px)', height:'max(4vw, 20px)' ,textAlign:'center',}} className='nav-bar-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
+		<i style={{position:'relative', padding:9,  bottom:'0.8vw'}}>{user.accountUsername }</i>
+		</div>
   		<li className='onglet-nav'><a href="/account"> Profil </a></li>
   		<li className='onglet-nav'><a href="/chat"> Chat </a></li>
-		<li className='onglet-nav'><a href={`/scores/${props.userId}`}> Scores </a></li>
+		<li className='onglet-nav'><a href={`/scores/${user.account_id}`}> Scores </a></li>
   		<li className='onglet-nav'><a href='/logout'> Logout </a></li>
 		
 	</ul>

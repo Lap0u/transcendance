@@ -34,6 +34,8 @@ const ScoresDto = [
     loser: { ...UserDto },
     ScorePlayer1: null,
     ScorePlayer2: null,
+	PointsWon: 0,
+	PointsLost: 0,
 	date: undefined,
   },
 ];
@@ -43,7 +45,6 @@ export function ScoreTab(props: any) {
 	const [scores, getScores] = useState(ScoresDto);
 	const [scoreLen, getScoreLen] = useState(0);
 	const [ok, setOk] = useState(false);
-	const user= props.user;
 	const currentUser= props.currentUser;
 
 	useEffect(() => {
@@ -78,6 +79,7 @@ export function ScoreTab(props: any) {
 		:
 		<i style={{color: 'orange'}}>{currentUser.accountUsername}</i>
 		}
+		<br/><i style={{color:'green', fontSize:10, position:'absolute',transform: 'translate(-50%, -50%)'}}>+{score.PointsWon} points</i>
 		</i>
 	  ))}
 	  </li>
@@ -89,6 +91,7 @@ export function ScoreTab(props: any) {
 		:
 		<i style={{color: 'orange'}}> {currentUser.accountUsername}</i>
 		}
+		<br/><i style={{color:'red', fontSize:10, position:'absolute',transform: 'translate(-50%, -50%)'}}>-{score.PointsLost} points</i>
 		</i>
 	  ))}
 	  </li>

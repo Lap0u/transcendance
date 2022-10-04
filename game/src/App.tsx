@@ -21,13 +21,14 @@ import { ScoresPage } from './components/Scores/ScorePage';
 import InviteGameModal from './components/utils/InviteGameModal';
 import axios from 'axios';
 import { message } from 'antd';
+import UserDto from './components/utils/UserDto';
 
 const BACK_URL = 'http://localhost:4000';
 
 const socket = io(BACK_URL).connect();
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState({...UserDto});
   const [isInviteGameModalOpen, setIsInviteGameModalOpen] = useState(false);
   const [invitor, setInvitor] = useState<string>('');
 
@@ -94,14 +95,14 @@ function App() {
           invitor={invitor}
         />
         <Routes>
-          <Route path="/" element={<Accueil/>} />
+          <Route path="/" element={<Accueil currentUser={currentUser}/>} />
           <Route path="/account" element={<AccountPage user={currentUser} />} />
           <Route path="/logout" element={<Logout />} />
           <Route
             path="/chat"
             element={<Chat socket={socket} currentUser={currentUser} />}
           />
-          <Route path="/menu" element={<GameMenu socket={socket} />} />
+          <Route path="/menu" element={<GameMenu user={currentUser} socket={socket} />} />
           <Route
             path="/singleGame/:id"
             element={<SingleGame socket={socket} />}
