@@ -102,7 +102,7 @@ function App() {
             path="/chat"
             element={<Chat socket={socket} currentUser={currentUser} />}
           />
-          <Route path="/menu" element={<GameMenu socket={socket} />} />
+          <Route path="/menu" element={<GameMenu user={currentUser} socket={socket} />} />
           <Route
             path="/singleGame/:id"
             element={<SingleGame socket={socket} />}

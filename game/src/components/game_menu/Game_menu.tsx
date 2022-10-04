@@ -8,6 +8,7 @@ import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
 import GamePreview from './GamePreview';
 import './Game_menu.css'
+import { NavigationBarre } from '../Accueil';
 
 const GameMenu = (props : any) => {
 	
@@ -102,6 +103,7 @@ const GameMenu = (props : any) => {
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (
     <div>
+		<NavigationBarre isLoginActive={true} user={props.user}/>
       <h1>antd version: {version}</h1>
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
