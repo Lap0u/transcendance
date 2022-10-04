@@ -13,7 +13,7 @@ export type IntraUserDetails = {
   avatar: string;
   points: number;
   rank?: number;
-  status?: number;
+  status?: boolean;
 };
 
 export type DatabaseFile = {

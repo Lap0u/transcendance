@@ -45,18 +45,18 @@ export class ScoresService {
     const res = this.scoresRepo.save(newScore);
     await this.userRepo.save({
       ...scoreDb.winner,
-      rank: await this.getRank(scoreDb.winner.account_id),
+      rank: await this.getRank(scoreDb.winner.id),
     });
     await this.userRepo.save({
       ...scoreDb.loser,
-      rank: await this.getRank(scoreDb.loser.account_id),
+      rank: await this.getRank(scoreDb.loser.id),
     });
     return res;
   }
 
-  async getRank(account_id: string) {
+  async getRank(id: string) {
     const classement: Accounts[] = await this.getClassement();
-    return classement.findIndex((elem) => elem.account_id === account_id) + 1;
+    return classement.findIndex((elem) => elem.id === id) + 1;
   }
 
   async statsById(id: string) {

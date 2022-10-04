@@ -4,6 +4,7 @@ import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from './Stats';
 import './ScoresHistory.css';
 import UserPopover from '../utils/UserPopover';
+import { colors } from '@mui/material';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -56,7 +57,7 @@ export function ClassementTab(props: any) {
 		{classement.account_id !== currentUser.account_id ?
 		<UserPopover currentUser={currentUser} user={classement} avatarOrUsername={'username'}/>
 		:
-		<i>{currentUser.accountUsername}</i>
+		<i style={{color: 'orange'}}>{currentUser.accountUsername}</i>
 		}
 		</i>
 	  ))}

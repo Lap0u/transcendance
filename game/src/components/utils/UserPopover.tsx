@@ -1,7 +1,7 @@
 import { CheckCircleFilled, ExclamationCircleFilled, MinusCircleFilled } from '@ant-design/icons';
 import { Avatar, Button, message, Popover, Typography } from 'antd';
 import axios from 'axios';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useNavigationType } from 'react-router-dom';
 import { BACK_URL, FRONT_URL } from '../../global';
 import '../Account/PublicAccount.css';
@@ -130,7 +130,7 @@ function ProfileTitle({user}: {user: any}){
 	<figure>
 		<Avatar  size={50} style={{ textAlign:'center'}} className='popover-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
 		<figcaption>
-		<i className='popover-username'><Status status={user.status}/>{user.accountUsername}</i><br/>
+		<i className='popover-username'><Status id={user.account_id}/>{user.accountUsername}</i><br/>
 		<div className='info'>
 		<i>{user.points} points</i>
 		<i><Stats id={user.account_id} tabFormat={0}/></i>
@@ -143,14 +143,25 @@ function ProfileTitle({user}: {user: any}){
 }
 
 function Status(props: any){
+	const [status, setStatus] = useState(0);
+	useEffect(() => {
+		axios.get(`${BACK_URL}/account/status/id/${props.id}`,  {withCredentials:true })
+			.then((response) => {
+				setStatus(response.data);
+			})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	console.log("stat", props.status);
-	if (props.status === 0)
+	if (status === 0)
 		return (
 		<i className='status'>
 			<MinusCircleFilled style={{color:'red'}} />
 		</i>
 	)
-	if (props.status === 1)
+	if (status === 1)
 		return (
 			<i className='status'>
 				<CheckCircleFilled style={{color:'green'}} />

@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { json } from 'express';
 import { SocketService } from 'src/socket/socket.service';
 import { Repository } from 'typeorm';
 import { ScoresService } from '../../game/Scores/scores.service';
 import { Accounts } from '../entities/accounts.entity';
+import { TypeOrmSession } from '../entities/session.entity';
 import { DatabaseFilesService } from '../files/databaseFile.service';
 
 @Injectable()
@@ -11,6 +13,8 @@ export class AccountService {
   constructor(
     @InjectRepository(Accounts)
     private usersRepository: Repository<Accounts>,
+    @InjectRepository(TypeOrmSession)
+    private sessionsRepository: Repository<TypeOrmSession>,
     private scoreService: ScoresService,
     private readonly databaseFilesService: DatabaseFilesService,
     private socketService: SocketService,
@@ -109,5 +113,20 @@ export class AccountService {
 
   async findUserById(account_id: string) {
     return await this.usersRepository.findOneBy({ account_id });
+  }
+
+  async getStatusById(account_id: string) {
+    const listSessionJson = await this.sessionsRepository.find();
+    for (const user of listSessionJson) {
+      const info = JSON.parse(user.json);
+      const isPassport = JSON.stringify(user.json).indexOf('passport');
+      if (
+        isPassport > -1 &&
+        user.destroyedAt === null &&
+        info.passport.user.account_id === account_id
+      )
+        return 1;
+    }
+    return 0;
   }
 }

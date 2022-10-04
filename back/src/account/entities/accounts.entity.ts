@@ -56,5 +56,5 @@ export class Accounts {
   public rank?: number;
 
   @Column({ nullable: true, default: 0 })
-  public status?: number;
+  public status?: boolean;
 }

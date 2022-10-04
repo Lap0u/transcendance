@@ -16,10 +16,11 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ScoresService } from '../../game/Scores/scores.service';
 import { Scores } from '../../game/Scores/entities/scores.entities';
+import { TypeOrmSession } from '../entities/session.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Accounts, Scores]),
+    TypeOrmModule.forFeature([Accounts, Scores, TypeOrmSession]),
     TypeOrmModule.forFeature([DatabaseFile]),
   ],
   controllers: [AuthController],

@@ -43,7 +43,7 @@ function App() {
 				message.error("Vous n'etes pas connecté");
 			}
 			else{
-				window.location.href = 'http://localhost:3000/error500';
+				return(<InternalError/>)
 			}
 		});
   	}, []);
