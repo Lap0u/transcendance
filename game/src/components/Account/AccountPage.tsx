@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { NavigationBarre } from '../Accueil';
 import handleErrors from '../RequestErrors/handleErrors';
 import { ActivateTwoAuth } from '../TwoFactorAuth/TwoAuthActivate';
 import UserDto from '../utils/UserDto';
@@ -178,23 +179,14 @@ const AccountInfo = ({user}: {user: typeof UserDto}) => {
 	const [username,  updateUsername] = useState('');
 	const [avatar, updateAvatar] = useState("");
 	const [twoAuth, turnTwoAuth] = useState(false);
-	const u = user;
 	useEffect(() => {
-		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
-			.then(()=>{
-				console.log("conneceteeeeed", u);
-				if (user)
-				{
-					updateUsername(user.accountUsername);
-					updateAvatar(user.avatar);
-					turnTwoAuth(user.isTwoFactorAuthenticationEnabled);
-					setOk(true);
-				}
-			})
-			.catch((error) => {
-				console.log("dissssconneceteeeeed", error);
-				handleErrors(error)
-			})
+		if (user)
+		{
+			updateUsername(user.accountUsername);
+			updateAvatar(user.avatar);
+			turnTwoAuth(user.isTwoFactorAuthenticationEnabled);
+			setOk(true);
+		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
@@ -260,13 +252,26 @@ export const LogoutButton = () =>{
 	)
 }
 const AccountPage = ({user} : {user : typeof UserDto}) => {
-
-	const nav = useNavigate();
+	const [ok, setOk] = useState(false);
+	useEffect(() => {
+		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
+			.then(()=>{
+				if (user)
+					setOk(true);
+			})
+			.catch((error) => {
+				handleErrors(error)
+			})
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user]);
 	return (
+		ok?
 		<div className='account-page'>
-			<Button className='home-button' shape="circle" icon={<HomeOutlined />} onClick={() => nav('/')} />
+			<NavigationBarre isLoginActive={true} user={user}/>
 			<AccountInfo user={user}/>		
 		</div>
+		:
+		null
 	);
 }
 

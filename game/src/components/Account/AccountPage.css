@@ -1,7 +1,7 @@
 @import '../../colors.css';
 
 #wholepage {
-	background-color: var(--background);
+	background: var(--background);
 	width: 100vw;
 	height: 100vh;
 }
@@ -18,6 +18,8 @@
 
 .account-info button{
 	background-color:  var(--button);
+	border: 0.5px solid var(--text-1) ;
+	
 }
 
 .account-info
@@ -93,7 +95,6 @@
 	text-align: center;
 	line-height: 1;
 	width: 120px;
-	height: max(2.5vh, 19px);
 	position: relative;
 	color: var(--text-1);
 }
@@ -148,6 +149,7 @@
 	bottom: 0px;
 	right: 140px;
 	font-size: 1.9vh;
+	border: 0.5px solid white ;
 
 }
 
