@@ -65,11 +65,9 @@
   text-align: center;
   padding: 6vw;
   text-decoration: none;
-}
-.nav-barre .onglet-nav a {
   margin-left: auto;
   margin-right: auto;
-  font-size: max(1.5vw, 7px);
+  font-size: max(1.7vw, 9px);
   white-space: nowrap;
 }
 
