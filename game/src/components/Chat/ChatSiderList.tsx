@@ -113,7 +113,7 @@ const ChannelListItem = ({
         `${BACK_URL}/channels/${channel.id}/${currentUser.id}`,
         { withCredentials: true, headers: {} }
       );
-      setSelectedChannel(channel);
+      setSelectedChannel(null);
       message.success('Quit the channel successeful!');
     } catch (error) {
       message.error('Fail to quit the channel!');
@@ -201,7 +201,6 @@ const ChatSiderList = ({
   users,
   currentUser,
   channels,
-  setChannels,
   selectedChannel,
   setSelectedChannel,
 }: ChatSiderListProps) => {
@@ -293,7 +292,6 @@ type ChatSiderListProps = {
   users: any;
   currentUser: any;
   channels: any;
-  setChannels: any;
   selectedChannel: ChannelType | null;
   setSelectedChannel: (channel: any | null) => void;
 };
