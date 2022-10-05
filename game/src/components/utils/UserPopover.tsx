@@ -1,4 +1,8 @@
-import { CheckCircleFilled, ExclamationCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+import {
+  CheckCircleFilled,
+  ExclamationCircleFilled,
+  MinusCircleFilled,
+} from '@ant-design/icons';
 import { Avatar, Button, message, Popover, Typography } from 'antd';
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
@@ -7,9 +11,14 @@ import { BACK_URL, FRONT_URL } from '../../global';
 import '../Account/PublicAccount.css';
 import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from '../Scores/Stats';
-import './UserPopover.css'
+import './UserPopover.css';
 
-const stylePopoverButton={fontSize:'13px', height: '15px', lineHeight: '0', padding:'0'}
+const stylePopoverButton = {
+  fontSize: '13px',
+  height: '15px',
+  lineHeight: '0',
+  padding: '0',
+};
 
 export const UserPopover = ({
   currentUser,
@@ -21,11 +30,12 @@ export const UserPopover = ({
   avatarOrUsername: any;
 }) => {
   const inBlacklist = useMemo(() => {
+    if (!currentUser.blacklist) return false;
     return currentUser.blacklist.includes(user.id);
   }, [currentUser.blacklist, user.id]);
 
-  	const nav = useNavigate();
- 
+  const nav = useNavigate();
+
   const [isVisible, setIsVisible] = useState(false);
 
   const blacklist = async () => {
@@ -65,15 +75,15 @@ export const UserPopover = ({
   };
 
   const handleScoresClick = (nav: any) => {
-	  console.log(`/scores/${user.account_id}`);
-	nav(`/scores/${user.account_id}`)
+    console.log(`/scores/${user.account_id}`);
+    nav(`/scores/${user.account_id}`);
   };
 
   const handleInviteClick = async () => {
     console.log('Profile');
 
     try {
-      	await axios.post(
+      await axios.post(
         `${BACK_URL}/matchmaking/inviteGame/${user.id}`,
         {},
         {
@@ -89,12 +99,20 @@ export const UserPopover = ({
   };
 
   const content = (
-    <div className='content' style={{ display: 'flex', flexDirection: 'column'}}>
-      <Button style={stylePopoverButton} onClick={() => handleScoresClick(nav)}>Scores</Button>
-      <Button style={{ margin: '5px 0', ...stylePopoverButton }} onClick={handleInviteClick}>
+    <div
+      className="content"
+      style={{ display: 'flex', flexDirection: 'column' }}>
+      <Button style={stylePopoverButton} onClick={() => handleScoresClick(nav)}>
+        Scores
+      </Button>
+      <Button
+        style={{ margin: '5px 0', ...stylePopoverButton }}
+        onClick={handleInviteClick}>
         Invite to play
       </Button>
-      <Button  style={stylePopoverButton}onClick={inBlacklist ? whitelist : blacklist}>
+      <Button
+        style={stylePopoverButton}
+        onClick={inBlacklist ? whitelist : blacklist}>
         {inBlacklist ? 'White list' : 'Black list'}
       </Button>
     </div>
@@ -102,14 +120,14 @@ export const UserPopover = ({
 
   return (
     <Popover
-	className='user-popover'
+      className="user-popover"
       onVisibleChange={(isVisible) => setIsVisible(isVisible)}
       visible={isVisible}
       placement="right"
       content={content}
-      title={<ProfileTitle user={user}/>}
-	  trigger="click"
-	  overlayStyle={{width: "170px", textAlign:'center'}}>
+      title={<ProfileTitle user={user} />}
+      trigger="click"
+      overlayStyle={{ width: '170px', textAlign: 'center' }}>
       <div className="popover-item" style={{ display: 'inline-block' }}>
         {avatarOrUsername === 'username' ? (
           <i> {user.accountUsername} </i>
@@ -124,53 +142,68 @@ UserPopover.defaultProps = {
   avatarOrUsername: 'avatar',
 };
 
-function ProfileTitle({user}: {user: any}){
-	return (
-	<Typography className='popover-title' style={{ width: '100%'}}>
-	<figure>
-		<Avatar  size={50} style={{ textAlign:'center'}} className='popover-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
-		<figcaption>
-		<i className='popover-username'><Status id={user.account_id}/>{user.accountUsername}</i><br/>
-		<div className='info'>
-		<i>{user.points} points</i>
-		<i><Stats id={user.account_id} tabFormat={0}/></i>
-		<i>rank: {user.rank}</i>
-		</div>
-		</figcaption>
-	</figure>
-	</Typography>
-	)
+function ProfileTitle({ user }: { user: any }) {
+  return (
+    <Typography className="popover-title" style={{ width: '100%' }}>
+      <figure>
+        <Avatar
+          size={50}
+          style={{ textAlign: 'center' }}
+          className="popover-avatar"
+          src={BACK_URL + '/account/avatar/' + user.avatar}
+          alt="avatar"
+        />
+        <figcaption>
+          <i className="popover-username">
+            <Status id={user.account_id} />
+            {user.accountUsername}
+          </i>
+          <br />
+          <div className="info">
+            <i>{user.points} points</i>
+            <i>
+              <Stats id={user.account_id} tabFormat={0} />
+            </i>
+            <i>rank: {user.rank}</i>
+          </div>
+        </figcaption>
+      </figure>
+    </Typography>
+  );
 }
 
-function Status(props: any){
-	const [status, setStatus] = useState(0);
-	useEffect(() => {
-		axios.get(`${BACK_URL}/account/status/id/${props.id}`,  {withCredentials:true })
-			.then((response) => {
-				setStatus(response.data);
-			})
-			.catch((error) => {
-				handleErrors(error)
-			})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	console.log("stat", props.status);
-	if (status === 0)
-		return (
-		<i className='status'>
-			<MinusCircleFilled style={{color:'red'}} />
-		</i>
-	)
-	if (status === 1)
-		return (
-			<i className='status'>
-				<CheckCircleFilled style={{color:'green'}} />
-			</i>
-		)
-	return (
-		<i className='status'>
-			<ExclamationCircleFilled style={{color:'grey'}} />
-		</i>
-	)
+function Status(props: any) {
+  const [status, setStatus] = useState(0);
+  useEffect(() => {
+    axios
+      .get(`${BACK_URL}/account/status/id/${props.id}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setStatus(response.data);
+      })
+      .catch((error) => {
+        handleErrors(error);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  console.log('stat', props.status);
+  if (status === 0)
+    return (
+      <i className="status">
+        <MinusCircleFilled style={{ color: 'red' }} />
+      </i>
+    );
+  if (status === 1)
+    return (
+      <i className="status">
+        <CheckCircleFilled style={{ color: 'green' }} />
+      </i>
+    );
+  return (
+    <i className="status">
+      <ExclamationCircleFilled style={{ color: 'grey' }} />
+    </i>
+  );
 }
 export default UserPopover;

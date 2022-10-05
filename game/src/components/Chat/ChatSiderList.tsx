@@ -1,6 +1,7 @@
 import {
   EditOutlined,
   ExclamationCircleOutlined,
+  MinusSquareOutlined,
   PlusSquareOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
@@ -62,13 +63,11 @@ const ChannelListItem = ({
     openSettingChannel(channel);
   };
 
-  const findAdmUser = channel.administratorsId.find(
-    (admId: string) => admId === currentUser.id
-  );
-
   const findUser = channel.usersId.find((user) => user === currentUser.id);
 
-  const text = 'Are you sure to join this channel?';
+  const textToJoin = 'Are you sure to join this channel?';
+
+  const textToQuit = 'Are you sure to quit this channel?';
 
   const content = (
     <div>
@@ -108,9 +107,22 @@ const ChannelListItem = ({
     }
   };
 
+  const onQuitOkHandler = async () => {
+    try {
+      await axios.delete(
+        `${BACK_URL}/channels/${channel.id}/${currentUser.id}`,
+        { withCredentials: true, headers: {} }
+      );
+      setSelectedChannel(channel);
+      message.success('Quit the channel successeful!');
+    } catch (error) {
+      message.error('Fail to quit the channel!');
+    }
+  };
+
   const showConfirm = () => {
     confirm({
-      title: text,
+      title: textToJoin,
       icon: <ExclamationCircleOutlined />,
       content: content,
       onOk() {
@@ -121,6 +133,16 @@ const ChannelListItem = ({
       onCancel() {
         console.log('Cancel');
         passwordRef.current = '';
+      },
+    });
+  };
+
+  const quitChannel = () => {
+    confirm({
+      title: textToQuit,
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        onQuitOkHandler();
       },
     });
   };
@@ -146,21 +168,27 @@ const ChannelListItem = ({
       }}>
       <div>{channel.channelName}</div>
       <div>
-        {findAdmUser && (
-          <Button
-            style={{ marginRight: 5 }}
-            icon={<EditOutlined />}
-            onClick={editClick}
-          />
+        {channel.ownerId === currentUser.id && (
+          <>
+            <Button
+              style={{ marginRight: 5 }}
+              icon={<EditOutlined />}
+              onClick={editClick}
+            />
+            <Button
+              style={{ marginRight: 5 }}
+              icon={<SettingOutlined />}
+              onClick={settingClick}
+            />
+          </>
         )}
 
-        {channel.ownerId === currentUser.id && (
-          <Button icon={<SettingOutlined />} onClick={settingClick} />
-        )}
-      </div>
-      <div>
         {!findUser && (
           <Button icon={<PlusSquareOutlined />} onClick={showConfirm} />
+        )}
+
+        {findUser && (
+          <Button icon={<MinusSquareOutlined />} onClick={quitChannel} />
         )}
       </div>
     </div>
@@ -188,24 +216,9 @@ const ChatSiderList = ({
     setIsSettingModalVisible(false);
   };
 
-  const addNewChannel = (newChannel: ChannelType) => {
-    setChannels((oldChannels: ChannelType[]) => {
-      return [...oldChannels, newChannel];
-    });
-  };
-
   const openEditChannel = (channel: ChannelType) => {
     setIsChannelModalVisible(true);
     setSelectedChannel(channel);
-  };
-
-  const updateChannel = (channel: ChannelType) => {
-    setChannels((oldChannels: ChannelType[]) => {
-      const tmpChannel = [...oldChannels];
-      const index = tmpChannel.findIndex((c) => channel.id === c.id);
-      tmpChannel[index] = channel;
-      return tmpChannel;
-    });
   };
 
   const openSettingChannel = (channel: ChannelType) => {
@@ -218,8 +231,6 @@ const ChatSiderList = ({
       <ChannelFormModal
         isModalVisible={isChannelModalVisible}
         closeModal={closeChannelModal}
-        addNewChannel={addNewChannel}
-        updateChannel={updateChannel}
         channel={selectedChannel}
       />
       <ChannelManageUserModal

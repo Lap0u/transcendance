@@ -64,6 +64,7 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
     if (currentUser) {
       const updateChannelSocketMessage = 'updateChannel';
       const createNewChannelSocket = 'createChannel';
+      const deleteChannelSocket = 'deleteChannel';
 
       socket.on(updateChannelSocketMessage, (updateChannel: ChannelType) => {
         setChannels((oldChannels: ChannelType[]) => {
@@ -86,6 +87,15 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
           tmpChannel[index] = updateChannel;
           return tmpChannel;
         });
+        setSelectedChannel((oldSelectedChannel: ChannelType | null) => {
+          if (oldSelectedChannel?.id === updateChannel.id) {
+            if (!updateChannel.usersId.includes(currentUser.id)) {
+              return null;
+            }
+            return updateChannel;
+          }
+          return oldSelectedChannel;
+        });
       });
 
       socket.on(createNewChannelSocket, (newChannel: ChannelType) => {
@@ -106,9 +116,25 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
         });
       });
 
+      socket.on(deleteChannelSocket, (deleteChannelId: string) => {
+        setChannels((oldChannels: ChannelType[]) => {
+          const tmpChannel = oldChannels.filter(
+            (channel: ChannelType) => channel.id !== deleteChannelId
+          );
+          return tmpChannel;
+        });
+        setSelectedChannel((oldSelectedChannel: ChannelType | null) => {
+          if (oldSelectedChannel?.id === deleteChannelId) {
+            return null;
+          }
+          return oldSelectedChannel;
+        });
+      });
+
       return () => {
         socket.off(updateChannelSocketMessage);
         socket.off(createNewChannelSocket);
+        socket.off(deleteChannelSocket);
       };
     }
   }, [currentUser]);

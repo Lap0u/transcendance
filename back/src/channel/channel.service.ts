@@ -111,4 +111,60 @@ export class ChannelService {
 
     return saveChannel;
   }
+
+  async updateChannelWithRemoveUer(
+    channelId: string,
+    removeUserId: string,
+  ): Promise<string> {
+    const channel: Channel = await this.channelsRepository.findOneBy({
+      id: channelId,
+    });
+
+    if (!channel) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+
+    channel.usersId = channel.usersId.filter(
+      (userId: any) => userId !== removeUserId,
+    );
+
+    channel.administratorsId = channel.administratorsId.filter(
+      (userId: any) => userId !== removeUserId,
+    );
+
+    if (channel.usersId.length === 0) {
+      this.channelsRepository.remove(channel);
+      this.socketService.socket.emit('deleteChannel', channelId);
+      return 'ok';
+    }
+
+    if (channel.ownerId === removeUserId) {
+      if (channel.administratorsId.length !== 0) {
+        channel.ownerId = channel.administratorsId[0];
+      } else {
+        channel.ownerId = channel.usersId[0];
+        channel.administratorsId = [channel.usersId[0]];
+      }
+    }
+
+    this.channelsRepository.save(channel);
+    this.socketService.socket.emit('updateChannel', channel);
+    return 'ok';
+  }
+
+  async deleteChannel(channelId: string): Promise<string> {
+    const channel: Channel = await this.channelsRepository.findOneBy({
+      id: channelId,
+    });
+
+    if (!channel) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+
+    this.channelsRepository.remove(channel);
+
+    this.socketService.socket.emit('deleteChannel', channelId);
+
+    return 'ok';
+  }
 }
