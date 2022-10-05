@@ -59,23 +59,6 @@ const GameMenu = (props: any) => {
     background: gameBackground,
   };
 
-  // useEffect(() => {
-  //   const initData = async () => {
-  //     try {
-  //       const res = await axios.get(`${BACK_URL}/account`, {
-  //         withCredentials: true,
-  //       });
-  //       console.log('fruser', res.data);
-
-  //       setCurrentUser(res.data);
-  //     } catch {
-  //       console.log('Must be connect to use chat!');
-  //       navigate('/');
-  //     }
-  //   };
-  //   initData();
-  // }, [navigate]);
-
   const joinMatchmaking = () => {
     setMatchmaking(!inMatchmaking);
   };
