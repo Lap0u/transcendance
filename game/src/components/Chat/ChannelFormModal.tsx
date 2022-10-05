@@ -85,25 +85,24 @@ const ChannelFormModal = ({
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[
-        <Popconfirm
-          title="Are you sure to delete this channel?"
-          onConfirm={comfirmHandler}
-          onCancel={() => {}}
-          okText="Yes"
-          cancelText="No">
-          <Button key="delete" danger>
-            Delete
-          </Button>
-        </Popconfirm>,
+        channel ? (
+          <Popconfirm
+            key="deleteConfirm"
+            title="Are you sure to delete this channel?"
+            onConfirm={comfirmHandler}
+            onCancel={() => {}}
+            okText="Yes"
+            cancelText="No">
+            <Button key="delete" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        ) : null,
 
         <Button key="cancel" type="primary" onClick={handleCancel}>
           Cancel
         </Button>,
-        <Button
-          key="ok"
-          type="primary"
-          // loading={loading}
-          onClick={handleOk}>
+        <Button key="ok" type="primary" onClick={handleOk}>
           Ok
         </Button>,
       ]}>

@@ -168,7 +168,6 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
             }}
             users={users}
             currentUser={currentUser}
-            setChannels={setChannels}
             channels={channels}
             selectedChannel={selectedChannel}
             setSelectedChannel={(selectedChannel: ChannelType) => {
