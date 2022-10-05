@@ -62,10 +62,12 @@ export function ScoreTab(props: any) {
 	}, []);
 
 	function getDate(date:any){
-		const newdate = new Date(date);
-		const dateString = newdate.toString();
-		return dateString.substring(0, dateString.indexOf('GMT'));
-	}
+        const  newdate = new Date(date);
+        const dateString = newdate.toLocaleDateString('fr');
+        const  hourString = newdate.toString();
+        console.log("date leen ", dateString.length)
+        return dateString + hourString.substring(15, hourString.indexOf('GMT') - 4);
+    }
 
 	return(
 		ok && scoreLen?
