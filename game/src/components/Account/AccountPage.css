@@ -6,11 +6,6 @@
 	height: 100vh;
 }
 
-.home-button {
-	position: relative;
-	margin: 10px;
-}
-
 .account-info ul{
 	background-color: var(--mid-backgroud);
 

@@ -45,8 +45,11 @@ export function checkGoal(ball: any, state: any) {
 }
 
 export function checkGameEnd(state: any) {
-  if (state.score.playerOne >= SCORE_LIMIT) return -1;
-  if (state.score.playerTwo >= SCORE_LIMIT) return -2;
+  let lim: number;
+  if (state.settings) lim = state.settings.point_limit;
+  else lim = SCORE_LIMIT;
+  if (state.score.playerOne >= lim) return -1;
+  if (state.score.playerTwo >= lim) return -2;
   return 1;
 }
 
@@ -95,8 +98,6 @@ export function handleEndGame(
       UsernameLoser: playerTwo.accountUsername,
       ScorePlayer1: state.score.playerTwo,
       ScorePlayer2: state.score.playerOne,
-      PointsWon: 30, //replace by the good number of points
-      PointsLost: 30,
     };
   } else if (gameStatus === -2) {
     socket
@@ -116,17 +117,13 @@ export function handleEndGame(
       UsernameLoser: playerOne.accountUsername,
       ScorePlayer1: state.score.playerOne,
       ScorePlayer2: state.score.playerTwo,
-      PointsWon: 30, //replace by the good number of points
-      PointsLost: 30,
     };
   }
-  console.log('score', score);
-  scoreService.addScore(score);
-
-  //call addscore
+  const isCustom = game.settings === null ? true : false;
+  scoreService.addScore(score, isCustom);
 }
 
-export function createGameState() {
+export function createGameState(settings: any) {
   return {
     powerup: createPowerup(),
     leftPlayer: {
@@ -151,5 +148,6 @@ export function createGameState() {
       playerTwo: 0,
     },
     frameDelay: 0,
+    settings: settings,
   };
 }

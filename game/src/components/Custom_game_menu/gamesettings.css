@@ -1,0 +1,23 @@
+.settings-table {
+  width: 30vw;
+}
+
+.settings-raw {
+  text-align: center;
+  background-color: white;
+}
+
+.powerup-button {
+  width: 2vh;
+  height: 2vh;
+  border-radius: 100%;
+  border: solid 2px black;
+}
+
+.true {
+  background-color: rgb(0, 255, 0);
+}
+
+.false {
+  background-color: rgb(255, 0, 0);
+}

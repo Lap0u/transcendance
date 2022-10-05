@@ -24,20 +24,22 @@ export function resetBall(side : number) {
 }
 
 
-export function handleBallMove(ball: any, powerup: any) {
+export function handleBallMove(ball: any, powerup: any, settings : any) {
 	const dirX = Math.sin(ball.angle * (Math.PI / 180));
 	const dirY = Math.cos(ball.angle * (Math.PI / 180));
-
-	let ballAccel = 0;
+    let ballAccel : number
+    if (settings)
+        ballAccel = settings.ball_speed / 100 - 1;
+    else ballAccel = 0
 	if (powerup.status === 2) {
 		if (powerup.value === 1 && ball.angle < 180 && powerup.target === 0)
-			ballAccel = 0.5;
+			ballAccel += 0.5;
 		else if (powerup.value === 1 && ball.angle > 180 && powerup.target === 1)
-			ballAccel = 0.5;
+			ballAccel += 0.5;
 		else if (powerup.value === 3 && ball.angle < 180 && powerup.target === 1)
-			ballAccel = -0.5;
+			ballAccel += -0.5;
 		else if (powerup.value === 3 && ball.angle > 180 && powerup.target === 0)
-			ballAccel = -0.5;
+			ballAccel += -0.5;
 	}
 	ball.pos.x += dirX * (ball.speed + ballAccel);
 	ball.pos.y += dirY * (ball.speed + ballAccel);

@@ -10,7 +10,19 @@ export class matchmakingDto {
   pongReply: number;
 }
 
+export class customMatchDto {
+	playerOne: string;
+	playerTwo: string;
+	gameId: string;
+}
+
 export class quitMatchmakingDto {
   id: string;
   socket: string;
+}
+
+export class customGameDto {
+	playerOne: matchmakingDto;
+	playerTwo: matchmakingDto;
+	settings: any;
 }

@@ -134,7 +134,3 @@ function Welcome() {
 }
 
 export default Accueil;
-function useQuery() {
-	throw new Error('Function not implemented.');
-}
-
