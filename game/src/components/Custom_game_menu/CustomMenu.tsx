@@ -11,12 +11,12 @@ import { NavigationBarre } from '../Accueil/Accueil';
 import GameSettings from './GameSettings';
 
 const CustomMenu = (props: any) => {
-  const [gameReady, setGameReady] = useState("");
+  const [gameReady, setGameReady] = useState('wait');
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
   const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
   const [ballColor, setBallColor] = useState('#ffffff');
   const [gameBackground, setGameBackground] = useState('#000000');
-  const [secondPlayer, setSecondPlayer] = useState('');
+  const [secondPlayer, setSecondPlayer] = useState(null);
   const [settings, setSettings] = useState({
     powerup: false,
     point_limit: 20,
@@ -70,8 +70,13 @@ const CustomMenu = (props: any) => {
         { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
-      setGameReady(res.data)
-      console.log('res', res);
+      if (res.data != 'wait') {
+        setGameReady('ready');
+        const sec = await axios.get(`${BACK_URL}/account/userId/${res.data}`, {
+          withCredentials: true,
+        });
+        setSecondPlayer(sec.data)
+      }
     }
     joinCustom();
   });
@@ -104,10 +109,9 @@ const CustomMenu = (props: any) => {
 
   function startGame() {
     if (secondPlayer != '') {
+      console.log('deux', secondPlayer);
       startCustom(currentUser, secondPlayer, settings);
-    } else setSecondPlayer(currentUser);
-    // else
-    // 	openFriendList("Second")
+    }
   }
 
   useEffect(() => {
@@ -117,12 +121,15 @@ const CustomMenu = (props: any) => {
     });
   });
 
-  let isReady = gameReady === 'ready' ? 'Start game' : 'Loading'
+  let isReady = secondPlayer === null ? 'Loading' : 'Start game';
   return (
     <div className="global-div">
       <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
       <Space>
-        <Button disabled={gameReady !== 'ready'} onClick={startGame} type="primary">
+        <Button
+          disabled={isReady === null}
+          onClick={startGame}
+          type="primary">
           {isReady}
         </Button>
       </Space>
