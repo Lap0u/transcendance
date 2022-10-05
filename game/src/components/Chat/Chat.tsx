@@ -4,14 +4,14 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BACK_URL } from '../../global';
+import { NavigationBarre } from '../Accueil';
 import handleErrors from '../RequestErrors/handleErrors';
 import ChatContentWindow from './ChatContentWindow';
-import ChatHeader from './ChatHeader';
 import ChatSiderButton from './ChatSiderButton';
 import ChatSiderList from './ChatSiderList';
 import { ChannelType, CHANNEL_TYPE, CHAT_TYPE } from './const';
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
   const navigate = useNavigate();
@@ -145,14 +145,7 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
 
   return (
     <Layout style={{ width: '100%', height: '100%' }}>
-      <Header
-        style={{
-          backgroundColor: '#000',
-          color: '#fff',
-          fontWeight: 'bold',
-        }}>
-        <ChatHeader currentUser={currentUser} />
-      </Header>
+      <NavigationBarre user={currentUser} isLoginActive={true} />
       <Layout style={{ width: '100%' }}>
         <Sider
           style={{ backgroundColor: '#1c1c1c', textAlign: 'center' }}
