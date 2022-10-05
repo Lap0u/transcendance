@@ -11,25 +11,10 @@ import '../Account/PublicAccount.css'
 import axios from "axios";
 import { BACK_URL } from "../../global";
 import handleErrors from "../RequestErrors/handleErrors";
+import UserDto from "../utils/UserDto";
+import { NavigationBarre } from "../Accueil";
 
-const UserDto = {
-	account_id:"",
-	id: "",
-	username: "",
-	name: "",
-	accountUsername: "",
-	isTwoFactorAuthenticationEnabled: "",
-	authConfirmToken: "",
-	isVerified: "",
-	twoFactorAuthenticationSecret: "",
-	email: "",
-	avatar: "",
-	points: "",
-	rank: undefined,
-	status: undefined,
-  };
-
-export function ScoresPage(props: any){
+export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	const params = useParams();
 	const id= params.id;
 	const nav = useNavigate();
@@ -40,17 +25,12 @@ export function ScoresPage(props: any){
 	};
 
 	const [user, getUser] = useState({...UserDto});
-	const [currentUser, getCurrentUser] = useState({...UserDto});
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
 			.then((response) => {
 				console.log("aaazzzs", response.data);
 				getUser(response.data);
-				axios.get(`${BACK_URL}/account`,  {withCredentials:true })
-					.then((response) => {
-						getCurrentUser(response.data);
-						setOk(true);
-					})
+				setOk(true);
 			})
 			.catch((error) => {
 				handleErrors(error)
@@ -61,13 +41,13 @@ export function ScoresPage(props: any){
 	return (
 		ok?
 		<div className='score-page'>
-			<Button className='home-button' shape="circle" icon={<HomeOutlined />} onClick={() => nav('/')} />
+			<NavigationBarre isLoginActive={true}  user={currentUser}/>
 			<div className='score-page' >
-			<i className='title-scores'>Scores page of user {user.accountUsername} </i>
+			<i className='title-scores' style={{fontSize:20, color:'#10117D'}}>SCORE PAGE OF USER {user.accountUsername} </i>
 			<Tabs className="box-tab" value={tabIndex} onChange={handleTabChange} variant="fullWidth" centered 
 					  sx={{
-						'& .MuiTabs-indicator': { backgroundColor: '#536dfe' },
-						'& .MuiTab-root': { color: '#7986cb', fontSize:' min(3vw, 15px)'},
+						'& .MuiTabs-indicator': { backgroundColor: '#5700DE' },
+						'& .MuiTab-root': { color: '#5700DE', fontSize:' min(3vw, 15px)'},
 					  }}>
 				<Tab label="Historique" />
         	  	<Tab label="Leaderboard" />

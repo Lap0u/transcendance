@@ -7,6 +7,8 @@ export type ScoresDto = {
   UsernameLoser?: string;
   ScorePlayer1: number;
   ScorePlayer2: number;
+  PointsWon: number;
+  PointsLost: number;
 };
 
 export type StatsDto = {

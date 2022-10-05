@@ -135,7 +135,7 @@ const GameMenu = (props : any) => {
 	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
   return (
     <div>
-			<NavigationBarre nav={navigate} isLoginActive={isLoginActive} userId={user.account_id}/>
+		<NavigationBarre isLoginActive={true} user={props.user}/>
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
       </Space>

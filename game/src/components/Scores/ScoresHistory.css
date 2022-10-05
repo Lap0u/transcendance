@@ -21,7 +21,8 @@
 .tab  .raw{
 	list-style-type: none;
 	display:inline-table;
-	background-color: var(--mid-backgroud);
+	background-color: var(--small-background);
+	color: var(--text-1);
 
 }
 
@@ -34,7 +35,7 @@
 	padding-bottom: 1vw;
 	display:table;
 	border: 2px solid var(--text-1);
-	background-color: var(--light-grey);
+	background-color: var(--small-background);
  }
 
 

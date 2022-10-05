@@ -1,38 +1,50 @@
-import { matchesDto } from "src/matchmaking/matches.dto";
-import { resetBall } from "./ball.utils";
-import { BACK_BALL_SIZE, BACK_WIN_HEIGHT, POWERUPDELAY, BACK_WIN_WIDTH, DEFAULT_BALL_SPEED, FRAME_RATE, GOAL_DELAY, PADDLE_HEIGHT, PADDLE_WIDTH, SCORE_LIMIT, STARTINGPOS_LEFT_X, STARTINGPOS_RIGHT_X } from "./constants";
-import { createPowerup } from "./powerUp";
-import { ScoresService } from "./Scores/scores.service";
-import { ScoresDto } from "./Scores/utils/types";
+import { matchesDto } from 'src/matchmaking/matches.dto';
+import { resetBall } from './ball.utils';
+import {
+  BACK_BALL_SIZE,
+  BACK_WIN_HEIGHT,
+  POWERUPDELAY,
+  BACK_WIN_WIDTH,
+  DEFAULT_BALL_SPEED,
+  FRAME_RATE,
+  GOAL_DELAY,
+  PADDLE_HEIGHT,
+  PADDLE_WIDTH,
+  SCORE_LIMIT,
+  STARTINGPOS_LEFT_X,
+  STARTINGPOS_RIGHT_X,
+} from './constants';
+import { createPowerup } from './powerUp';
+import { ScoresService } from './Scores/scores.service';
+import { ScoresDto } from './Scores/utils/types';
 
-export function getRandomArbitrary(min : number, max : number) {
-    return Math.random() * (max - min) + min;
+export function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
+
+export function clearGame(gameId: string, allGames: matchesDto[]) {
+  for (let i = 0; i < allGames.length; i++) {
+    if (allGames[i].gameId === gameId) {
+      allGames.splice(i, 1);
+      return;
+    }
   }
-
-export function clearGame(gameId : string, allGames : matchesDto[]) {
-	for (let i = 0; i < allGames.length; i++) {
-	if (allGames[i].gameId === gameId) {
-			allGames.splice(i, 1)
-			return
-		}
-	}
 }
 
 export function checkGoal(ball: any, state: any) {
-if (ball.pos.x <= 0) {
-	state.score.playerTwo += 1;
-	ball = resetBall(0);
-	state.frameDelay = GOAL_DELAY;
-} else if (ball.pos.x >= BACK_WIN_WIDTH) {
-	state.score.playerOne += 1;
-	ball = resetBall(1);
-	state.frameDelay = GOAL_DELAY;
-}
-return ball;
+  if (ball.pos.x <= 0) {
+    state.score.playerTwo += 1;
+    ball = resetBall(0);
+    state.frameDelay = GOAL_DELAY;
+  } else if (ball.pos.x >= BACK_WIN_WIDTH) {
+    state.score.playerOne += 1;
+    ball = resetBall(1);
+    state.frameDelay = GOAL_DELAY;
+  }
+  return ball;
 }
 
 export function checkGameEnd(state: any) {
-	
 	let lim : number;
 	if (state.settings)
 		lim = state.settings.point_limit
@@ -45,14 +57,19 @@ export function checkGameEnd(state: any) {
 	return 1
 }
 
-export function handlePing(pongCounter : number, socket : any,  playerOne: string, playerTwo: string) {
-	pongCounter--
-	if (pongCounter === 0) {
-		socket.to(playerOne).emit(`ping`)
-		socket.to(playerTwo).emit(`ping`)
-		pongCounter = FRAME_RATE
-	}
-	return pongCounter
+export function handlePing(
+  pongCounter: number,
+  socket: any,
+  playerOne: string,
+  playerTwo: string,
+) {
+  pongCounter--;
+  if (pongCounter === 0) {
+    socket.to(playerOne).emit(`ping`);
+    socket.to(playerTwo).emit(`ping`);
+    pongCounter = FRAME_RATE;
+  }
+  return pongCounter;
 }
 
 export function handleEndGame(gameStatus: number, socket : any, state: any, game:any, scoreService: ScoresService) {

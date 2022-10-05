@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -33,9 +35,14 @@ export class AccountController {
   @UseGuards(JwtTwoFactorGuard)
   getAccountInfo(@Req() req: Request) {
     const session_info = req.session['passport'];
-    const user_info = session_info.user;
-    const { id } = user_info;
-    return this.authService.findUser(id);
+    if (session_info) {
+      const user_info = session_info.user;
+      const { id } = user_info;
+      return this.authService.findUser(id);
+    } else {
+      return new HttpException('Disconected', HttpStatus.BAD_REQUEST);
+    }
+    return;
   }
 
   @Get('/id/:id')
@@ -134,5 +141,19 @@ export class AccountController {
   async getAllAccounts() {
     const users = await this.usersService.getAllAccount();
     return users;
+  }
+
+  @Get('status')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  status() {
+    return 'ok';
+  }
+
+  @Get('status/id/:id')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async statusById(@Param() params) {
+    return await this.usersService.getStatusById(params.id);
   }
 }
