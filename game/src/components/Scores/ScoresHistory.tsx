@@ -62,11 +62,8 @@ export function ScoreTab(props: any) {
 	}, []);
 
 	function getDate(date:any){
-        const  newdate = new Date(date);
-        const dateString = newdate.toLocaleDateString('fr');
-        const  hourString = newdate.toString();
-        console.log("date leen ", dateString.length)
-        return dateString + hourString.substring(15, hourString.indexOf('GMT') - 4);
+        const  newdate = new Date(date).toLocaleString('fr', {timeZone: 'Europe/Berlin'});
+        return newdate.substring(0, newdate.length - 3);
     }
 
 	return(
