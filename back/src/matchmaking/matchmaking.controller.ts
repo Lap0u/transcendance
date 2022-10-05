@@ -62,7 +62,7 @@ export class MatchmakingController {
   @UseGuards(JwtTwoFactorGuard)
   @Post('/joinCustom')
   async joinCustomGame(@Body() body: any): Promise<string> {
-    return this.matchmakingService.joinCustomGame(body.socket);
+    return this.matchmakingService.joinCustomGame(body.id, body.socket);
   }
 
   @UseGuards(AuthenticatedGuard)

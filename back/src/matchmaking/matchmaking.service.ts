@@ -136,8 +136,20 @@ export class MatchmakingService {
     );
   }
 
-  async joinCustomGame(userId: string): Promise<string> {
-    console.log('id', userId);
+  async joinCustomGame(userId: string, socket: string): Promise<string> {
+    for (let game of this.customMatchesList) {
+      if (userId === game.playerOne) {
+        game.oneSocket = socket;
+        game.oneReady = true;
+      } else if (userId === game.playerTwo) {
+        game.twoSocket = socket;
+        game.twoReady = true;
+      }
+      if (game.oneReady === true && game.twoReady === true) {
+        console.log(game);
+        return 'ready';
+      }
+    }
     return 'ok';
   }
 
@@ -165,7 +177,9 @@ export class MatchmakingService {
     });
     this.customMatchesList.push({
       playerOne: sendInvitationUserId,
+      oneReady: false,
       playerTwo: userId,
+      twoReady: false,
       gameId: uuid(),
     });
     return 'ok';

@@ -66,7 +66,7 @@ const CustomMenu = (props: any) => {
     async function joinCustom() {
       const res = await axios.post(
         `${BACK_URL}/matchmaking/joinCustom`,
-        { socket: currentUser.id },
+        { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
       console.log('res', res);
