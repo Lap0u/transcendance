@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -51,6 +52,7 @@ export class ChannelController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Put(':channelId/:addUserId')
   updateChannelUsers(
     @Param('channelId') channelId: string,
@@ -58,5 +60,22 @@ export class ChannelController {
     @Body() body: UpdateChannelUserDto,
   ): Promise<Channel> {
     return this.service.updateChannelUsers(channelId, addUserId, body);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  @Delete(':channelId/:removeUserId')
+  updateChannelWithRemoveUer(
+    @Param('channelId') channelId: string,
+    @Param('removeUserId') removeUserId: string,
+  ): Promise<string> {
+    return this.service.updateChannelWithRemoveUer(channelId, removeUserId);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  @Delete(':channelId')
+  deleteChannel(@Param('channelId') channelId: string): Promise<string> {
+    return this.service.deleteChannel(channelId);
   }
 }

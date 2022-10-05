@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Form, Input, Modal, Radio, message } from 'antd';
+import { Form, Input, Modal, Radio, message, Button, Popconfirm } from 'antd';
 import { ChannelType, CHANNEL_TYPE } from './const';
 import axios from 'axios';
 import { BACK_URL } from '../../global';
@@ -7,8 +7,6 @@ import { BACK_URL } from '../../global';
 const ChannelFormModal = ({
   isModalVisible,
   closeModal,
-  addNewChannel,
-  updateChannel,
   channel = null,
 }: channelForModalProps) => {
   const [form] = Form.useForm();
@@ -32,21 +30,18 @@ const ChannelFormModal = ({
 
   const sendChannel = async (values: any) => {
     try {
-      let res = null;
       if (channel) {
-        res = await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
+        await axios.put(`${BACK_URL}/channels/${channel.id}`, values, {
           withCredentials: true,
           headers: {},
         });
         message.success('Channel edited!');
-        // updateChannel(res.data);
       } else {
-        res = await axios.post(`${BACK_URL}/channels`, values, {
+        await axios.post(`${BACK_URL}/channels`, values, {
           withCredentials: true,
           headers: {},
         });
         message.success('New channel created!');
-        // addNewChannel(res.data);
       }
     } catch (e) {
       message.error(`Une erreur s'est passé ${e}`);
@@ -69,13 +64,49 @@ const ChannelFormModal = ({
     form.resetFields();
   };
 
+  const comfirmHandler = async () => {
+    try {
+      await axios.delete(`${BACK_URL}/channels/${channel?.id}`, {
+        withCredentials: true,
+        headers: {},
+      });
+      handleCancel();
+      message.success('Delete the channel successeful!');
+    } catch (error) {
+      message.error('Fail to delete the channel!');
+    }
+  };
+
   return (
     <Modal
       forceRender
       title={isEdit ? 'Modify Channel' : 'Create Channel'}
       visible={isModalVisible}
       onOk={handleOk}
-      onCancel={handleCancel}>
+      onCancel={handleCancel}
+      footer={[
+        <Popconfirm
+          title="Are you sure to delete this channel?"
+          onConfirm={comfirmHandler}
+          onCancel={() => {}}
+          okText="Yes"
+          cancelText="No">
+          <Button key="delete" danger>
+            Delete
+          </Button>
+        </Popconfirm>,
+
+        <Button key="cancel" type="primary" onClick={handleCancel}>
+          Cancel
+        </Button>,
+        <Button
+          key="ok"
+          type="primary"
+          // loading={loading}
+          onClick={handleOk}>
+          Ok
+        </Button>,
+      ]}>
       <Form form={form} layout="vertical" name="form_in_modal">
         <Form.Item name="type">
           <Radio.Group>
@@ -118,8 +149,6 @@ const ChannelFormModal = ({
 type channelForModalProps = {
   isModalVisible: boolean;
   closeModal: () => void;
-  addNewChannel: (newChannel: ChannelType) => void;
-  updateChannel: (channel: ChannelType) => void;
   channel?: ChannelType | null;
 };
 export default ChannelFormModal;

@@ -153,6 +153,10 @@ const ChatContentWindow = ({
     return null;
   }
 
+  if (selectedChannel && !selectedChannel.usersId.includes(currentUser.id)) {
+    return null;
+  }
+
   return (
     <div className="chat-window-wrapper">
       <div className="chat-window-header">
