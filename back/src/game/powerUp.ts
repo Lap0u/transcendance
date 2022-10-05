@@ -88,9 +88,11 @@ function handlePickUp(ball: any, powerup : any) {
         }
 }
 
-export function handlePowerUp(ball: any, powerup: any) {
+export function handlePowerUp(ball: any, powerup: any, settings: any) {
     
-    handleDelay(powerup);
-    if (powerup.status === 1)
-        handlePickUp(ball, powerup)
+		if (settings && settings.powerup === true) {
+	    handleDelay(powerup);
+  	  if (powerup.status === 1)
+    	    handlePickUp(ball, powerup)
+		}
 }

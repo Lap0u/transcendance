@@ -1,6 +1,37 @@
 .preview-box {
-    color: rgb(241, 35, 241);
-    margin-left: 15vw;
-    margin-right: auto;
-    font-size: 16px;
+	color: rgb(241, 35, 241);
+	margin-left: 15vw;
+	margin-right: auto;
+	font-size: 16px;
+}
+
+@import '../../colors.css';
+
+.nav-barre {
+font-size: 3vw;
+list-style-type: none;
+margin: 0;
+padding: 0;
+width: 100vw;
+background-color: var(--mid-backgroud);
+text-align: center;
+}
+
+.nav-barre .onglet-nav {
+display: inline;
+	text-align: center;
+	padding: 7vw;
+	text-decoration: none;
+
+}
+.nav-barre .onglet-nav a{
+margin-left: auto;
+	margin-right: auto;
+font-size: 0.7em;
+color: var(--text-1);
+line-height: 3;
+}
+
+.nav-barre a:hover {
+color: var(--background);
 }

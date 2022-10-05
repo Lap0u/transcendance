@@ -21,6 +21,36 @@ const GameMenu = (props : any) => {
 	const socket = props.socket;
   const [currentUser, setCurrentUser] = useState<any>(null);
 	const navigate = useNavigate();
+	const [isLoginActive, setIsLogin] = useState(false);
+	const [ok, setOk] = useState(false);
+	const [user, setUser] = useState({account_id: ""});
+
+	useEffect(() => {
+		console.log("useefect");
+		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
+			.then((res) => {
+				console.log("ress acceuirl", res);
+				setOk(true);
+				axios.get(`${BACK_URL}/2fa/status`, {
+					withCredentials:true ,
+				})
+				.then((res) => {
+					setUser(res.data)
+				})
+				.catch(error => {
+					handleErrors(error)
+				})
+				setIsLogin(true);
+			})
+			.catch((error) => {
+				if (error.response.status === 403)
+					setIsLogin(false);
+				else
+					handleErrors(error);
+				setOk(true);
+		})	
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
   const customGameValues : any= {
 	myColor: ownPaddleColor,
@@ -35,6 +65,8 @@ const GameMenu = (props : any) => {
         const res = await axios.get(`${BACK_URL}/account`, {
           withCredentials: true,
         });
+				console.log('fruser', res.data);
+				
         setCurrentUser(res.data);
       } catch {
         console.log('Must be connect to use chat!');
@@ -49,7 +81,7 @@ const GameMenu = (props : any) => {
   }
   const quitMatchmakingList = async(userId: string) => {
     try {
-         await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
+        await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
     } catch(e) {
       handleErrors(e);
     }
@@ -104,7 +136,6 @@ const GameMenu = (props : any) => {
   return (
     <div>
 		<NavigationBarre isLoginActive={true} user={props.user}/>
-      <h1>antd version: {version}</h1>
       <Space>
         <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
       </Space>

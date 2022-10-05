@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
+import { matchmakingDto, joinMatchmakingDto, customGameDto, customMatchDto } from './matchmaking.dto';
 import { SocketService } from '../socket/socket.service';
 import { matchesDto } from './matches.dto';
-import { addUserMatchmakingList, gameStart } from './matchmaking.utils';
+import { addUserMatchmakingList, gameStart, generateNewGame } from './matchmaking.utils';
 import { ScoresService } from 'src/game/Scores/scores.service';
+import { v4 as uuid} from 'uuid';
+import { launchGame } from 'src/game/game';
 
 @Injectable()
 export class MatchmakingService {
@@ -13,6 +15,7 @@ export class MatchmakingService {
   ) {}
 
   private matchmakingList: matchmakingDto[] = [];
+  private customMatchesList: customMatchDto[] = [];
   private currentMatches: matchesDto[] = [];
   getMatchmakingList(): matchmakingDto[] {
     return this.matchmakingList;
@@ -35,11 +38,24 @@ export class MatchmakingService {
     }
   }
 
+	handleQuit(sender: string) {
+    for (const elem of this.currentMatches) {
+      if (elem.playerOne.socket === sender) {
+        elem.playerOne.pongReply = 100000;
+        // return; remettre quand on pourra inviter a faire une custom
+      }
+      if (elem.playerTwo.socket === sender) {
+        elem.playerTwo.pongReply = 100000;
+        // return;
+      }
+    }
+	}
+
   handlePong(sender: string) {
     for (const elem of this.currentMatches) {
       if (elem.playerOne.socket === sender) {
         elem.playerOne.pongReply = 0;
-        // return;
+        // return; remettre quand on pourra inviter a faire une custom
       }
       if (elem.playerTwo.socket === sender) {
         elem.playerTwo.pongReply = 0;
@@ -68,14 +84,37 @@ export class MatchmakingService {
   }
 
   quitMatchmaking(userId: string): matchmakingDto[] {
+		console.log(',usid', userId);
+		console.log('li', this.matchmakingList);
+
     const newMatchmakingList = this.matchmakingList.filter((user) => {
-      return user.socket != userId;
+      return user.login != userId;
     });
 
     this.matchmakingList = newMatchmakingList;
 
     return newMatchmakingList;
   }
+
+	async launchCustomGame(payload: customGameDto) {
+
+    const gameId = uuid()
+
+    const playerOne = { 
+			pongReply: 0,
+			...payload.playerOne
+		}
+    const playerTwo = { 
+			pongReply: 0,
+			...payload.playerTwo
+		}
+		this.socketService.socket.to(playerOne.socket).emit(`customFound:`, gameId);
+    this.socketService.socket.to(playerTwo.socket).emit(`customFound:`, gameId);
+    const settings = payload.settings;
+    const newGame = generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, settings)
+	  launchGame(playerOne, playerTwo, this.socketService.socket, newGame, this.currentMatches, this.scoreService)
+
+	}
 
   async inviteGame(
     userId: string,
@@ -99,7 +138,7 @@ export class MatchmakingService {
       senderId: userId,
       senderUsername: username,
     });
-
+		this.customMatchesList.push({playerOne: sendInvitationUserId, playerTwo: userId, gameId: uuid()})
     return 'ok';
   }
 

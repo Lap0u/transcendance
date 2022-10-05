@@ -8,7 +8,7 @@ const WinnerBox = ({message}: winnerProps) => {
 	return (
 		<div className="container-box">
 			<p className="winner">{message}</p>
-			<Button type="dashed" onClick={() => navigate("/menu")}>Return to main menu</Button>
+			<Button type="dashed" onClick={() => navigate("/")}>Return to main menu</Button>
 		</div>
 	)
 }

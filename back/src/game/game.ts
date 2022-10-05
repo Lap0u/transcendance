@@ -21,7 +21,7 @@ export function launchGame(
   allGames: matchesDto[],
   scoreService: ScoresService
 ) {
-  const state = createGameState();
+  const state = createGameState(game.settings);
   startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames, scoreService);
 }
 
@@ -71,12 +71,12 @@ function gameLoop(state: any, curGames: any): number {
   }
   const ball = state.ball;
 
-  handleBallMove(ball, state.powerup);
+  handleBallMove(ball, state.powerup, state.settings);
 
   state.leftPlayer.pos.y = curGames.playerOneY;
   state.rightPlayer.pos.y = curGames.playerTwoY;
   handleWallBounce(ball, state.leftPlayer, state.rightPlayer, state.powerup);
-  handlePowerUp(ball, state.powerup);
+  handlePowerUp(ball, state.powerup, state.settings);
   state.ball = checkGoal(ball, state);
   return checkGameEnd(state);
 }

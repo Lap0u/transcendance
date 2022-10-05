@@ -18,6 +18,7 @@ import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate'
 import Forrbidden from './components/ErrorPage/Forbidden';
 import PublicInfo from './components/Account/PublicAccount';
 import { ScoresPage } from './components/Scores/ScorePage';
+import CustomMenu from './components/Custom_game_menu/CustomMenu';
 import InviteGameModal from './components/utils/InviteGameModal';
 import axios from 'axios';
 import { message } from 'antd';
@@ -69,7 +70,8 @@ function App() {
 
       socket.on(acceptInviteGame, (accept: any) => {
         message.success(`${accept.senderUsername} accept to play with you`);
-        window.location.href = '/menu';
+				
+        window.location.href = '/custom_game';
       });
 
       socket.on(refuseInviteGame, (refuse: any) => {
@@ -102,7 +104,9 @@ function App() {
             path="/chat"
             element={<Chat socket={socket} currentUser={currentUser} />}
           />
-          <Route path="/menu" element={<GameMenu user={currentUser} socket={socket} />} />
+
+          <Route path="/menu" element={<GameMenu socket={socket} />} />
+		  <Route path='/custom_game' element={<CustomMenu socket={socket} />} />
           <Route
             path="/singleGame/:id"
             element={<SingleGame socket={socket} />}

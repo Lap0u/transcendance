@@ -27,18 +27,19 @@ export function gameStart(matchmakingList : matchmakingDto[], socketService : an
     const playerTwo = matchmakingList[1]
     socketService.socket.to(playerOne.socket).emit(`matchFound:`, gameId);
     socketService.socket.to(playerTwo.socket).emit(`matchFound:`, gameId);
-    const newGame = generateNewGame(gameId, playerOne, playerTwo, currentMatches)
-	launchGame(playerOne, playerTwo, socketService.socket, newGame, currentMatches, scoreService)
+    const newGame = generateNewGame(gameId, playerOne, playerTwo, currentMatches, null)
+		launchGame(playerOne, playerTwo, socketService.socket, newGame, currentMatches, scoreService)
     return [playerOne.socket, playerTwo.socket]
 }
 
-function generateNewGame (gameId :string, playerOne : matchmakingDto, playerTwo : matchmakingDto, currentMatches : matchesDto[]) {
+export function generateNewGame (gameId :string, playerOne : matchmakingDto, playerTwo : matchmakingDto, currentMatches : matchesDto[], settings: any) {
 	const newGame = {
 		gameId : gameId,
 		playerOne : playerOne,
 		playerTwo : playerTwo,
 		playerOneY : BACK_WIN_HEIGHT / 2,
-		playerTwoY : BACK_WIN_HEIGHT / 2
+		playerTwoY : BACK_WIN_HEIGHT / 2,
+		settings: settings
 	}
 	currentMatches.push(newGame)
 	return newGame
