@@ -1,0 +1,1728 @@
+diff --git a/back/src/game/Scores/scores.controller.ts b/back/src/game/Scores/scores.controller.ts
+index cac25d9..8f8edec 100644
+--- a/back/src/game/Scores/scores.controller.ts
++++ b/back/src/game/Scores/scores.controller.ts
+@@ -58,4 +58,11 @@ export class ScoresController {
+   async getClassement() {
+     return await this.scoresService.getClassement();
+   }
++
++  @Post()
++  @UseGuards(AuthenticatedGuard)
++  @UseGuards(JwtTwoFactorGuard)
++  async addScore(@Req() req: Request, @Body() body: ScoresDto) {
++    return await this.scoresService.addScore(body);
++  }
+ }
+diff --git a/back/src/game/Scores/scores.service.ts b/back/src/game/Scores/scores.service.ts
+index dac3708..8c31e23 100644
+--- a/back/src/game/Scores/scores.service.ts
++++ b/back/src/game/Scores/scores.service.ts
+@@ -32,22 +32,16 @@ export class ScoresService {
+     return total;
+   }
+ 
+-  async addScore(scores: ScoresDto, isCustom: boolean) {
++  async addScore(scores: ScoresDto) {
+     const idWinner = scores.idWinner;
+     const idLoser = scores.idLoser;
+-    if (isCustom)
+-      //game officielle
+-      scores.PointsWon = scores.PointsLost = await this.addPoint(
+-        scores.idWinner,
+-        scores.idLoser,
+-      );
+-    else scores.PointsWon = scores.PointsLost = 0;
+     const scoreDb: ScoresDbDto = {
+       ...scores,
+       winner: await this.userRepo.findOneBy({ account_id: idWinner }),
+       loser: await this.userRepo.findOneBy({ account_id: idLoser }),
+     };
+     const newScore = this.scoresRepo.create(scoreDb);
++    await this.addPoint(scores.idWinner, scores.ScorePlayer1);
+     const res = this.scoresRepo.save(newScore);
+     await this.userRepo.save({
+       ...scoreDb.winner,
+@@ -75,31 +69,12 @@ export class ScoresService {
+     return await this.userRepo.find({ order: { points: 'DESC' } });
+   }
+ 
+-  calcPoints(winner: number, loser: number) {
+-    const diff = winner - loser;
+-    const points =
+-      diff > 0 ? 20 - Math.round(diff / 30) : 20 + Math.round((diff * -1) / 30);
+-    if (points < 0) return 0;
+-    return points;
+-  }
+-
+-  async addPoint(winnerId: string, loserId: string) {
+-    let account_id = winnerId;
+-    const winner = await this.userRepo.findOneBy({ account_id });
+-    account_id = loserId;
+-    const loser = await this.userRepo.findOneBy({ account_id });
+-    const points = this.calcPoints(winner.points, loser.points);
+-
+-    let newPoints: number = +winner.points + +points;
+-    await this.userRepo.save({
+-      ...winner, // existing fields
+-      points: newPoints,
+-    });
+-    newPoints = +loser.points - +points;
+-    await this.userRepo.save({
+-      ...loser, // existing fields
++  async addPoint(account_id: string, points: number) {
++    const user = await this.userRepo.findOneBy({ account_id });
++    const newPoints: number = +user.points + +points;
++    return await this.userRepo.save({
++      ...user, // existing fields
+       points: newPoints,
+     });
+-    return points;
+   }
+ }
+diff --git a/back/src/game/Scores/utils/types.ts b/back/src/game/Scores/utils/types.ts
+index d363cba..c57dced 100644
+--- a/back/src/game/Scores/utils/types.ts
++++ b/back/src/game/Scores/utils/types.ts
+@@ -7,8 +7,8 @@ export type ScoresDto = {
+   UsernameLoser?: string;
+   ScorePlayer1: number;
+   ScorePlayer2: number;
+-  PointsWon?: number;
+-  PointsLost?: number;
++  PointsWon: number;
++  PointsLost: number;
+ };
+ 
+ export type StatsDto = {
+diff --git a/back/src/game/ball.utils.ts b/back/src/game/ball.utils.ts
+index adb81a9..3051b39 100644
+--- a/back/src/game/ball.utils.ts
++++ b/back/src/game/ball.utils.ts
+@@ -24,22 +24,20 @@ export function resetBall(side : number) {
+ }
+ 
+ 
+-export function handleBallMove(ball: any, powerup: any, settings : any) {
++export function handleBallMove(ball: any, powerup: any) {
+ 	const dirX = Math.sin(ball.angle * (Math.PI / 180));
+ 	const dirY = Math.cos(ball.angle * (Math.PI / 180));
+-    let ballAccel : number
+-    if (settings)
+-        ballAccel = settings.ball_speed / 100 - 1;
+-    else ballAccel = 0
++
++	let ballAccel = 0;
+ 	if (powerup.status === 2) {
+ 		if (powerup.value === 1 && ball.angle < 180 && powerup.target === 0)
+-			ballAccel += 0.5;
++			ballAccel = 0.5;
+ 		else if (powerup.value === 1 && ball.angle > 180 && powerup.target === 1)
+-			ballAccel += 0.5;
++			ballAccel = 0.5;
+ 		else if (powerup.value === 3 && ball.angle < 180 && powerup.target === 1)
+-			ballAccel += -0.5;
++			ballAccel = -0.5;
+ 		else if (powerup.value === 3 && ball.angle > 180 && powerup.target === 0)
+-			ballAccel += -0.5;
++			ballAccel = -0.5;
+ 	}
+ 	ball.pos.x += dirX * (ball.speed + ballAccel);
+ 	ball.pos.y += dirY * (ball.speed + ballAccel);
+diff --git a/back/src/game/game.ts b/back/src/game/game.ts
+index 4318bb2..8ffa6da 100644
+--- a/back/src/game/game.ts
++++ b/back/src/game/game.ts
+@@ -21,7 +21,7 @@ export function launchGame(
+   allGames: matchesDto[],
+   scoreService: ScoresService
+ ) {
+-  const state = createGameState(game.settings);
++  const state = createGameState();
+   startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames, scoreService);
+ }
+ 
+@@ -71,12 +71,12 @@ function gameLoop(state: any, curGames: any): number {
+   }
+   const ball = state.ball;
+ 
+-  handleBallMove(ball, state.powerup, state.settings);
++  handleBallMove(ball, state.powerup);
+ 
+   state.leftPlayer.pos.y = curGames.playerOneY;
+   state.rightPlayer.pos.y = curGames.playerTwoY;
+   handleWallBounce(ball, state.leftPlayer, state.rightPlayer, state.powerup);
+-  handlePowerUp(ball, state.powerup, state.settings);
++  handlePowerUp(ball, state.powerup);
+   state.ball = checkGoal(ball, state);
+   return checkGameEnd(state);
+ }
+diff --git a/back/src/game/game.utils.ts b/back/src/game/game.utils.ts
+index 6670edf..3052b24 100644
+--- a/back/src/game/game.utils.ts
++++ b/back/src/game/game.utils.ts
+@@ -45,11 +45,8 @@ export function checkGoal(ball: any, state: any) {
+ }
+ 
+ export function checkGameEnd(state: any) {
+-  let lim: number;
+-  if (state.settings) lim = state.settings.point_limit;
+-  else lim = SCORE_LIMIT;
+-  if (state.score.playerOne >= lim) return -1;
+-  if (state.score.playerTwo >= lim) return -2;
++  if (state.score.playerOne >= SCORE_LIMIT) return -1;
++  if (state.score.playerTwo >= SCORE_LIMIT) return -2;
+   return 1;
+ }
+ 
+@@ -98,6 +95,8 @@ export function handleEndGame(
+       UsernameLoser: playerTwo.accountUsername,
+       ScorePlayer1: state.score.playerTwo,
+       ScorePlayer2: state.score.playerOne,
++      PointsWon: 30, //replace by the good number of points
++      PointsLost: 30,
+     };
+   } else if (gameStatus === -2) {
+     socket
+@@ -117,13 +116,17 @@ export function handleEndGame(
+       UsernameLoser: playerOne.accountUsername,
+       ScorePlayer1: state.score.playerOne,
+       ScorePlayer2: state.score.playerTwo,
++      PointsWon: 30, //replace by the good number of points
++      PointsLost: 30,
+     };
+   }
+-  const isCustom = game.settings === null ? true : false;
+-  scoreService.addScore(score, isCustom);
++  console.log('score', score);
++  scoreService.addScore(score);
++
++  //call addscore
+ }
+ 
+-export function createGameState(settings: any) {
++export function createGameState() {
+   return {
+     powerup: createPowerup(),
+     leftPlayer: {
+@@ -148,6 +151,5 @@ export function createGameState(settings: any) {
+       playerTwo: 0,
+     },
+     frameDelay: 0,
+-    settings: settings,
+   };
+ }
+diff --git a/back/src/game/powerUp.ts b/back/src/game/powerUp.ts
+index 9b8bd18..50550d2 100644
+--- a/back/src/game/powerUp.ts
++++ b/back/src/game/powerUp.ts
+@@ -88,11 +88,9 @@ function handlePickUp(ball: any, powerup : any) {
+         }
+ }
+ 
+-export function handlePowerUp(ball: any, powerup: any, settings: any) {
++export function handlePowerUp(ball: any, powerup: any) {
+     
+-		if (settings && settings.powerup === true) {
+-	    handleDelay(powerup);
+-  	  if (powerup.status === 1)
+-    	    handlePickUp(ball, powerup)
+-		}
++    handleDelay(powerup);
++    if (powerup.status === 1)
++        handlePickUp(ball, powerup)
+ }
+\ No newline at end of file
+diff --git a/back/src/matchmaking/matchmaking.controller.ts b/back/src/matchmaking/matchmaking.controller.ts
+index 6ffaf15..3825bf8 100644
+--- a/back/src/matchmaking/matchmaking.controller.ts
++++ b/back/src/matchmaking/matchmaking.controller.ts
+@@ -10,7 +10,7 @@ import {
+ } from '@nestjs/common';
+ import { AuthenticatedGuard, JwtTwoFactorGuard } from 'src/account/auth/guards';
+ import { matchesDto } from './matches.dto';
+-import { matchmakingDto, joinMatchmakingDto, customGameDto } from './matchmaking.dto';
++import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
+ import { MatchmakingService } from './matchmaking.service';
+ 
+ @Controller('matchmaking')
+@@ -47,15 +47,6 @@ export class MatchmakingController {
+     return this.matchmakingService.quitMatchmaking(userId);
+   }
+ 
+-  @UseGuards(AuthenticatedGuard)
+-  @UseGuards(JwtTwoFactorGuard)
+-	@Post('/customGame')
+-  async launchCustomGame(
+-    @Body() body: customGameDto,
+-  ) {
+-    return this.matchmakingService.launchCustomGame(body);
+-  }
+-
+   @UseGuards(AuthenticatedGuard)
+   @UseGuards(JwtTwoFactorGuard)
+   @Post('/inviteGame/:invitedUserId')
+diff --git a/back/src/matchmaking/matchmaking.dto.ts b/back/src/matchmaking/matchmaking.dto.ts
+index 864cbd7..6f742b8 100644
+--- a/back/src/matchmaking/matchmaking.dto.ts
++++ b/back/src/matchmaking/matchmaking.dto.ts
+@@ -10,19 +10,7 @@ export class matchmakingDto {
+   pongReply: number;
+ }
+ 
+-export class customMatchDto {
+-	playerOne: string;
+-	playerTwo: string;
+-	gameId: string;
+-}
+-
+ export class quitMatchmakingDto {
+   id: string;
+   socket: string;
+ }
+-
+-export class customGameDto {
+-	playerOne: matchmakingDto;
+-	playerTwo: matchmakingDto;
+-	settings: any;
+-}
+diff --git a/back/src/matchmaking/matchmaking.service.ts b/back/src/matchmaking/matchmaking.service.ts
+index 6712a99..10a1167 100644
+--- a/back/src/matchmaking/matchmaking.service.ts
++++ b/back/src/matchmaking/matchmaking.service.ts
+@@ -1,11 +1,9 @@
+ import { Injectable } from '@nestjs/common';
+-import { matchmakingDto, joinMatchmakingDto, customGameDto, customMatchDto } from './matchmaking.dto';
++import { matchmakingDto, joinMatchmakingDto } from './matchmaking.dto';
+ import { SocketService } from '../socket/socket.service';
+ import { matchesDto } from './matches.dto';
+-import { addUserMatchmakingList, gameStart, generateNewGame } from './matchmaking.utils';
++import { addUserMatchmakingList, gameStart } from './matchmaking.utils';
+ import { ScoresService } from 'src/game/Scores/scores.service';
+-import { v4 as uuid} from 'uuid';
+-import { launchGame } from 'src/game/game';
+ 
+ @Injectable()
+ export class MatchmakingService {
+@@ -15,7 +13,6 @@ export class MatchmakingService {
+   ) {}
+ 
+   private matchmakingList: matchmakingDto[] = [];
+-  private customMatchesList: customMatchDto[] = [];
+   private currentMatches: matchesDto[] = [];
+   getMatchmakingList(): matchmakingDto[] {
+     return this.matchmakingList;
+@@ -38,24 +35,11 @@ export class MatchmakingService {
+     }
+   }
+ 
+-	handleQuit(sender: string) {
+-    for (const elem of this.currentMatches) {
+-      if (elem.playerOne.socket === sender) {
+-        elem.playerOne.pongReply = 100000;
+-        // return; remettre quand on pourra inviter a faire une custom
+-      }
+-      if (elem.playerTwo.socket === sender) {
+-        elem.playerTwo.pongReply = 100000;
+-        // return;
+-      }
+-    }
+-	}
+-
+   handlePong(sender: string) {
+     for (const elem of this.currentMatches) {
+       if (elem.playerOne.socket === sender) {
+         elem.playerOne.pongReply = 0;
+-        // return; remettre quand on pourra inviter a faire une custom
++        // return;
+       }
+       if (elem.playerTwo.socket === sender) {
+         elem.playerTwo.pongReply = 0;
+@@ -84,11 +68,8 @@ export class MatchmakingService {
+   }
+ 
+   quitMatchmaking(userId: string): matchmakingDto[] {
+-		console.log(',usid', userId);
+-		console.log('li', this.matchmakingList);
+-
+     const newMatchmakingList = this.matchmakingList.filter((user) => {
+-      return user.login != userId;
++      return user.socket != userId;
+     });
+ 
+     this.matchmakingList = newMatchmakingList;
+@@ -96,26 +77,6 @@ export class MatchmakingService {
+     return newMatchmakingList;
+   }
+ 
+-	async launchCustomGame(payload: customGameDto) {
+-
+-    const gameId = uuid()
+-
+-    const playerOne = { 
+-			pongReply: 0,
+-			...payload.playerOne
+-		}
+-    const playerTwo = { 
+-			pongReply: 0,
+-			...payload.playerTwo
+-		}
+-		this.socketService.socket.to(playerOne.socket).emit(`customFound:`, gameId);
+-    this.socketService.socket.to(playerTwo.socket).emit(`customFound:`, gameId);
+-    const settings = payload.settings;
+-    const newGame = generateNewGame(gameId, playerOne, playerTwo, this.currentMatches, settings)
+-	  launchGame(playerOne, playerTwo, this.socketService.socket, newGame, this.currentMatches, this.scoreService)
+-
+-	}
+-
+   async inviteGame(
+     userId: string,
+     username: string,
+@@ -138,7 +99,7 @@ export class MatchmakingService {
+       senderId: userId,
+       senderUsername: username,
+     });
+-		this.customMatchesList.push({playerOne: sendInvitationUserId, playerTwo: userId, gameId: uuid()})
++
+     return 'ok';
+   }
+ 
+diff --git a/back/src/matchmaking/matchmaking.utils.ts b/back/src/matchmaking/matchmaking.utils.ts
+index 3f73e88..8ce6b11 100644
+--- a/back/src/matchmaking/matchmaking.utils.ts
++++ b/back/src/matchmaking/matchmaking.utils.ts
+@@ -27,19 +27,18 @@ export function gameStart(matchmakingList : matchmakingDto[], socketService : an
+     const playerTwo = matchmakingList[1]
+     socketService.socket.to(playerOne.socket).emit(`matchFound:`, gameId);
+     socketService.socket.to(playerTwo.socket).emit(`matchFound:`, gameId);
+-    const newGame = generateNewGame(gameId, playerOne, playerTwo, currentMatches, null)
+-		launchGame(playerOne, playerTwo, socketService.socket, newGame, currentMatches, scoreService)
++    const newGame = generateNewGame(gameId, playerOne, playerTwo, currentMatches)
++	launchGame(playerOne, playerTwo, socketService.socket, newGame, currentMatches, scoreService)
+     return [playerOne.socket, playerTwo.socket]
+ }
+ 
+-export function generateNewGame (gameId :string, playerOne : matchmakingDto, playerTwo : matchmakingDto, currentMatches : matchesDto[], settings: any) {
++function generateNewGame (gameId :string, playerOne : matchmakingDto, playerTwo : matchmakingDto, currentMatches : matchesDto[]) {
+ 	const newGame = {
+ 		gameId : gameId,
+ 		playerOne : playerOne,
+ 		playerTwo : playerTwo,
+ 		playerOneY : BACK_WIN_HEIGHT / 2,
+-		playerTwoY : BACK_WIN_HEIGHT / 2,
+-		settings: settings
++		playerTwoY : BACK_WIN_HEIGHT / 2
+ 	}
+ 	currentMatches.push(newGame)
+ 	return newGame
+diff --git a/back/src/socket.gateway.ts b/back/src/socket.gateway.ts
+index be7e3b4..79520b7 100644
+--- a/back/src/socket.gateway.ts
++++ b/back/src/socket.gateway.ts
+@@ -48,10 +48,4 @@ export class SocketGateway
+     @ConnectedSocket() client: Socket): any {
+       this.matchmakingService.handlePong(client.id)
+     }
+-	
+-	@SubscribeMessage('leave')
+-	handleQuit(
+-	@ConnectedSocket() client: Socket): any {
+-		this.matchmakingService.handleQuit(client.id)
+-	}
+ }
+diff --git a/game/src/App.tsx b/game/src/App.tsx
+index 7791cf3..23611a6 100644
+--- a/game/src/App.tsx
++++ b/game/src/App.tsx
+@@ -1,6 +1,6 @@
+ import { useEffect, useState } from 'react';
+ import './App.css';
+-import { Routes, Route, useNavigate } from 'react-router-dom';
++import { BrowserRouter, Routes, Route } from 'react-router-dom';
+ import Accueil from './components/Accueil';
+ import Chat from './components/Chat/Chat';
+ import Page404 from './components/Page404';
+@@ -18,7 +18,6 @@ import { TwoAuthAutenticatePage } from './components/TwoFactorAuth/Authenticate'
+ import Forrbidden from './components/ErrorPage/Forbidden';
+ import PublicInfo from './components/Account/PublicAccount';
+ import { ScoresPage } from './components/Scores/ScorePage';
+-import CustomMenu from './components/Custom_game_menu/CustomMenu';
+ import InviteGameModal from './components/utils/InviteGameModal';
+ import axios from 'axios';
+ import { message } from 'antd';
+@@ -29,28 +28,26 @@ const BACK_URL = 'http://localhost:4000';
+ const socket = io(BACK_URL).connect();
+ 
+ function App() {
+-  const [currentUser, setCurrentUser] = useState({ ...UserDto });
++  const [currentUser, setCurrentUser] = useState({...UserDto});
+   const [isInviteGameModalOpen, setIsInviteGameModalOpen] = useState(false);
+   const [invitor, setInvitor] = useState<string>('');
+ 
+-  const nav = useNavigate();
+-
+   useEffect(() => {
+-    axios
+-      .get(`${BACK_URL}/account`, {
+-        withCredentials: true,
+-      })
+-      .then((res) => {
+-        setCurrentUser(res.data);
+-      })
+-      .catch(async (error) => {
+-        if (error.response.status === 401 || error.response.status === 403) {
+-          message.error("Vous n'etes pas connecté");
+-        } else {
+-          return <InternalError />;
+-        }
+-      });
+-  }, []);
++    	axios.get(`${BACK_URL}/account`, {
++          withCredentials: true,
++       	})
++		.then(res=>{
++        	setCurrentUser(res.data)
++	    })
++      	.catch (async error => {
++			if (error.response.status === 401 || error.response.status === 403){
++				message.error("Vous n'etes pas connecté");
++			}
++			else{
++				return(<InternalError/>)
++			}
++		});
++  	}, []);
+ 
+   useEffect(() => {
+     if (currentUser) {
+@@ -72,8 +69,7 @@ function App() {
+ 
+       socket.on(acceptInviteGame, (accept: any) => {
+         message.success(`${accept.senderUsername} accept to play with you`);
+-
+-        nav('/custom_game');
++        window.location.href = '/menu';
+       });
+ 
+       socket.on(refuseInviteGame, (refuse: any) => {
+@@ -91,48 +87,39 @@ function App() {
+ 
+   return (
+     <div id="wholepage">
+-      <InviteGameModal
+-        isInviteGameModalOpen={isInviteGameModalOpen}
+-        setIsInviteGameModalOpen={setIsInviteGameModalOpen}
+-        currentUser={currentUser}
+-        invitor={invitor}
+-      />
+-      <Routes>
+-        <Route path="/" element={<Accueil currentUser={currentUser} />} />
+-        <Route path="/account" element={<AccountPage user={currentUser} />} />
+-        <Route path="/logout" element={<Logout />} />
+-        <Route
+-          path="/chat"
+-          element={<Chat socket={socket} currentUser={currentUser} />}
+-        />
+-
+-        <Route
+-          path="/menu"
+-          element={<GameMenu currentUser={currentUser} socket={socket} />}
+-        />
+-        <Route
+-          path="/custom_game"
+-          element={<CustomMenu currentUser={currentUser} socket={socket} />}
+-        />
+-        <Route
+-          path="/singleGame/:id"
+-          element={<SingleGame socket={socket} />}
+-        />
+-        <Route path="/error403" element={<Disconnected />} />
+-        <Route path="/error500" element={<InternalError />} />
+-        <Route path="/wrongGameId" element={<WrongGameId />} />
+-        <Route path="/login" element={<LoginSuccess />} />
+-        <Route path="/emailverify" element={<EmailConfirm />} />
+-        <Route path="/2fa" element={<TwoAuthAutenticatePage />} />
+-        <Route
+-          path="/scores/:id"
+-          element={<ScoresPage currentUser={currentUser} />}
++      <BrowserRouter>
++        <InviteGameModal
++          isInviteGameModalOpen={isInviteGameModalOpen}
++          setIsInviteGameModalOpen={setIsInviteGameModalOpen}
++          currentUser={currentUser}
++          invitor={invitor}
+         />
+-        <Route path="/playerinfo" element={<PublicInfo />} />
+-        <Route path="/forbidden" element={<Forrbidden />} />
+-        {/* If no route match, then return 404 page */}
+-        <Route path="*" element={<Page404 />} />
+-      </Routes>
++        <Routes>
++          <Route path="/" element={<Accueil currentUser={currentUser}/>} />
++          <Route path="/account" element={<AccountPage user={currentUser} />} />
++          <Route path="/logout" element={<Logout />} />
++          <Route
++            path="/chat"
++            element={<Chat socket={socket} currentUser={currentUser} />}
++          />
++          <Route path="/menu" element={<GameMenu user={currentUser} socket={socket} />} />
++          <Route
++            path="/singleGame/:id"
++            element={<SingleGame socket={socket} />}
++          />
++          <Route path="/error403" element={<Disconnected />} />
++          <Route path="/error500" element={<InternalError />} />
++          <Route path="/wrongGameId" element={<WrongGameId/>} />
++          <Route path="/login" element={<LoginSuccess />} />
++          <Route path="/emailverify" element={<EmailConfirm />} />
++          <Route path="/2fa" element={<TwoAuthAutenticatePage />} />
++          <Route path="/scores/:id" element={<ScoresPage currentUser={currentUser} />} />
++          <Route path="/playerinfo" element={<PublicInfo/>} />
++          <Route path="/forbidden" element={<Forrbidden />} />
++          {/* If no route match, then return 404 page */}
++          <Route path="*" element={<Page404 />} />
++        </Routes>
++      </BrowserRouter>
+       {/* <Canvas /> */}
+     </div>
+   );
+diff --git a/game/src/components/Accueil.tsx b/game/src/components/Accueil.tsx
+index 99bc5d3..df1b8f4 100644
+--- a/game/src/components/Accueil.tsx
++++ b/game/src/components/Accueil.tsx
+@@ -1,9 +1,9 @@
+-import './Accueil.css';
+-import io from 'socket.io-client';
+-import LoginPopup from './login/Login';
+-import ButtonTemplate from './ButtonTemplate';
+-import { useState } from 'react';
+-import { Link, useNavigate } from 'react-router-dom';
++import './Accueil.css'
++import io from "socket.io-client";
++import LoginPopup from './login/Login'
++import ButtonTemplate from './ButtonTemplate'
++import { useState } from 'react'
++import { useNavigate } from 'react-router-dom';
+ import { Button, Form, Input, Modal } from 'antd';
+ import { BACK_URL } from '../global';
+ import axios from 'axios';
+@@ -19,160 +19,122 @@ const socket = io('http://localhost:3000');
+ socket.on('init', handleInit);
+ 
+ function handleInit(msg: string) {
+-  console.log(msg);
++	console.log(msg);
+ }
+ function Accueil(props: any) {
+-  const [isLoginActive, setIsLogin] = useState(false);
+-  const [ok, setOk] = useState(false);
+-  useEffect(() => {
+-    console.log('useefect');
+-    axios
+-      .get(`${BACK_URL}/auth/status`, { withCredentials: true })
+-      .then((res) => {
+-        axios
+-          .get(`${BACK_URL}/2fa/status`, {
+-            withCredentials: true,
+-          })
+-          .then((res) => {
+-            setOk(true);
+-          })
+-          .catch((error) => {
+-            handleErrors(error);
+-          });
+-        setIsLogin(true);
+-        setOk(true);
+-      })
+-      .catch((error) => {
+-        if (error.response.status === 403) {
+-          setIsLogin(false);
+-          setOk(true);
+-        } else handleErrors(error);
+-      });
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, []);
++	const [isLoginActive, setIsLogin] = useState(false);
++	const [ok, setOk] = useState(false);
++	useEffect(() => {
++		console.log("useefect");
++		axios.get(`${BACK_URL}/auth/status`,  {withCredentials:true })
++			.then((res) => {
++				axios.get(`${BACK_URL}/2fa/status`, {
++					withCredentials:true ,
++				})
++				.then((res) => {
++					setOk(true);
++				})
++				.catch(error => {
++					handleErrors(error)
++				})
++				setIsLogin(true);
++				setOk(true);
++			})
++			.catch((error) => {
++				if (error.response.status === 403){
++					setIsLogin(false);
++					setOk(true);
++				}
++				else
++					handleErrors(error);
++		})	
++	// eslint-disable-next-line react-hooks/exhaustive-deps
++	}, []);
++  
++	return (
++		ok ?
++		<div className='AccueilPage'>
++			<div>
++				<Background />
++			</div>
++				<div>
++					<Welcome />
++					<LoginPlayButton isLoginActive={isLoginActive} />
++					<NavigationBarre isLoginActive={isLoginActive} user={props.currentUser}/>
+ 
+-  return ok ? (
+-    <div className="AccueilPage">
+-      <div>
+-        <Background />
+-      </div>
+-      <div>
+-        <Welcome />
+-        <LoginPlayButton isLoginActive={isLoginActive} />
+-        <NavigationBarre
+-          isLoginActive={isLoginActive}
+-          user={props.currentUser}
+-        />
+-      </div>
+-    </div>
+-  ) : null;
++				</div>
++		</div>
++		: null
++	)
+ }
+ 
+-export function NavigationBarre({
+-  user,
+-  isLoginActive = true,
+-}: {
+-  user: typeof UserDto;
+-  isLoginActive: any;
+-}) {
+-  const nav = useNavigate();
+-  if (!user) return null;
+-  return (
+-    <div>
+-      {isLoginActive ? (
+-        <ul className="nav-barre">
+-          <HomeOutlined
+-            className="home-button"
+-            shape="circle"
+-            onClick={() => nav('/')}
+-          />
+-          <div className="nav-barre-user-info">
+-            <Avatar
+-              style={{
+-                bottom: '0.8vw',
+-                width: 'max(4vw, 20px)',
+-                height: 'max(4vw, 20px)',
+-                textAlign: 'center',
+-              }}
+-              className="nav-bar-avatar"
+-              src={BACK_URL + '/account/avatar/' + user.avatar}
+-              alt="avatar"
+-            />
+-            <i style={{ position: 'relative', padding: 9, bottom: '0.8vw' }}>
+-              {user.accountUsername}
+-            </i>
+-          </div>
+-          <Link className="onglet-nav" to="/account">
+-            Profil
+-          </Link>
+-          <Link className="onglet-nav" to="/chat">
+-            Chat
+-          </Link>
+-          <Link className="onglet-nav" to={`/scores/${user.account_id}`}>
+-            Scores
+-          </Link>
+-          <Link className="onglet-nav" to="/logout">
+-            Logout
+-          </Link>
+-        </ul>
+-      ) : null}
+-    </div>
+-  );
++
++
++
++export function NavigationBarre({user, isLoginActive = true}: {user: typeof UserDto, isLoginActive: any}) {
++	const nav = useNavigate();
++
++	if (!user)
++		return (
++			null
++		)
++
++	return(
++	<div>
++	{isLoginActive ?
++	<ul className='nav-barre'>
++		<HomeOutlined className='home-button' shape="circle" onClick={() => nav('/')} />
++		<div className='nav-barre-user-info'>
++		<Avatar style={{ bottom:'0.8vw', width:'max(4vw, 20px)', height:'max(4vw, 20px)' ,textAlign:'center',}} className='nav-bar-avatar' src={ BACK_URL + '/account/avatar/' + user.avatar } alt='avatar'/>
++		<i style={{position:'relative', padding:9,  bottom:'0.8vw'}}>{user.accountUsername }</i>
++		</div>
++  		<li className='onglet-nav'><a href="/account"> Profil </a></li>
++  		<li className='onglet-nav'><a href="/chat"> Chat </a></li>
++		<li className='onglet-nav'><a href={`/scores/${user.account_id}`}> Scores </a></li>
++  		<li className='onglet-nav'><a href='/logout'> Logout </a></li>
++		
++	</ul>
++	: null}
++	</div>
++	)
+ }
+ function LoginPlayButton(props: any) {
+-  const nav = useNavigate();
+-  return (
+-    <div className="login-play-button">
+-      {!props.isLoginActive ? (
+-        <h2 className="login-play-message">
+-          You have to login to play
+-          <br />
+-        </h2>
+-      ) : (
+-        <h2 className="login-play-message">
+-          Click here to access play
+-          <br />
+-        </h2>
+-      )}
+-      {!props.isLoginActive ? (
+-        <ButtonTemplate
+-          text="Login"
+-          onClick={() =>
+-            (window.location.href = 'http://localhost:4000/auth/login')
+-          }
+-          buttonClass={'login-button'}
+-        />
+-      ) : (
+-        <div>
+-          <ButtonTemplate
+-            text="Matchmaking"
+-            onClick={() => nav('/menu')}
+-            buttonClass={'play-button'}
+-          />
+-          <ButtonTemplate
+-            text="Custom game"
+-            onClick={() => nav('/custom_game')}
+-            buttonClass={'play-button'}
+-          />
+-        </div>
+-      )}
+-    </div>
+-  );
++
++	const nav = useNavigate();
++	return (
++		<div className='login-play-button'>
++			{!props.isLoginActive ? 
++			<h2 className='login-play-message'>
++				You have to login to play<br />
++			</h2>
++			: 
++			<h2 className='login-play-message'>
++			Click here to access play<br />
++			</h2>
++			}
++			{!props.isLoginActive ? 
++
++				<ButtonTemplate text="Login" onClick={() => window.location.href = 'http://localhost:4000/auth/login'} buttonClass={'login-button'} />
++			:
++			<ButtonTemplate  text="Enter game" onClick={() => nav("/menu")} buttonClass={'play-button'} />}
++		</div>
++	)
+ }
+ 
+ function Background() {
+-  return <div className="backgroundImg"></div>;
++	return (
++		<div className='backgroundImg'></div>
++	)
+ }
+ 
+ function Welcome() {
+-  return (
+-    <h1 className="welcome" id="welcome">
+-      Welcome to our Pong
+-    </h1>
+-  );
++	return (
++		<h1 className='welcome' id='welcome'>Welcome to our Pong</h1>
++	)
+ }
+ 
+ export default Accueil;
+ function useQuery() {
+-  throw new Error('Function not implemented.');
++	throw new Error('Function not implemented.');
+ }
++
+diff --git a/game/src/components/Custom_game_menu/CustomMenu.css b/game/src/components/Custom_game_menu/CustomMenu.css
+deleted file mode 100644
+index 84ab397..0000000
+--- a/game/src/components/Custom_game_menu/CustomMenu.css
++++ /dev/null
+@@ -1,37 +0,0 @@
+-.preview-box {
+-    color: rgb(241, 35, 241);
+-    margin-left: 15vw;
+-    margin-right: auto;
+-    font-size: 16px;
+-}
+-
+-@import '../../colors.css';
+-
+-.nav-barre {
+-	font-size: 3vw;
+-  list-style-type: none;
+-  margin: 0;
+-  padding: 0;
+-	width: 100vw;
+-	background-color: var(--mid-backgroud);
+-	text-align: center;
+-}
+-
+-.nav-barre .onglet-nav {
+-	display: inline;
+-    text-align: center;
+-    padding: 7vw;
+-    text-decoration: none;
+-	
+-}
+-.nav-barre .onglet-nav a{
+-	margin-left: auto;
+-    margin-right: auto;
+-	font-size: 0.7em;
+-	color: var(--text-1);
+-	line-height: 3;
+-}
+-
+-.nav-barre a:hover {
+-	color: var(--background);
+-}
+\ No newline at end of file
+diff --git a/game/src/components/Custom_game_menu/CustomMenu.tsx b/game/src/components/Custom_game_menu/CustomMenu.tsx
+deleted file mode 100644
+index 58997f9..0000000
+--- a/game/src/components/Custom_game_menu/CustomMenu.tsx
++++ /dev/null
+@@ -1,156 +0,0 @@
+-import { useState, useEffect } from 'react';
+-import { Button, Space, version } from 'antd';
+-import { useNavigate } from 'react-router-dom';
+-import axios from 'axios';
+-import { BACK_URL } from '../constants';
+-import handleErrors from '../RequestErrors/handleErrors';
+-import Customization from '../customization/Customization';
+-import './CustomMenu.css';
+-import GamePreview from '../game_menu/GamePreview';
+-import { NavigationBarre } from '../Accueil';
+-import GameSettings from './GameSettings';
+-
+-const CustomMenu = (props: any) => {
+-  const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
+-  const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
+-  const [ballColor, setBallColor] = useState('#ffffff');
+-  const [gameBackground, setGameBackground] = useState('#000000');
+-  const [secondPlayer, setSecondPlayer] = useState('');
+-  const [settings, setSettings] = useState({
+-    powerup: false,
+-    point_limit: 20,
+-    ball_speed: 100,
+-  });
+-  const socket = props.socket;
+-  const currentUser = props.currentUser;
+-  // const [currentUser, setCurrentUser] = useState<any>(null);
+-  const navigate = useNavigate();
+-  const [isLoginActive, setIsLogin] = useState(false);
+-  const [ok, setOk] = useState(false);
+-  const [user, setUser] = useState({ account_id: '' });
+-
+-  useEffect(() => {
+-    console.log('useefect');
+-    axios
+-      .get(`${BACK_URL}/auth/status`, { withCredentials: true })
+-      .then((res) => {
+-        console.log('ress acceuirl', res);
+-        setOk(true);
+-        axios
+-          .get(`${BACK_URL}/2fa/status`, {
+-            withCredentials: true,
+-          })
+-          .then((res) => {
+-            setUser(res.data);
+-          })
+-          .catch((error) => {
+-            handleErrors(error);
+-          });
+-        setIsLogin(true);
+-      })
+-      .catch((error) => {
+-        if (error.response.status === 403) setIsLogin(false);
+-        else handleErrors(error);
+-        setOk(true);
+-      });
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, []);
+-
+-  const customGameValues: any = {
+-    myColor: ownPaddleColor,
+-    opponentColor: opponentPaddleColor,
+-    ballColor: ballColor,
+-    background: gameBackground,
+-  };
+-
+-  // useEffect(() => {
+-  //   const initData = async () => {
+-  //     try {
+-  //       const res = await axios.get(`${BACK_URL}/account`, {
+-  //         withCredentials: true,
+-  //       });
+-  //       setCurrentUser(res.data);
+-  //     } catch {
+-  //       console.log('Must be connect to use chat!');
+-  //       navigate('/');
+-  //     }
+-  //   };
+-  //   initData();
+-  // }, [navigate]);
+-
+-  async function startCustom(
+-    currentUser: any,
+-    secondPlayer: any,
+-    settings: any
+-  ) {
+-    const playerOne = {
+-      login: currentUser.account_id,
+-      accountUsername: currentUser.accountUsername,
+-      socket: socket.id,
+-    };
+-    const playerTwo = {
+-      login: secondPlayer.account_id,
+-      accountUsername: secondPlayer.accountUsername,
+-      socket: socket.id,
+-    };
+-    try {
+-      await axios.post(
+-        `${BACK_URL}/matchmaking/customGame`,
+-        { playerOne: playerOne, playerTwo: playerTwo, settings: settings },
+-        { withCredentials: true }
+-      );
+-    } catch (e) {
+-      handleErrors(e);
+-    }
+-  }
+-
+-  function startGame() {
+-    if (secondPlayer != '') {
+-      startCustom(currentUser, secondPlayer, settings);
+-    } else setSecondPlayer(currentUser);
+-    // else
+-    // 	openFriendList("Second")
+-  }
+-
+-  useEffect(() => {
+-    socket.on(`customFound:`, (gameId: string) => {
+-      navigate(`/singleGame/${gameId}`, { state: customGameValues });
+-      return () => socket.off(`customFound:`);
+-    });
+-  });
+-
+-  let launchGame = secondPlayer != '' ? 'Start Game' : 'Invite player';
+-  return (
+-    <div className="global-div">
+-      <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
+-      <Space>
+-        <Button onClick={startGame} type="primary">
+-          {launchGame}
+-        </Button>
+-      </Space>
+-
+-      <Customization
+-        ownPaddleColor={ownPaddleColor}
+-        setOwnPaddleColor={setOwnPaddleColor}
+-        opponentPaddleColor={opponentPaddleColor}
+-        setOpponentPaddleColor={setOpponentPaddleColor}
+-        ballColor={ballColor}
+-        setBallColor={setBallColor}
+-        gameBackground={gameBackground}
+-        setGameBackground={setGameBackground}
+-      />
+-      <GameSettings settings={settings} setSettings={setSettings} />
+-      <div className="preview-box">
+-        <div>Live game preview</div>
+-        <GamePreview
+-          ownColor={ownPaddleColor}
+-          opponentColor={opponentPaddleColor}
+-          ballColor={ballColor}
+-          backgroundColor={gameBackground}
+-        />
+-      </div>
+-    </div>
+-  );
+-};
+-
+-export default CustomMenu;
+diff --git a/game/src/components/Custom_game_menu/GameSettings.tsx b/game/src/components/Custom_game_menu/GameSettings.tsx
+deleted file mode 100644
+index f664a98..0000000
+--- a/game/src/components/Custom_game_menu/GameSettings.tsx
++++ /dev/null
+@@ -1,70 +0,0 @@
+-import { Row, Col, Select } from "antd";
+-import { useState } from "react";
+-import './gamesettings.css'
+-const { Option } = Select;
+-
+-const GameSettings = (props : any) => {
+-	const [set, setSet] = useState(false);
+-
+-	function handleLimit(value : string) {
+-		const newObj = props.settings;
+-		newObj.point_limit = value;
+-		setSet(!set)
+-		props.setSettings(newObj);
+-	}
+-	
+-	function handleSpeed(value : string) {
+-		const newObj = props.settings;
+-		newObj.ball_speed = value;
+-		setSet(!set)
+-		props.setSettings(newObj);
+-	}
+-
+-	function powerupClick() {
+-		const newObj = props.settings;
+-		newObj.powerup = !props.settings.powerup
+-		setSet(!set)
+-		props.setSettings(newObj);
+-	}
+-	let res = props.settings.powerup ? "true" : "false"
+-	res += " powerup-button"
+-	return (
+-		<div className="settings-table">
+-			<Row className="settings-raw">
+-				<Col span={24}>Game settings</Col>
+-			</Row>
+-			<Row className="settings-raw">
+-				<Col span={12}>Powerups</Col>
+-				<Col span={12} className="powerup-box" >
+-					<button onClick={() => powerupClick()} className={res}></button>
+-				</Col>
+-			</Row>
+-			<Row className="settings-raw">
+-				<Col span={12}>Point limit</Col>
+-				<Col span={12}>
+-					<Select onChange={handleLimit} defaultValue={"20"}>
+-						<Option value="1">1</Option>
+-						<Option value="10">10</Option>
+-						<Option value="20">20</Option>
+-						<Option value="50">50</Option>
+-						<Option value="100">100</Option>
+-					</Select>
+-				</Col>
+-			</Row>
+-			<Row className="settings-raw">
+-				<Col span={12}>Ball speed</Col>
+-				<Col span={12}>
+-				<Select onChange={handleSpeed} defaultValue={"100"}>
+-						<Option value="50">50 %</Option>
+-						<Option value="75">75 %</Option>
+-						<Option value="100">100 %</Option>
+-						<Option value="125">125 %</Option>
+-						<Option value="150">150 %</Option>
+-					</Select>
+-				</Col>
+-			</Row>
+-		</div>
+-	)
+-}
+-
+-export default GameSettings;
+\ No newline at end of file
+diff --git a/game/src/components/Custom_game_menu/gamesettings.css b/game/src/components/Custom_game_menu/gamesettings.css
+deleted file mode 100644
+index 4eba900..0000000
+--- a/game/src/components/Custom_game_menu/gamesettings.css
++++ /dev/null
+@@ -1,23 +0,0 @@
+-.settings-table {
+-  width: 30vw;
+-}
+-
+-.settings-raw {
+-  text-align: center;
+-  background-color: white;
+-}
+-
+-.powerup-button {
+-  width: 2vh;
+-  height: 2vh;
+-  border-radius: 100%;
+-  border: solid 2px black;
+-}
+-
+-.true {
+-  background-color: rgb(0, 255, 0);
+-}
+-
+-.false {
+-  background-color: rgb(255, 0, 0);
+-}
+\ No newline at end of file
+diff --git a/game/src/components/Scores/ScoresHistory.tsx b/game/src/components/Scores/ScoresHistory.tsx
+index cb81a04..c80efa3 100644
+--- a/game/src/components/Scores/ScoresHistory.tsx
++++ b/game/src/components/Scores/ScoresHistory.tsx
+@@ -62,12 +62,10 @@ export function ScoreTab(props: any) {
+ 	}, []);
+ 
+ 	function getDate(date:any){
+-        const  newdate = new Date(date);
+-        const dateString = newdate.toLocaleDateString('fr');
+-        const  hourString = newdate.toString();
+-        console.log("date leen ", dateString.length)
+-        return dateString + hourString.substring(15, hourString.indexOf('GMT') - 4);
+-    }
++		const newdate = new Date(date);
++		const dateString = newdate.toString();
++		return dateString.substring(0, dateString.indexOf('GMT'));
++	}
+ 
+ 	return(
+ 		ok && scoreLen?
+diff --git a/game/src/components/game_Display/Single_game.tsx b/game/src/components/game_Display/Single_game.tsx
+index fa95931..ecc2b67 100644
+--- a/game/src/components/game_Display/Single_game.tsx
++++ b/game/src/components/game_Display/Single_game.tsx
+@@ -16,17 +16,20 @@ import myImg from '../../assets/spreadsheet.png';
+ 
+ const SingleGame = (props : any) => {
+ 	const [quitPressed, setQuitPressed] = useState(false);
+-  const canvasRef = useRef(null);
+-  const [newState, setNewState] = useState();
++    const canvasRef = useRef(null);
++    const [newState, setNewState] = useState();
+ 	const [haveWinner, setHaveWinner] = useState(false)
+-  const winner = useRef("")
++    const winner = useRef("")
+ 	const pageLocation = useLocation();
+-  const path = pageLocation.pathname.split('/')
+-  const gameSocket = path[path.length - 1]
+-  const navigate = useNavigate();
++    const path = pageLocation.pathname.split('/')
++    const gameSocket = path[path.length - 1]
++    const navigate = useNavigate();
+ 	const socket = props.socket;
+ 
+ 	const powerupSprite = new Image();
++	// powerupSprite.onload = () => {
++	// 	console.log('image loaded')
++	// }
+ 	powerupSprite.src = myImg
+ 
+ 	console.log('updated')
+@@ -38,6 +41,7 @@ const SingleGame = (props : any) => {
+ 			ballColor: "#ffffff",
+ 			gameBackground: "#000000"
+ 		}
++	console.log('gaaa', gameCustomization);
+ 	
+ 	function searchId(allGames : any){
+ 		for (const game of allGames) {
+@@ -61,25 +65,25 @@ const SingleGame = (props : any) => {
+ 
+ 	//Game Display
+     function updateGame (gameState: any) {
+-      const canvas : any = canvasRef.current
+-			if (canvas === null)
+-				return
+-			canvas.width = window.innerWidth;
+-			canvas.height = window.innerHeight;
+-			if (window.innerHeight * 2 > window.innerWidth) {
+-					canvas.style.width = "90vw";
+-					canvas.style.height = "45vw";
+-			} else {
+-					canvas.style.width = "180vh";
+-					canvas.style.height = "90vh";
+-			}
+-			const context : any = canvas.getContext('2d')
+-			drawBackground(context, gameCustomization.background)
+-			drawScore(context, gameState.score)
+-			drawPowerup(context, powerupSprite, gameState.powerup)
+-			drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
+-			drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
+-			drawBall(context, gameState.ball, gameCustomization.ballColor)
++        const canvas : any = canvasRef.current
++		if (canvas === null)
++			return
++        canvas.width = window.innerWidth;
++        canvas.height = window.innerHeight;
++        if (window.innerHeight * 2 > window.innerWidth) {
++            canvas.style.width = "90vw";
++            canvas.style.height = "45vw";
++        } else {
++            canvas.style.width = "180vh";
++            canvas.style.height = "90vh";
++        }
++        const context : any = canvas.getContext('2d')
++        drawBackground(context, gameCustomization.background)
++        drawScore(context, gameState.score)
++		drawPowerup(context, powerupSprite, gameState.powerup)
++        drawPlayBar(context, gameState.leftPlayer, gameCustomization.myColor)
++        drawPlayBar(context, gameState.rightPlayer, gameCustomization.opponentColor)
++        drawBall(context, gameState.ball, gameCustomization.ballColor)
+     }
+ 
+ 	//winMenu
+@@ -114,12 +118,10 @@ const SingleGame = (props : any) => {
+ 
+ 
+ 	function sendPong() {
+-		console.log('got ponged');
+-		
+ 		socket.emit(`pong`)
+ 	}
+ 	useEffect(() => {
+-    socket.on(gameSocket, handleGameState)
++        socket.on(gameSocket, handleGameState)
+ 		socket.on(`ping`, sendPong)
+ 		socket.on(`winner`, handleWinner)
+ 		return () => {
+@@ -134,7 +136,7 @@ const SingleGame = (props : any) => {
+             <canvas className="myCanvas" ref={canvasRef} onMouseMove={(event) => sendNewBar(socket, getMousePosY(event, canvasRef.current))}>
+                 There should be the canvas of the full game
+             </canvas>
+-			{quitPressed && <QuitBox setQuitPressed={setQuitPressed} quitPressed={quitPressed} socket={socket} />}
++			{quitPressed && <QuitBox setQuitPressed={setQuitPressed} quitPressed={quitPressed} />}
+ 			{winner.current !== "" && < WinnerBox message={winner.current} />}
+         </div>
+     )
+diff --git a/game/src/components/game_Display/WinnerBox.tsx b/game/src/components/game_Display/WinnerBox.tsx
+index c4cb851..82f75e3 100644
+--- a/game/src/components/game_Display/WinnerBox.tsx
++++ b/game/src/components/game_Display/WinnerBox.tsx
+@@ -8,7 +8,7 @@ const WinnerBox = ({message}: winnerProps) => {
+ 	return (
+ 		<div className="container-box">
+ 			<p className="winner">{message}</p>
+-			<Button type="dashed" onClick={() => navigate("/")}>Return to main menu</Button>
++			<Button type="dashed" onClick={() => navigate("/menu")}>Return to main menu</Button>
+ 		</div>
+ 	)
+ }
+diff --git a/game/src/components/game_Display/quitBox.tsx b/game/src/components/game_Display/quitBox.tsx
+index 5b23f27..f3636d8 100644
+--- a/game/src/components/game_Display/quitBox.tsx
++++ b/game/src/components/game_Display/quitBox.tsx
+@@ -1,19 +1,13 @@
+ import { Button } from 'antd'
+ import { useNavigate } from 'react-router-dom';
+-import { Socket } from 'socket.io-client';
+ import './winnerBox.css'
+ 
+-const QuitBox = ({setQuitPressed, quitPressed, socket} : quitBoxProps) => {
++const QuitBox = ({setQuitPressed, quitPressed} : quitBoxProps) => {
+     const navigate = useNavigate();
+-		function forfeitGame() {
+-			socket.emit('leave')
+-			navigate("/")
+-			setQuitPressed(!quitPressed)
+-		}
+ 	return (
+ 		<div className="container-box">
+ 			<Button type="link" onClick={() => setQuitPressed(!quitPressed)}>Resume game</Button>
+-			<Button type="primary" danger onClick={() => forfeitGame()}>Forfeit Game</Button>
++			<Button type="primary" danger onClick={() => navigate("/menu", {replace: true})}>Forfeit Game</Button>
+ 		</div>
+ 	)
+ }
+@@ -21,7 +15,6 @@ const QuitBox = ({setQuitPressed, quitPressed, socket} : quitBoxProps) => {
+ type quitBoxProps = {
+ 	setQuitPressed: any;
+ 	quitPressed: any;
+-	socket: any;
+ }
+ 
+ export default QuitBox;
+\ No newline at end of file
+diff --git a/game/src/components/game_menu/Game_list.css b/game/src/components/game_menu/Game_list.css
+index bb24da3..66c1e38 100644
+--- a/game/src/components/game_menu/Game_list.css
++++ b/game/src/components/game_menu/Game_list.css
+@@ -5,7 +5,6 @@
+     align-items: flex-end;
+     flex-direction: column;
+ }
+-
+ h1 {
+     color: red;
+ }
+diff --git a/game/src/components/game_menu/Game_menu.css b/game/src/components/game_menu/Game_menu.css
+index 8d7402d..9e2776d 100644
+--- a/game/src/components/game_menu/Game_menu.css
++++ b/game/src/components/game_menu/Game_menu.css
+@@ -1,37 +1,6 @@
+ .preview-box {
+-	color: rgb(241, 35, 241);
+-	margin-left: 15vw;
+-	margin-right: auto;
+-	font-size: 16px;
+-}
+-
+-@import '../../colors.css';
+-
+-.nav-barre {
+-font-size: 3vw;
+-list-style-type: none;
+-margin: 0;
+-padding: 0;
+-width: 100vw;
+-background-color: var(--mid-backgroud);
+-text-align: center;
+-}
+-
+-.nav-barre .onglet-nav {
+-display: inline;
+-	text-align: center;
+-	padding: 7vw;
+-	text-decoration: none;
+-
+-}
+-.nav-barre .onglet-nav a{
+-margin-left: auto;
+-	margin-right: auto;
+-font-size: 0.7em;
+-color: var(--text-1);
+-line-height: 3;
+-}
+-
+-.nav-barre a:hover {
+-color: var(--background);
++    color: rgb(241, 35, 241);
++    margin-left: 15vw;
++    margin-right: auto;
++    font-size: 16px;
+ }
+\ No newline at end of file
+diff --git a/game/src/components/game_menu/Game_menu.tsx b/game/src/components/game_menu/Game_menu.tsx
+index 5529a4e..f595012 100644
+--- a/game/src/components/game_menu/Game_menu.tsx
++++ b/game/src/components/game_menu/Game_menu.tsx
+@@ -1,5 +1,5 @@
+-import { useState, useEffect } from 'react';
+-import { Button, Space, version } from 'antd';
++import {useState, useEffect} from 'react'
++import { Button, Space, version } from "antd";
+ import { useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+ import { GameList, game } from './GameList';
+@@ -7,176 +7,119 @@ import { BACK_URL } from '../constants';
+ import handleErrors from '../RequestErrors/handleErrors';
+ import Customization from '../customization/Customization';
+ import GamePreview from './GamePreview';
+-import './Game_menu.css';
++import './Game_menu.css'
+ import { NavigationBarre } from '../Accueil';
+ 
+-const GameMenu = (props: any) => {
+-  const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
+-  const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
+-  const [ballColor, setBallColor] = useState('#ffffff');
+-  const [gameBackground, setGameBackground] = useState('#000000');
+-  const [inMatchmaking, setMatchmaking] = useState(false);
+-  const [gamesList, setGamesList] = useState<game[]>([]);
+-  const socket = props.socket;
+-  const currentUser = props.currentUser;
+-  // const [currentUser, setCurrentUser] = useState<any>(null);
+-  const navigate = useNavigate();
+-  const [isLoginActive, setIsLogin] = useState(false);
+-  const [ok, setOk] = useState(false);
+-  const [user, setUser] = useState({ account_id: '' });
++const GameMenu = (props : any) => {
++	
++	const [ownPaddleColor, setOwnPaddleColor] = useState("#ffffff")
++	const [opponentPaddleColor, setOpponentPaddleColor] = useState("#ffffff")
++	const [ballColor, setBallColor] = useState("#ffffff")
++	const [gameBackground, setGameBackground] = useState("#000000")
++	const [inMatchmaking, setMatchmaking] = useState(false);
++	const [ gamesList, setGamesList] = useState<game[]>([]);
++	const socket = props.socket;
++  const [currentUser, setCurrentUser] = useState<any>(null);
++	const navigate = useNavigate();
+ 
++  const customGameValues : any= {
++	myColor: ownPaddleColor,
++	opponentColor: opponentPaddleColor,
++	ballColor: ballColor,
++	background: gameBackground
++  }
++  
+   useEffect(() => {
+-    console.log('useefect');
+-    axios
+-      .get(`${BACK_URL}/auth/status`, { withCredentials: true })
+-      .then((res) => {
+-        console.log('ress acceuirl', res);
+-        setOk(true);
+-        axios
+-          .get(`${BACK_URL}/2fa/status`, {
+-            withCredentials: true,
+-          })
+-          .then((res) => {
+-            setUser(res.data);
+-          })
+-          .catch((error) => {
+-            handleErrors(error);
+-          });
+-        setIsLogin(true);
+-      })
+-      .catch((error) => {
+-        if (error.response.status === 403) setIsLogin(false);
+-        else handleErrors(error);
+-        setOk(true);
+-      });
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, []);
+-
+-  const customGameValues: any = {
+-    myColor: ownPaddleColor,
+-    opponentColor: opponentPaddleColor,
+-    ballColor: ballColor,
+-    background: gameBackground,
+-  };
+-
+-  // useEffect(() => {
+-  //   const initData = async () => {
+-  //     try {
+-  //       const res = await axios.get(`${BACK_URL}/account`, {
+-  //         withCredentials: true,
+-  //       });
+-  //       console.log('fruser', res.data);
+-
+-  //       setCurrentUser(res.data);
+-  //     } catch {
+-  //       console.log('Must be connect to use chat!');
+-  //       navigate('/');
+-  //     }
+-  //   };
+-  //   initData();
+-  // }, [navigate]);
++    const initData = async () => {
++      try {
++        const res = await axios.get(`${BACK_URL}/account`, {
++          withCredentials: true,
++        });
++        setCurrentUser(res.data);
++      } catch {
++        console.log('Must be connect to use chat!');
++        navigate('/');
++      }
++    };
++    initData();
++  }, [navigate]);
+ 
+-  const joinMatchmaking = () => {
+-    setMatchmaking(!inMatchmaking);
+-  };
+-  const quitMatchmakingList = async (userId: string) => {
++  const joinMatchmaking = () =>{
++    setMatchmaking(!inMatchmaking)
++  }
++  const quitMatchmakingList = async(userId: string) => {
+     try {
+-      await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {
+-        withCredentials: true,
+-      });
+-    } catch (e) {
++         await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {withCredentials:true});
++    } catch(e) {
+       handleErrors(e);
+     }
+-  };
++  }
+ 
+-  const joinMatchmakingList = async (
+-    userLogin: string,
+-    userId: string,
+-    socket: string
+-  ) => {
++  const joinMatchmakingList = async(userLogin: string, userId: string, socket: string) => {
+     try {
+-      await axios.post(
+-        `${BACK_URL}/matchmaking`,
+-        { login: userLogin, accountUsername: userId, socket: socket },
+-        { withCredentials: true }
+-      );
+-    } catch (e) {
++        await axios.post(`${BACK_URL}/matchmaking`, { login: userLogin, accountUsername: userId, socket: socket}, {withCredentials:true});
++    } catch(e) {
+       handleErrors(e);
+     }
+-  };
++  }
+   const getMatchesList = async () => {
+     try {
+-      const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
+-        withCredentials: true,
+-      });
+-      setGamesList(res.data);
+-    } catch (e) {
+-      console.log(e);
+-
+-      handleErrors(e);
++        const res = await axios.get(`${BACK_URL}/matchmaking/games`, {withCredentials:true});
++        setGamesList(res.data)
++      }
++      catch(e) {
++		console.log(e);
++		
++        handleErrors(e);
+     }
+-  };
++  }
+   useEffect(() => {
+-    const interval = setInterval(getMatchesList, 1000);
++    const interval = setInterval(getMatchesList, 1000)
+     return () => {
+-      clearInterval(interval);
+-    };
+-  }, []);
++      clearInterval(interval)
++    }
++  }, [])
+ 
++	useEffect(() => {
++		socket.on(`matchFound:`, (gameId : string) => {
++			navigate(`/singleGame/${gameId}`, {state: customGameValues});
++		return () => 
++			socket.off(`matchFound:`)
++	})
++
++	});
+   useEffect(() => {
+-    socket.on(`matchFound:`, (gameId: string) => {
+-      navigate(`/singleGame/${gameId}`, { state: customGameValues });
+-      return () => socket.off(`matchFound:`);
+-    });
+-  });
+-  useEffect(() => {
+-    if (currentUser) {
++		if (currentUser) {
+       if (inMatchmaking)
+-        joinMatchmakingList(
+-          currentUser.account_id,
+-          currentUser.accountUsername,
+-          socket.id
+-        ); // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
+-      if (!inMatchmaking) quitMatchmakingList(currentUser.account_id);
+-      return () => {
+-        quitMatchmakingList(currentUser.account_id);
+-      };
+-    }
++        joinMatchmakingList(currentUser.account_id, currentUser.accountUsername, socket.id) // id unique a ajouter dans le localstorage, utiliser un userId de l'auth 42!
++      if (!inMatchmaking)
++        quitMatchmakingList(currentUser.account_id)
++        return () => {
++          quitMatchmakingList(currentUser.account_id)
++	  }
++  }
+   }, [inMatchmaking, currentUser]);
+ 
+-  var matchmakingButton = inMatchmaking
+-    ? 'Exit Matchmaking'
+-    : 'Join Matchmaking';
++	var matchmakingButton = inMatchmaking ? "Exit Matchmaking" : "Join Matchmaking"
+   return (
+     <div>
+-      <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
++		<NavigationBarre isLoginActive={true} user={props.user}/>
++      <h1>antd version: {version}</h1>
+       <Space>
+-        <Button onClick={joinMatchmaking} type="primary">
+-          {matchmakingButton}
+-        </Button>
++        <Button onClick={joinMatchmaking} type="primary">{matchmakingButton}</Button>
+       </Space>
+-      <Customization
+-        ownPaddleColor={ownPaddleColor}
+-        setOwnPaddleColor={setOwnPaddleColor}
+-        opponentPaddleColor={opponentPaddleColor}
+-        setOpponentPaddleColor={setOpponentPaddleColor}
+-        ballColor={ballColor}
+-        setBallColor={setBallColor}
+-        gameBackground={gameBackground}
+-        setGameBackground={setGameBackground}
+-      />
+-      <GameList games={gamesList} customGameValues={customGameValues} />
+-      <div className="preview-box">
++	  <Customization ownPaddleColor={ownPaddleColor} setOwnPaddleColor={setOwnPaddleColor}
++	 	 opponentPaddleColor={opponentPaddleColor} setOpponentPaddleColor={setOpponentPaddleColor}
++	 	 ballColor={ballColor} setBallColor={setBallColor}
++		  gameBackground={gameBackground} setGameBackground={setGameBackground}/>
++      <GameList games={gamesList} customGameValues={customGameValues}/>
++      <div className='preview-box'>
+         <div>Live game preview</div>
+-        <GamePreview
+-          ownColor={ownPaddleColor}
+-          opponentColor={opponentPaddleColor}
+-          ballColor={ballColor}
+-          backgroundColor={gameBackground}
+-        />
++	      <GamePreview ownColor={ownPaddleColor} opponentColor={opponentPaddleColor}
++        ballColor={ballColor} backgroundColor ={gameBackground} />
+       </div>
+     </div>
+   );
+ };
+ 
+-export default GameMenu;
++export default GameMenu;
+\ No newline at end of file
+diff --git a/game/src/components/utils/InviteGameModal.tsx b/game/src/components/utils/InviteGameModal.tsx
+index 52a12cb..7c71d59 100644
+--- a/game/src/components/utils/InviteGameModal.tsx
++++ b/game/src/components/utils/InviteGameModal.tsx
+@@ -24,7 +24,7 @@ const InviteGameModal = ({
+     } catch (error) {
+       message.error('Fail!');
+     }
+-    navigate('/custom_game');
++    navigate('/menu');
+     setIsInviteGameModalOpen(false);
+   };
+ 
+diff --git a/game/src/index.tsx b/game/src/index.tsx
+index 1813a71..a7c4802 100644
+--- a/game/src/index.tsx
++++ b/game/src/index.tsx
+@@ -1,16 +1,11 @@
+ import ReactDOM from 'react-dom/client';
+-import { BrowserRouter } from 'react-router-dom';
+ import './index.css';
+ import App from './App';
+ import reportWebVitals from './reportWebVitals';
+ 
+-const root = ReactDOM.createRoot(
+-  document.getElementById('root') as HTMLElement
+-);
++const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+ root.render(
+-  <BrowserRouter>
+-    <App />
+-  </BrowserRouter>
++  <App />
+ );
+ 
+ // If you want to start measuring performance in your app, pass a function
