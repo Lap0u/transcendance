@@ -11,6 +11,7 @@ import { NavigationBarre } from '../Accueil/Accueil';
 import GameSettings from './GameSettings';
 
 const CustomMenu = (props: any) => {
+  const [gameReady, setGameReady] = useState("");
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
   const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
   const [ballColor, setBallColor] = useState('#ffffff');
@@ -69,6 +70,7 @@ const CustomMenu = (props: any) => {
         { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
+      setGameReady(res.data)
       console.log('res', res);
     }
     joinCustom();
@@ -115,13 +117,13 @@ const CustomMenu = (props: any) => {
     });
   });
 
-  let launchGame = secondPlayer != '' ? 'Start Game' : 'Invite player';
+  let isReady = gameReady === 'ready' ? 'Start game' : 'Loading'
   return (
     <div className="global-div">
       <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
       <Space>
-        <Button onClick={startGame} type="primary">
-          {launchGame}
+        <Button disabled={gameReady !== 'ready'} onClick={startGame} type="primary">
+          {isReady}
         </Button>
       </Space>
 
