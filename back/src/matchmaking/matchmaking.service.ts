@@ -147,10 +147,10 @@ export class MatchmakingService {
       }
       if (game.oneReady === true && game.twoReady === true && socket === game.oneSocket) {
         console.log(game);
-        return 'ready';
+        return game.playerTwo;
       }
     }
-    return 'ok';
+    return 'wait';
   }
 
   async inviteGame(

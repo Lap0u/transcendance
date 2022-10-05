@@ -115,6 +115,10 @@ export class AccountService {
     return await this.usersRepository.findOneBy({ account_id });
   }
 
+  async findUserByUserId(id: string) {
+    return await this.usersRepository.findOneBy({ id });
+  }
+
   async getStatusById(account_id: string) {
     const listSessionJson = await this.sessionsRepository.find();
     for (const user of listSessionJson) {
