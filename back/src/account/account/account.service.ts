@@ -129,4 +129,18 @@ export class AccountService {
     }
     return 0;
   }
+
+  async destroySession(account_id: string) {
+    const listSessionJson = await this.sessionsRepository.find();
+    for (const user of listSessionJson) {
+      const info = JSON.parse(user.json);
+      const isPassport = JSON.stringify(user.json).indexOf('passport');
+      if (
+        isPassport > -1 &&
+        user.destroyedAt === null &&
+        info.passport.user.account_id === account_id
+      )
+        info.session.destoy();
+    }
+  }
 }

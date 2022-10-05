@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Next, Req, Res, UseGuards } from '@nestjs/common';
 import { Response, Request, NextFunction} from "express";
+import { writeFile } from 'fs';
 import { Auth42Guard, AuthenticatedGuard, JwtTwoFactorGuard} from './guards/index';
 import { TwoFactorAuthenticationService } from './twoFactorAuth/twoFactorAuth.service';
 
@@ -47,6 +48,7 @@ export class AuthController {
 	@UseGuards(AuthenticatedGuard)
 	@UseGuards(JwtTwoFactorGuard)
 	async logout(@Req() req: Request, @Res() res: Response, @Next() next : NextFunction){
+		console.log('logout reqqqqqq', req.session);
 		req.logOut(async function(err) {
 		if (err) {  return next(err); }
 			res.clearCookie("Authentication", {domain: 'localhost', path:'/'});

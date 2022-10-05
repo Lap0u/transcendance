@@ -255,9 +255,10 @@ const AccountPage = ({user} : {user : typeof UserDto}) => {
 	const [ok, setOk] = useState(false);
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
-			.then(()=>{
+			.then((res)=>{
 				if (user)
 					setOk(true);
+				console.log("reeeeeessddd", res);
 			})
 			.catch((error) => {
 				handleErrors(error)
