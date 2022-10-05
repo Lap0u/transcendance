@@ -23,7 +23,6 @@ const CustomMenu = (props: any) => {
   });
   const socket = props.socket;
   const currentUser = props.currentUser;
-  // const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
@@ -63,20 +62,17 @@ const CustomMenu = (props: any) => {
     background: gameBackground,
   };
 
-  // useEffect(() => {
-  //   const initData = async () => {
-  //     try {
-  //       const res = await axios.get(`${BACK_URL}/account`, {
-  //         withCredentials: true,
-  //       });
-  //       setCurrentUser(res.data);
-  //     } catch {
-  //       console.log('Must be connect to use chat!');
-  //       navigate('/');
-  //     }
-  //   };
-  //   initData();
-  // }, [navigate]);
+  useEffect(() => {
+    async function joinCustom() {
+      const res = await axios.post(
+        `${BACK_URL}/matchmaking/joinCustom`,
+        { socket: currentUser.id },
+        { withCredentials: true }
+      );
+      console.log('res', res);
+    }
+    joinCustom();
+  });
 
   async function startCustom(
     currentUser: any,

@@ -10,7 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthenticatedGuard, JwtTwoFactorGuard } from 'src/account/auth/guards';
 import { matchesDto } from './matches.dto';
-import { matchmakingDto, joinMatchmakingDto, customGameDto } from './matchmaking.dto';
+import {
+  matchmakingDto,
+  joinMatchmakingDto,
+  customGameDto,
+} from './matchmaking.dto';
 import { MatchmakingService } from './matchmaking.service';
 
 @Controller('matchmaking')
@@ -49,11 +53,16 @@ export class MatchmakingController {
 
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
-	@Post('/customGame')
-  async launchCustomGame(
-    @Body() body: customGameDto,
-  ) {
+  @Post('/customGame')
+  async launchCustomGame(@Body() body: customGameDto) {
     return this.matchmakingService.launchCustomGame(body);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  @Post('/joinCustom')
+  async joinCustomGame(@Body() body: any): Promise<string> {
+    return this.matchmakingService.joinCustomGame(body.socket);
   }
 
   @UseGuards(AuthenticatedGuard)
