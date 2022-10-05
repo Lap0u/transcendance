@@ -89,6 +89,8 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 			UsernameLoser: playerTwo.accountUsername,
 			ScorePlayer1: state.score.playerTwo,
 			ScorePlayer2: state.score.playerOne,
+			PointsWon: 10,
+			PointsLost: 10,
 		}
 	}
 	else if (gameStatus === -2) {
@@ -102,6 +104,8 @@ export function handleEndGame(gameStatus: number, socket : any, state: any, game
 			UsernameLoser: playerOne.accountUsername,
 			ScorePlayer1: state.score.playerOne,
 			ScorePlayer2: state.score.playerTwo,
+			PointsWon: 10,
+			PointsLost: 10,
 		}
 	}
 	const isCustom = game.settings === null ? true : false

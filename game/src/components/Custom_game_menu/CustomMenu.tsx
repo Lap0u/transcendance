@@ -108,7 +108,7 @@ const CustomMenu = (props : any) => {
   return (
 
     <div className='global-div'>
-			<NavigationBarre nav={navigate} isLoginActive={isLoginActive} userId={user.account_id}/>
+			<NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
       <Space>
         <Button onClick={startGame} type="primary">{launchGame}</Button>
       </Space>
