@@ -133,11 +133,6 @@ function LoginPlayButton(props: any) {
             onClick={() => nav('/menu')}
             buttonClass={'play-button'}
           />
-          <ButtonTemplate
-            text="Custom game"
-            onClick={() => nav('/custom_game')}
-            buttonClass={'play-button'}
-          />
         </div>
       )}
     </div>
