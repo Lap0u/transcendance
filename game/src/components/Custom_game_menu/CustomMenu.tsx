@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Space, version } from 'antd';
+import { Button, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACK_URL } from '../constants';
@@ -11,11 +11,13 @@ import { NavigationBarre } from '../Accueil';
 import GameSettings from './GameSettings';
 
 const CustomMenu = (props: any) => {
+  const [gameReady, setGameReady] = useState('wait');
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
   const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
   const [ballColor, setBallColor] = useState('#ffffff');
   const [gameBackground, setGameBackground] = useState('#000000');
-  const [secondPlayer, setSecondPlayer] = useState('');
+  const [secondPlayer, setSecondPlayer] = useState(null);
+  const [secondSocket, setSecondSocket] = useState('');
   const [settings, setSettings] = useState({
     powerup: false,
     point_limit: 20,
@@ -29,11 +31,9 @@ const CustomMenu = (props: any) => {
   const [user, setUser] = useState({ account_id: '' });
 
   useEffect(() => {
-    console.log('useefect');
     axios
       .get(`${BACK_URL}/auth/status`, { withCredentials: true })
       .then((res) => {
-        console.log('ress acceuirl', res);
         setOk(true);
         axios
           .get(`${BACK_URL}/2fa/status`, {
@@ -66,18 +66,29 @@ const CustomMenu = (props: any) => {
     async function joinCustom() {
       const res = await axios.post(
         `${BACK_URL}/matchmaking/joinCustom`,
-        { socket: currentUser.id },
+        { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
-      console.log('res', res);
+      if (res.data.playerId !== 'wait') {
+        setGameReady('ready');
+        const sec = await axios.get(
+          `${BACK_URL}/account/userId/${res.data.playerId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setSecondPlayer(sec.data);
+        setSecondSocket(res.data.playerSocket);
+      }
     }
-    joinCustom();
+    if (gameReady !== 'ready') joinCustom();
   });
 
   async function startCustom(
     currentUser: any,
     secondPlayer: any,
-    settings: any
+    settings: any,
+    secondSocket: string
   ) {
     const playerOne = {
       login: currentUser.account_id,
@@ -87,7 +98,7 @@ const CustomMenu = (props: any) => {
     const playerTwo = {
       login: secondPlayer.account_id,
       accountUsername: secondPlayer.accountUsername,
-      socket: socket.id,
+      socket: secondSocket,
     };
     try {
       await axios.post(
@@ -101,11 +112,9 @@ const CustomMenu = (props: any) => {
   }
 
   function startGame() {
-    if (secondPlayer != '') {
-      startCustom(currentUser, secondPlayer, settings);
-    } else setSecondPlayer(currentUser);
-    // else
-    // 	openFriendList("Second")
+    if (secondPlayer !== '') {
+      startCustom(currentUser, secondPlayer, settings, secondSocket);
+    }
   }
 
   useEffect(() => {
@@ -115,13 +124,16 @@ const CustomMenu = (props: any) => {
     });
   });
 
-  let launchGame = secondPlayer != '' ? 'Start Game' : 'Invite player';
+  let isReady = secondPlayer === null ? 'Loading' : 'Start game';
   return (
     <div className="global-div">
       <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
       <Space>
-        <Button onClick={startGame} type="primary">
-          {launchGame}
+        <Button
+          disabled={isReady === 'Loading'}
+          onClick={startGame}
+          type="primary">
+          {isReady}
         </Button>
       </Space>
 

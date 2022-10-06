@@ -11,9 +11,13 @@ export class matchmakingDto {
 }
 
 export class customMatchDto {
-	playerOne: string;
-	playerTwo: string;
-	gameId: string;
+  playerOne: string;
+  oneReady: boolean;
+  oneSocket?: string;
+  playerTwo: string;
+  twoReady: boolean;
+  twoSocket?: string;
+  gameId: string;
 }
 
 export class quitMatchmakingDto {
@@ -22,7 +26,7 @@ export class quitMatchmakingDto {
 }
 
 export class customGameDto {
-	playerOne: matchmakingDto;
-	playerTwo: matchmakingDto;
-	settings: any;
+  playerOne: matchmakingDto;
+  playerTwo: matchmakingDto;
+  settings: any;
 }

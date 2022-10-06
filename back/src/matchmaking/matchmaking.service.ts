@@ -93,9 +93,6 @@ export class MatchmakingService {
   }
 
   quitMatchmaking(userId: string): matchmakingDto[] {
-    console.log(',usid', userId);
-    console.log('li', this.matchmakingList);
-
     const newMatchmakingList = this.matchmakingList.filter((user) => {
       return user.login != userId;
     });
@@ -103,6 +100,15 @@ export class MatchmakingService {
     this.matchmakingList = newMatchmakingList;
 
     return newMatchmakingList;
+  }
+
+  async removeCustom(socket: string) {
+    let i = 0;
+    for (const item of this.customMatchesList) {
+      if (item.oneSocket === socket || item.twoSocket === socket)
+        this.customMatchesList.splice(i, 1);
+      i++;
+    }
   }
 
   async launchCustomGame(payload: customGameDto) {
@@ -116,6 +122,7 @@ export class MatchmakingService {
       pongReply: 0,
       ...payload.playerTwo,
     };
+    this.removeCustom(playerOne.socket);
     this.socketService.socket.to(playerOne.socket).emit(`customFound:`, gameId);
     this.socketService.socket.to(playerTwo.socket).emit(`customFound:`, gameId);
     const settings = payload.settings;
@@ -126,6 +133,7 @@ export class MatchmakingService {
       this.currentMatches,
       settings,
     );
+
     launchGame(
       playerOne,
       playerTwo,
@@ -136,9 +144,26 @@ export class MatchmakingService {
     );
   }
 
-  async joinCustomGame(userId: string): Promise<string> {
-    console.log('id', userId);
-    return 'ok';
+  async joinCustomGame(userId: string, socket: string): Promise<any> {
+    for (let game of this.customMatchesList) {
+      if (userId === game.playerOne && game.oneReady === false) {
+        game.oneSocket = socket;
+        game.oneReady = true;
+      } else if (userId === game.playerTwo && game.twoReady === false) {
+        game.twoSocket = socket;
+        game.twoReady = true;
+      }
+      ``;
+      if (
+        game.oneReady === true &&
+        game.twoReady === true &&
+        socket === game.oneSocket
+      ) {
+        const res = { playerId: game.playerTwo, playerSocket: game.twoSocket };
+        return res;
+      }
+    }
+    return { playerId: 'wait', playerSocket: 'wait' };
   }
 
   async inviteGame(
@@ -165,7 +190,9 @@ export class MatchmakingService {
     });
     this.customMatchesList.push({
       playerOne: sendInvitationUserId,
+      oneReady: false,
       playerTwo: userId,
+      twoReady: false,
       gameId: uuid(),
     });
     return 'ok';

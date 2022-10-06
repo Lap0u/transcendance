@@ -52,6 +52,13 @@ export class AccountController {
     return await this.usersService.findUserById(param.id);
   }
 
+  @Get('/userId/:id') //user.id
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async getAccountById(@Param() param) {
+    return await this.usersService.findUserByUserId(param.id);
+  }
+
   @Post('avatar')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
