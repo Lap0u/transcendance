@@ -105,6 +105,15 @@ export class MatchmakingService {
     return newMatchmakingList;
   }
 
+  async removeCustom(socket: string) {
+    let i = 0;
+    for (const item of this.customMatchesList) {
+      if (item.oneSocket === socket || item.twoSocket === socket)
+        this.customMatchesList.splice(i, 1);
+      i++;
+    }
+  }
+
   async launchCustomGame(payload: customGameDto) {
     const gameId = uuid();
 
@@ -116,6 +125,7 @@ export class MatchmakingService {
       pongReply: 0,
       ...payload.playerTwo,
     };
+    this.removeCustom(playerOne.socket);
     this.socketService.socket.to(playerOne.socket).emit(`customFound:`, gameId);
     this.socketService.socket.to(playerTwo.socket).emit(`customFound:`, gameId);
     const settings = payload.settings;
@@ -126,6 +136,8 @@ export class MatchmakingService {
       this.currentMatches,
       settings,
     );
+    console.log('newg', newGame);
+
     launchGame(
       playerOne,
       playerTwo,

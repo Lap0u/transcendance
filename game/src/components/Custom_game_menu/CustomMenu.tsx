@@ -92,8 +92,6 @@ const CustomMenu = (props: any) => {
     settings: any,
     secondSocket: string
   ) {
-    console.log('ssso', secondSocket);
-
     const playerOne = {
       login: currentUser.account_id,
       accountUsername: currentUser.accountUsername,
