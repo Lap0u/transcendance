@@ -93,9 +93,6 @@ export class MatchmakingService {
   }
 
   quitMatchmaking(userId: string): matchmakingDto[] {
-    console.log(',usid', userId);
-    console.log('li', this.matchmakingList);
-
     const newMatchmakingList = this.matchmakingList.filter((user) => {
       return user.login != userId;
     });
@@ -136,7 +133,6 @@ export class MatchmakingService {
       this.currentMatches,
       settings,
     );
-    console.log('newg', newGame);
 
     launchGame(
       playerOne,
@@ -163,7 +159,6 @@ export class MatchmakingService {
         game.twoReady === true &&
         socket === game.oneSocket
       ) {
-        console.log(game);
         const res = { playerId: game.playerTwo, playerSocket: game.twoSocket };
         return res;
       }

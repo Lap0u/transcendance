@@ -83,7 +83,7 @@ const CustomMenu = (props: any) => {
         setSecondSocket(res.data.playerSocket);
       }
     }
-    joinCustom();
+    if (gameReady !== 'ready') joinCustom();
   });
 
   async function startCustom(
