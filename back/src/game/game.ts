@@ -6,6 +6,7 @@ import { FRAME_RATE, RECONNECTION_DELAY } from './constants';
 import {
   checkGameEnd,
   checkGoal,
+  clearGame,
   createGameState,
   handleEndGame,
   handlePing,
@@ -19,10 +20,18 @@ export function launchGame(
   socket: any,
   game: any,
   allGames: matchesDto[],
-  scoreService: ScoresService
+  scoreService: ScoresService,
 ) {
   const state = createGameState(game.settings);
-  startGameInterval(playerOne.socket, playerTwo.socket, state, socket, game, allGames, scoreService);
+  startGameInterval(
+    playerOne.socket,
+    playerTwo.socket,
+    state,
+    socket,
+    game,
+    allGames,
+    scoreService,
+  );
 }
 
 function startGameInterval(
@@ -32,22 +41,22 @@ function startGameInterval(
   socket: any,
   curGame: any,
   allGames: matchesDto[],
-  scoreService: ScoresService
+  scoreService: ScoresService,
 ) {
   let pongCounter: number = FRAME_RATE;
   const intervalId = setInterval(() => {
-	//check connection with client every second
-	pongCounter = handlePing(pongCounter, socket, playerOne, playerTwo)
-	//
-	const status: number = gameLoop(state, curGame);
-	if (status === 1) {
-	  socket.emit(curGame.gameId, state);
-	} else {
-	  console.log(status);
-      handleEndGame(status, socket, state, curGame, scoreService)
-	//   clearGame(curGame.gameId, allGames) //enleve la game de la liste, pose des problemes avec le front pour l'instant
-	  clearInterval(intervalId);
-	}
+    //check connection with client every second
+    pongCounter = handlePing(pongCounter, socket, playerOne, playerTwo);
+    //
+    const status: number = gameLoop(state, curGame);
+    if (status === 1) {
+      socket.emit(curGame.gameId, state);
+    } else {
+      console.log(status);
+      handleEndGame(status, socket, state, curGame, scoreService);
+      clearGame(curGame.gameId, allGames); //enleve la game de la liste, pose des problemes avec le front pour l'instant
+      clearInterval(intervalId);
+    }
   }, 1000 / FRAME_RATE);
   return curGame.gameId;
 }
