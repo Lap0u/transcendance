@@ -26,11 +26,9 @@ const GameMenu = (props: any) => {
   const [user, setUser] = useState({ account_id: '' });
 
   useEffect(() => {
-    console.log('useefect');
     axios
       .get(`${BACK_URL}/auth/status`, { withCredentials: true })
       .then((res) => {
-        console.log('ress acceuirl', res);
         setOk(true);
         axios
           .get(`${BACK_URL}/2fa/status`, {
