@@ -17,6 +17,7 @@ const CustomMenu = (props: any) => {
   const [ballColor, setBallColor] = useState('#ffffff');
   const [gameBackground, setGameBackground] = useState('#000000');
   const [secondPlayer, setSecondPlayer] = useState(null);
+  const [secondSocket, setSecondSocket] = useState('');
   const [settings, setSettings] = useState({
     powerup: false,
     point_limit: 20,
@@ -70,12 +71,16 @@ const CustomMenu = (props: any) => {
         { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
-      if (res.data != 'wait') {
+      if (res.data.playerId != 'wait') {
         setGameReady('ready');
-        const sec = await axios.get(`${BACK_URL}/account/userId/${res.data}`, {
-          withCredentials: true,
-        });
-        setSecondPlayer(sec.data)
+        const sec = await axios.get(
+          `${BACK_URL}/account/userId/${res.data.playerId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setSecondPlayer(sec.data);
+        setSecondSocket(res.data.playerSocket);
       }
     }
     joinCustom();
@@ -84,8 +89,11 @@ const CustomMenu = (props: any) => {
   async function startCustom(
     currentUser: any,
     secondPlayer: any,
-    settings: any
+    settings: any,
+    secondSocket: string
   ) {
+    console.log('ssso', secondSocket);
+
     const playerOne = {
       login: currentUser.account_id,
       accountUsername: currentUser.accountUsername,
@@ -94,7 +102,7 @@ const CustomMenu = (props: any) => {
     const playerTwo = {
       login: secondPlayer.account_id,
       accountUsername: secondPlayer.accountUsername,
-      socket: socket.id,
+      socket: secondSocket,
     };
     try {
       await axios.post(
@@ -110,7 +118,7 @@ const CustomMenu = (props: any) => {
   function startGame() {
     if (secondPlayer != '') {
       console.log('deux', secondPlayer);
-      startCustom(currentUser, secondPlayer, settings);
+      startCustom(currentUser, secondPlayer, settings, secondSocket);
     }
   }
 
@@ -126,10 +134,7 @@ const CustomMenu = (props: any) => {
     <div className="global-div">
       <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
       <Space>
-        <Button
-          disabled={isReady === null}
-          onClick={startGame}
-          type="primary">
+        <Button disabled={isReady === null} onClick={startGame} type="primary">
           {isReady}
         </Button>
       </Space>
