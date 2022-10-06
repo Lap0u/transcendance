@@ -52,7 +52,6 @@ function startGameInterval(
     if (status === 1) {
       socket.emit(curGame.gameId, state);
     } else {
-      console.log(status);
       handleEndGame(status, socket, state, curGame, scoreService);
       clearGame(curGame.gameId, allGames); //enleve la game de la liste, pose des problemes avec le front pour l'instant
       clearInterval(intervalId);
@@ -70,12 +69,10 @@ function gameLoop(state: any, curGames: any): number {
   curGames.playerTwo.pongReply++;
   if (curGames.playerOne.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {
     //playerOne left -> playerTWo won
-    console.log(curGames, 'ping2');
     return -2;
   }
   if (curGames.playerTwo.pongReply >= FRAME_RATE * RECONNECTION_DELAY) {
     //playerTwo left -> playerOne won
-    console.log(curGames, 'ping1');
     return -1;
   }
   const ball = state.ball;
