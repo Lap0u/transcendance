@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Space, version } from 'antd';
+import { Button, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACK_URL } from '../constants';
@@ -71,7 +71,7 @@ const CustomMenu = (props: any) => {
         { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
-      if (res.data.playerId != 'wait') {
+      if (res.data.playerId !== 'wait') {
         setGameReady('ready');
         const sec = await axios.get(
           `${BACK_URL}/account/userId/${res.data.playerId}`,
@@ -114,8 +114,7 @@ const CustomMenu = (props: any) => {
   }
 
   function startGame() {
-    if (secondPlayer != '') {
-      console.log('deux', secondPlayer);
+    if (secondPlayer !== '') {
       startCustom(currentUser, secondPlayer, settings, secondSocket);
     }
   }
@@ -132,7 +131,10 @@ const CustomMenu = (props: any) => {
     <div className="global-div">
       <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
       <Space>
-        <Button disabled={isReady === null} onClick={startGame} type="primary">
+        <Button
+          disabled={isReady === 'Loading'}
+          onClick={startGame}
+          type="primary">
           {isReady}
         </Button>
       </Space>
