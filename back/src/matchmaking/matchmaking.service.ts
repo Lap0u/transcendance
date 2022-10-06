@@ -136,7 +136,7 @@ export class MatchmakingService {
     );
   }
 
-  async joinCustomGame(userId: string, socket: string): Promise<string> {
+  async joinCustomGame(userId: string, socket: string): Promise<any> {
     for (let game of this.customMatchesList) {
       if (userId === game.playerOne && game.oneReady === false) {
         game.oneSocket = socket;
@@ -145,12 +145,18 @@ export class MatchmakingService {
         game.twoSocket = socket;
         game.twoReady = true;
       }
-      if (game.oneReady === true && game.twoReady === true && socket === game.oneSocket) {
+      ``;
+      if (
+        game.oneReady === true &&
+        game.twoReady === true &&
+        socket === game.oneSocket
+      ) {
         console.log(game);
-        return game.playerTwo;
+        const res = { playerId: game.playerTwo, playerSocket: game.twoSocket };
+        return res;
       }
     }
-    return 'wait';
+    return { playerId: 'wait', playerSocket: 'wait' };
   }
 
   async inviteGame(
