@@ -167,4 +167,18 @@ export class ChannelService {
 
     return 'ok';
   }
+
+  async banOrMute(
+    channelId: string,
+    userId: string,
+    type: string,
+    banTime: number,
+  ): Promise<Channel> {
+    const channel: Channel = await this.channelsRepository.findOneBy({
+      id: channelId,
+    });
+
+    console.log(channel.channelName, userId, type, banTime);
+    return channel;
+  }
 }
