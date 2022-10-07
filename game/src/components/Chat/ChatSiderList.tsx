@@ -211,7 +211,6 @@ const ChatSiderList = ({
 
   const closeChannelModal = () => {
     setIsChannelModalVisible(false);
-    setSelectedChannel(null);
     setIsSettingModalVisible(false);
   };
 

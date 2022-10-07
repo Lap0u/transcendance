@@ -78,4 +78,15 @@ export class ChannelController {
   deleteChannel(@Param('channelId') channelId: string): Promise<string> {
     return this.service.deleteChannel(channelId);
   }
+
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  @Put('banOrMute/:channelId/:userId')
+  banOrMute(
+    @Param('channelId') channelId: string,
+    @Param('userId') userId: string,
+    @Body() body: { type: string; banTime: number },
+  ): Promise<Channel> {
+    return this.service.banOrMute(channelId, userId, body.type, body.banTime);
+  }
 }

@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './Chat.css';
 import { Avatar, Button, Input, message as antdMessage } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
+import { SendOutlined, TeamOutlined } from '@ant-design/icons';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { ChannelType, MessageType } from './const';
 import './ProfilPlayer.css';
 import UserPopover from '../utils/UserPopover';
+import ChannelListUserModal from './ChannelListUserModal';
 
 const MessageContent = ({
   item,
@@ -54,6 +55,7 @@ const ChatContentWindow = ({
 }: ChatContentWindowProps) => {
   const [message, setMessage] = useState<string>('');
   const [history, setHistory] = useState<any>([]);
+  const [isListUserModalOpen, setIsListUserModalOpen] = useState(false);
   const historyEndRef: any = useRef(null);
   const isUser: boolean = !!selectUser;
 
@@ -131,9 +133,13 @@ const ChatContentWindow = ({
   const scrollToBottom = () => {
     if (historyEndRef.current) {
       setTimeout(() => {
-        historyEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        historyEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
+  };
+
+  const showListUserModal = () => {
+    setIsListUserModalOpen(true);
   };
 
   const chatWindowName = () => {
@@ -145,7 +151,19 @@ const ChatContentWindow = ({
         </>
       );
     } else {
-      return <>{selectedChannel?.channelName}</>;
+      return (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>{selectedChannel?.channelName}</span>
+          <Button icon={<TeamOutlined />} onClick={showListUserModal} />
+          <ChannelListUserModal
+            isListUserModalOpen={isListUserModalOpen}
+            setIsListUserModalOpen={setIsListUserModalOpen}
+            users={users}
+            currentUser={currentUser}
+            selectedChannel={selectedChannel}
+          />
+        </div>
+      );
     }
   };
 
