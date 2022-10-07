@@ -1,6 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Next, Req, Res, UseGuards } from '@nestjs/common';
 import { Response, Request, NextFunction} from "express";
+import passport from 'passport';
+import { disconnect } from 'process';
+import { AccountService } from '../account/account.service';
 import { Auth42Guard, AuthenticatedGuard, JwtTwoFactorGuard} from './guards/index';
 import { TwoFactorAuthenticationService } from './twoFactorAuth/twoFactorAuth.service';
 
@@ -9,6 +12,7 @@ export class AuthController {
 
 	constructor(
 		private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
+		private readonly accountService: AccountService,
 		) {}
 	
 	//This route will send the 42 0auth login page 
@@ -47,11 +51,22 @@ export class AuthController {
 	@UseGuards(AuthenticatedGuard)
 	@UseGuards(JwtTwoFactorGuard)
 	async logout(@Req() req: Request, @Res() res: Response, @Next() next : NextFunction){
+	//	console.log('logout reqqqqqq', req.session);
+//	if (!req.session['passport'])
+	//	return;
+	//	this.accountService.destroySession(req.session['passport'].user.id);
 		req.logOut(async function(err) {
 		if (err) {  return next(err); }
 			res.clearCookie("Authentication", {domain: 'localhost', path:'/'});
 			return res.sendStatus(200);
 		});
 	}
-	
+
+	@Get('disconnect')
+	@UseGuards(AuthenticatedGuard)
+	@UseGuards(JwtTwoFactorGuard)
+	async disconnect(@Req() req: Request){
+		if (!req.session['passport'])
+			return;
+	}
 }

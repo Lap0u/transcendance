@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Accounts } from '../entities/accounts.entity';
 import { AuthentificationProvider } from './auth';
 import { IntraUserDetails } from '../utils/types';
+import { SocketService } from '../../socket/socket.service';
 
 @Injectable()
 export class AuthService implements AuthentificationProvider {

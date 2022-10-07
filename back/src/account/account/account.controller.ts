@@ -33,12 +33,13 @@ export class AccountController {
   @Get()
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
-  getAccountInfo(@Req() req: Request) {
+  async getAccountInfo(@Req() req: Request) {
     const session_info = req.session['passport'];
-    if (session_info) {
+    if (session_info && session_info.user) {
       const user_info = session_info.user;
       const { id } = user_info;
-      return this.authService.findUser(id);
+      const user = await this.authService.findUser(id);
+      return user;
     } else {
       return new HttpException('Disconected', HttpStatus.BAD_REQUEST);
     }

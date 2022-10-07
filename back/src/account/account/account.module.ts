@@ -16,5 +16,6 @@ import { AccountService } from './account.service';
   ],
   controllers: [AccountController],
   providers: [AccountService, DatabaseFilesService, AuthService, ScoresService],
+  exports: [AccountService],
 })
 export class AccountModule {}

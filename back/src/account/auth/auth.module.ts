@@ -17,6 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ScoresService } from '../../game/Scores/scores.service';
 import { Scores } from '../../game/Scores/entities/scores.entities';
 import { TypeOrmSession } from '../entities/session.entity';
+import { SocketService } from '../../socket/socket.service';
 
 @Module({
   imports: [

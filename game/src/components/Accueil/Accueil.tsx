@@ -1,15 +1,15 @@
 import './Accueil.css';
 import io from 'socket.io-client';
-import ButtonTemplate from './ButtonTemplate';
+import ButtonTemplate from '../ButtonTemplate';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BACK_URL } from '../global';
+import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect } from 'react';
-import handleErrors from './RequestErrors/handleErrors';
+import handleErrors from '../RequestErrors/handleErrors';
 import { HomeOutlined } from '@ant-design/icons';
 import Avatar from 'antd/lib/avatar/avatar';
-import UserDto from './utils/UserDto';
+import UserDto from '../utils/UserDto';
 const socket = io('http://localhost:3000');
 socket.on('init', handleInit);
 

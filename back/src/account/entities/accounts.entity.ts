@@ -55,6 +55,9 @@ export class Accounts {
   @Column({ nullable: true })
   public rank?: number;
 
+  @Column('text', { array: true, default: [] })
+  public socketsConnection?: Array<string>;
+
   @Column({ nullable: true, default: 0 })
-  public status?: boolean;
+  public currentGames?: number;
 }

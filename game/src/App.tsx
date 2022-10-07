@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import Accueil from './components/Accueil';
+import Accueil from './components/Accueil/Accueil';
 import Chat from './components/Chat/Chat';
 import Page404 from './components/Page404';
 import GameMenu from './components/game_menu/Game_menu';
@@ -23,15 +23,19 @@ import InviteGameModal from './components/utils/InviteGameModal';
 import axios from 'axios';
 import { message } from 'antd';
 import UserDto from './components/utils/UserDto';
+import handleErrors from './components/RequestErrors/handleErrors';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
+import { handleDisconected, setConnect, setDisconnect } from './components/utils/connect';
 
 const BACK_URL = 'http://localhost:4000';
 
 const socket = io(BACK_URL).connect();
-
 function App() {
   const [currentUser, setCurrentUser] = useState({ ...UserDto });
   const [isInviteGameModalOpen, setIsInviteGameModalOpen] = useState(false);
   const [invitor, setInvitor] = useState<string>('');
+  const [userChanged, changeUser] = useState(0);
+
 
   const nav = useNavigate();
 
@@ -42,6 +46,8 @@ function App() {
       })
       .then((res) => {
         setCurrentUser(res.data);
+		if (userChanged === 0)
+			socket.emit('clientConnected', { ...res.data });
       })
       .catch(async (error) => {
         if (error.response.status === 401 || error.response.status === 403) {
@@ -50,14 +56,20 @@ function App() {
           return <InternalError />;
         }
       });
-  }, []);
+  }, [userChanged]);
+
+
 
   useEffect(() => {
     if (currentUser) {
+
       const userUpdate = `userUpdate:${currentUser.id}`;
       const receiveInviteGame = `inviteGame:${currentUser.id}`;
       const acceptInviteGame = `acceptInviteGame:${currentUser.id}`;
       const refuseInviteGame = `refuseInviteGame:${currentUser.id}`;
+
+
+
 
       socket.on(userUpdate, (newCurrentUser: any) => {
         if (newCurrentUser.id === currentUser.id) {
@@ -80,6 +92,7 @@ function App() {
         message.error(`${refuse.senderUsername} refuse to play with you`);
       });
 
+
       return () => {
         socket.off(userUpdate);
         socket.off(receiveInviteGame);
@@ -88,6 +101,7 @@ function App() {
       };
     }
   }, [currentUser]);
+
 
   return (
     <div id="wholepage">
@@ -99,7 +113,7 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<Accueil currentUser={currentUser} />} />
-        <Route path="/account" element={<AccountPage user={currentUser} />} />
+        <Route path="/account" element={<AccountPage user={currentUser} changeUser={changeUser} cur={userChanged}/>} />
         <Route path="/logout" element={<Logout />} />
         <Route
           path="/chat"

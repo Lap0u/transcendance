@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { json } from 'express';
 import { SocketService } from 'src/socket/socket.service';
 import { Repository } from 'typeorm';
 import { ScoresService } from '../../game/Scores/scores.service';
@@ -14,7 +13,6 @@ export class AccountService {
     @InjectRepository(Accounts)
     private usersRepository: Repository<Accounts>,
     @InjectRepository(TypeOrmSession)
-    private sessionsRepository: Repository<TypeOrmSession>,
     private scoreService: ScoresService,
     private readonly databaseFilesService: DatabaseFilesService,
     private socketService: SocketService,
@@ -120,17 +118,40 @@ export class AccountService {
   }
 
   async getStatusById(account_id: string) {
-    const listSessionJson = await this.sessionsRepository.find();
-    for (const user of listSessionJson) {
-      const info = JSON.parse(user.json);
-      const isPassport = JSON.stringify(user.json).indexOf('passport');
-      if (
-        isPassport > -1 &&
-        user.destroyedAt === null &&
-        info.passport.user.account_id === account_id
-      )
-        return 1;
-    }
+    const user = await this.usersRepository.findOneBy({
+      account_id,
+    });
+    if (user.socketsConnection.length > 0) return 1;
     return 0;
+  }
+
+  async addUsertoOnlineList(socket_id: any, account_id: string) {
+    const user = await this.usersRepository.findOneBy({ account_id });
+    const listSocket = user.socketsConnection;
+    listSocket.push(socket_id);
+    await this.usersRepository.save({
+      ...user,
+      socketsConnection: listSocket,
+    });
+  }
+
+  async deleteUsertoOnlineList(socket_id: any) {
+    const users = await this.usersRepository.find();
+    for (const user of users) {
+      for (const socket of user.socketsConnection) {
+        if (socket === socket_id) {
+          const index = user.socketsConnection.indexOf(socket);
+          console.log('indexxx', index);
+          if (index === -1) return;
+          const newListSocket = user.socketsConnection;
+          newListSocket.splice(index, 1);
+          await this.usersRepository.save({
+            ...user,
+            usesrOnline: newListSocket,
+          });
+        }
+      }
+    }
+    return users;
   }
 }
