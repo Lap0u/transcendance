@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NavigationBarre } from '../Accueil';
+import { NavigationBarre } from '../Accueil/Accueil';
 import handleErrors from '../RequestErrors/handleErrors';
 import { ActivateTwoAuth } from '../TwoFactorAuth/TwoAuthActivate';
 import UserDto from '../utils/UserDto';
@@ -40,6 +40,7 @@ function ButtonChangeUsername(props : any) {
 			if (window.confirm("Change your username?") === false)
 				return;
 			props.refresh(username);
+			props.changeUser(+props.cur + 1);
 			clearInput.current = "";
 		})
 		.catch((error) => {
@@ -90,6 +91,7 @@ function ButtonChangeAvatar(props : any) {
 			console.log("eeeeeeeee");
 		  clickButton('none');
 		  props.refresh(response.data.avatar);
+		  props.changeUser(props.cur + 1);
 		  console.log("refressshh avatar", response.data.avatar);
 		  e.target.value= null;
 		})
@@ -116,7 +118,7 @@ const Avatar = (props : any) => {
 	return(
 		<ul className='avatar'>
 			<img className='avatarImg' src={ BACK_URL + '/account/avatar/' + props.avatar } alt={props.avatar}/>
-			<ButtonChangeAvatar refresh={props.updateAvatar} avatar={props.avatar}/>
+			<ButtonChangeAvatar refresh={props.updateAvatar} avatar={props.avatar} changeUser={props.changeUser} cur={props.cur}/>
 		</ul>
 	)
 }
@@ -128,7 +130,7 @@ const UserName = (props : any) => {
 	<ul className='username'>
 		<i className='info-type'>Username</i>
 		<i className='info'> {props.username}</i>
-		<ButtonChangeUsername refresh={props.updateUsername} prevUsername={prevUsername}/>	
+		<ButtonChangeUsername refresh={props.updateUsername} prevUsername={prevUsername} changeUser={props.changeUser} cur={props.cur}/>	
 	</ul>
 	)
 }
@@ -173,7 +175,7 @@ function TwoAuth(props: any){
 		</div>
 	)
 }
-const AccountInfo = ({user}: {user: typeof UserDto}) => {
+const AccountInfo = ({user, changeUser, cur}: {user: typeof UserDto, changeUser:any, cur: any}) => {
 
 	const [ok, setOk] = useState(false);
 	const [username,  updateUsername] = useState('');
@@ -211,10 +213,9 @@ const AccountInfo = ({user}: {user: typeof UserDto}) => {
 	return (
 		ok ?
 		<div>
-		<div className='top-line'/>
 		<li className='account-info'>
-			<Avatar avatar={avatar} updateAvatar={updateAvatar}/>
-			<UserName username={username} updateUsername={updateUsername}/>
+			<Avatar avatar={avatar} updateAvatar={updateAvatar} changeUser={changeUser} cur={cur} />
+			<UserName username={username} updateUsername={updateUsername} changeUser={changeUser} cur={cur}/>
 			<ul className='name'>
 				<i className='info-type'>Name </i>
 				<i className='info'>{getName()}</i>
@@ -225,7 +226,6 @@ const AccountInfo = ({user}: {user: typeof UserDto}) => {
 			</ul>
 			<TwoAuth isActivate={twoAuth} turnTwoAuth={turnTwoAuth} email={user.email}/>
 		</li>
-		<div className='bottom-line'/>
 		</div>
 		:null
 	)
@@ -251,7 +251,7 @@ export const LogoutButton = () =>{
 		<button onClick={() => logout()}>Logout</button>
 	)
 }
-const AccountPage = ({user} : {user : typeof UserDto}) => {
+const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUser:any, cur:any}) => {
 	const [ok, setOk] = useState(false);
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
@@ -268,7 +268,7 @@ const AccountPage = ({user} : {user : typeof UserDto}) => {
 		ok?
 		<div className='account-page'>
 			<NavigationBarre isLoginActive={true} user={user}/>
-			<AccountInfo user={user}/>		
+			<AccountInfo user={user} changeUser={changeUser} cur={cur}/>		
 		</div>
 		:
 		null

@@ -12,7 +12,7 @@ import axios from "axios";
 import { BACK_URL } from "../../global";
 import handleErrors from "../RequestErrors/handleErrors";
 import UserDto from "../utils/UserDto";
-import { NavigationBarre } from "../Accueil";
+import { NavigationBarre } from "../Accueil/Accueil";
 
 export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	const params = useParams();
@@ -28,7 +28,6 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
 			.then((response) => {
-				console.log("aaazzzs", response.data);
 				getUser(response.data);
 				setOk(true);
 			})
@@ -43,20 +42,20 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 		<div className='score-page'>
 			<NavigationBarre isLoginActive={true}  user={currentUser}/>
 			<div className='score-page' >
-			<i className='title-scores' style={{fontSize:20, color:'#10117D'}}>SCORE PAGE OF USER {user.accountUsername} </i>
+			<i className='title-scores' style={{fontSize:20, color:'#00000', WebkitTextStroke:'0.8px #2d10d3', position:'relative', top: 40}}>SCORE PAGE OF USER {user.accountUsername} </i>
 			<Tabs className="box-tab" value={tabIndex} onChange={handleTabChange} variant="fullWidth" centered 
 					  sx={{
+						position:'relative', top:50,
 						'& .MuiTabs-indicator': { backgroundColor: '#5700DE' },
 						'& .MuiTab-root': { color: '#5700DE', fontSize:' min(3vw, 15px)'},
 					  }}>
 				<Tab label="Historique" />
         	  	<Tab label="Leaderboard" />
 			</Tabs>
-			<Box sx={{ padding: 2 }}>
+			<Box sx={{ padding: 2,position:'relative', top:50, height:'100vh'}}>
         	{tabIndex === 0 && (
         	  <Box >
         	    <ScoreTab user={user} id={id} currentUser={currentUser}/>
-				<Stats id={id} tabFormat={1}/>
         	  </Box>
         	)}
         	{tabIndex === 1 && (

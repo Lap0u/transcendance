@@ -7,7 +7,7 @@ import { MatchmakingController } from './matchmaking.controller';
 import { MatchmakingService } from './matchmaking.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Scores,Accounts])],
+  imports: [TypeOrmModule.forFeature([Scores, Accounts])],
   controllers: [MatchmakingController],
   providers: [MatchmakingService, ScoresService],
   exports: [MatchmakingService],

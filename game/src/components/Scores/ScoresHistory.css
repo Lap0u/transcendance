@@ -2,10 +2,9 @@
 
 .score-page {
 	text-align: center;
-	background-color: var(--background);
 	font-size: min(3vw, 15px);
-	background-size: cover;
 	overflow:auto;
+	height: 100%;
 
 
 }

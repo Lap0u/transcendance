@@ -4,7 +4,6 @@ import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from './Stats';
 import './ScoresHistory.css';
 import UserPopover from '../utils/UserPopover';
-import { colors } from '@mui/material';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -50,7 +49,7 @@ export function ClassementTab(props: any) {
 	return(
 		ok && classementLen?
 	<div className='tab'>
-	<ul className="classement-tab">
+		<ul className="score-tab">
 		<li className='raw' > Username 
 		{Classement.map((classement) => (
 		<i key={classement.account_id} className="data">

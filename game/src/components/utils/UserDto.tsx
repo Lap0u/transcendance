@@ -13,6 +13,8 @@ const UserDto = {
 	points: "",
 	rank: undefined,
 	status: undefined,
+	usesrOnline: [],
+	currentGames: 0,
   };
 
   export default UserDto;

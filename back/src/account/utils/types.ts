@@ -13,7 +13,8 @@ export type IntraUserDetails = {
   avatar: string;
   points: number;
   rank?: number;
-  status?: boolean;
+  socketsConnection?: string[];
+  currentGames?: number;
 };
 
 export type DatabaseFile = {

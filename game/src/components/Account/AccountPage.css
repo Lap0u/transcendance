@@ -1,10 +1,5 @@
 @import '../../colors.css';
 
-#wholepage {
-	background: var(--background);
-	width: 100vw;
-	height: 100vh;
-}
 
 .account-info ul{
 	background-color: var(--mid-backgroud);
@@ -29,7 +24,8 @@
 	line-height: 4vh;
 	display: inline-block;
 	white-space: nowrap;
-	border-radius: 50%; 
+	border-radius: 50%;
+	color: white; 
 }
 
 .account-info .info-type{
@@ -120,6 +116,13 @@
 	top: 3px;
 	margin: 0;
 	padding: 0;
+
+}
+input[type=file]::file-selector-button{
+	background: var(--light-grey);
+	border: 0.5px solid white ;
+	color: white;
+
 }
 
 .avatar .submit-file{
@@ -129,8 +132,9 @@
 	left: 130px;
 	top: 9px;
 	background-color: var(--light-grey);
-	color: white;
 }
+
+
 .username  .change-username{
 	text-align: center;
 }
@@ -145,6 +149,7 @@
 	right: 140px;
 	font-size: 1.9vh;
 	border: 0.5px solid white ;
+	color: white;
 
 }
 
@@ -152,17 +157,19 @@
 	position: absolute;
 	top: 50%;
     left: 50%;
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, -140%);
 	z-index: 5;
-	background-color:rgb(201, 199, 199);
+	background-color:var(--small-background);
 	text-align: center;
 	color:white;
-	width: 285px;
-	height: 120px;
+	width:300px;
+	height: 130px;
+	border: 2px solid white;
 }
 
 .two-auth .two-auth-form input{
 	margin-right: 15px;
+	margin-bottom: 15px;
 }
 .two-auth .two-auth-form button{
 	color:var(--text-1);
@@ -180,9 +187,11 @@
 }
 
 .two-auth .input-email{
-	background-color: white;
+	background-color: var(--light-grey); 
 	color: black;
 	line-height: 2.5vh;
+	border: 0.5px solid white ;
+	color: white;
 
 }
 
