@@ -1,0 +1,46 @@
+.game-list-container {
+    margin-left: auto;
+    margin-right: 10vw;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+h1 {
+    color: red;
+}
+.item-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.one-game-line {
+    margin-bottom: 1vh;
+}
+
+.join-game-button {
+    display: inline;
+    margin-right: 2vw;
+}
+
+.one-game-list {
+    display: inline;
+    color: white;
+}
+
+.leftPlayer {
+    color: rgb(65, 120, 202);
+    background-color: rgb(255, 0, 0);
+    padding: 3px;
+    margin: 2px;
+    font-weight: bold;
+}
+
+.rightPlayer {
+    color: rgb(255, 0, 0);
+    background-color: rgb(65, 120, 202);
+    padding: 3px;
+    margin: 2px;
+    font-weight: bold;
+}

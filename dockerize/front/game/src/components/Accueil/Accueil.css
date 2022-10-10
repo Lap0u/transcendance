@@ -1,0 +1,104 @@
+@import '../../colors.css';
+
+.AccueilPage {
+  text-align: center;
+  font-size: 3vw;
+}
+
+.home-button {
+  position: relative;
+  float: left;
+  vertical-align: center;
+  font-size: max(1.5vw, 7px);
+  background-color: white;
+  padding: 0.6vw;
+  border-radius: 50px;
+  margin: 8px;
+}
+
+.welcome {
+  color: white;
+  font-size: 1em;
+  position: absolute;
+  z-index: 1;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0px;
+  padding: 0px;
+}
+
+.login-play-message {
+  font-size: 0.6em;
+  color: var(--light-grey);
+}
+
+.login-play-button {
+  font-size: 0.7em;
+  position: absolute;
+  z-index: 3;
+  top: calc(40% + 3em);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login-play-button button {
+  color: var(--text-1);
+}
+
+.nav-barre {
+  color: var(--text-1);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 5vw;
+  line-height: 5vw;
+  background-color: var(--mid-backgroud);
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-barre .onglet-nav {
+  display: inline;
+  text-align: center;
+  padding: 6vw;
+  text-decoration: none;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: max(1.7vw, 9px);
+  white-space: nowrap;
+}
+
+.nav-barre a:hover {
+  color: var(--background);
+}
+
+.nav-barre-avatar {
+  bottom: 0.8vw;
+  width: max(4vw, 20px);
+  height: max(4vw, 20px);
+  text-align: center;
+}
+
+.avatar-username {
+  position: relative;
+  padding: 9;
+  bottom: 0.8vw;
+}
+
+.nav-barre .nav-barre-user-info {
+  height: 5vw;
+  float: right;
+  display: inline;
+  white-space: nowrap;
+  position: relative;
+  text-align: center;
+  justify-content: center;
+  line-height: 5vw;
+  font-size: max(1.5vw, 7px);
+  padding: 0.6vw;
+  background-color: var(--small-background);
+  width: 15vw;
+}

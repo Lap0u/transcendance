@@ -1,0 +1,46 @@
+@import '../../colors.css';
+
+.two-auth{
+	font-size: min(2vw, 17px);
+	position: relative;
+	top:10%;
+}
+.two-auth .two-auth-info{
+	position: relative;
+	color: var(--text-1);
+	text-align: center;
+	top:10px;
+}
+
+
+.two-auth .two-auth-title{
+	text-align: center;
+	color:white;
+}
+
+.two-auth .two-fa-input-email{
+	position: relative;
+	right: 10px;
+	height: min(3vw, 19px);
+	top: 10px;
+}
+
+.two-auth .confirm-button{
+	position: relative;
+	line-height: 0px;
+	height: min(2.5vw, 19px);
+	top: 10px;
+
+}
+
+.two-auth .resend{
+	top: 40px;
+	margin-left: 30px;
+	margin-right: 30px;
+	position: relative;
+}
+.two-auth .resend button{
+	height: min(2vw, 19px);
+	line-height: 0px;
+
+}
