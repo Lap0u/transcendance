@@ -6,13 +6,21 @@ services:
       - '3000:3000'
     depends_on:
       - 'back'
+    container_name: front
+    networks:
+      - transcendance_network
+    restart: unless-stopped
 
   back:
     build: ./back
     env_file: .env
     depends_on:
       - 'db'
-
+    container_name: back
+    networks:
+      - transcendance_network
+    restart: unless-stopped
+  
   db:
     image: postgres
     restart: always
@@ -22,12 +30,24 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: ft_transcendence
+    container_name: postgresql
+    networks:
+      - transcendance_network
+    restart: unless-stopped
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+    container_name: adminer
+    networks:
+      - transcendance_network
+    restart: unless-stopped
+
+networks:
+    transcendance_network:
+      driver: bridge
 
 volumes:
   db:
