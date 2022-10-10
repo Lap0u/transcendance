@@ -4,12 +4,20 @@ services:
     build: ./front
     ports:
       - '3000:3000'
+    depends_on:
+      - 'back'
+
+  back:
+    build: ./back
+    env_file: .env
+    depends_on:
+      - 'db'
 
   db:
     image: postgres
     restart: always
     ports:
-      - 5432:5432
+      - '5432'
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
