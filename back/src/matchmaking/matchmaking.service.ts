@@ -15,12 +15,16 @@ import {
 import { ScoresService } from 'src/game/Scores/scores.service';
 import { v4 as uuid } from 'uuid';
 import { launchGame } from 'src/game/game';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Accounts } from '../account/entities/accounts.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MatchmakingService {
   constructor(
     private socketService: SocketService,
     private scoreService: ScoresService,
+    @InjectRepository(Accounts) private userRepo: Repository<Accounts>,
   ) {}
 
   private matchmakingList: matchmakingDto[] = [];
@@ -85,6 +89,7 @@ export class MatchmakingService {
         this.socketService,
         this.currentMatches,
         this.scoreService,
+        this.userRepo,
       );
       this.quitMatchmaking(toQuit[0]);
       this.quitMatchmaking(toQuit[1]);
@@ -134,18 +139,19 @@ export class MatchmakingService {
       settings,
     );
 
-    launchGame(
+    await launchGame(
       playerOne,
       playerTwo,
       this.socketService.socket,
       newGame,
       this.currentMatches,
       this.scoreService,
+      this.userRepo,
     );
   }
 
   async joinCustomGame(userId: string, socket: string): Promise<any> {
-    for (let game of this.customMatchesList) {
+    for (const game of this.customMatchesList) {
       if (userId === game.playerOne && game.oneReady === false) {
         game.oneSocket = socket;
         game.oneReady = true;

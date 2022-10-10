@@ -202,7 +202,7 @@ function Status(props: any) {
     );
   return (
     <i className="status">
-      <ExclamationCircleFilled style={{ color: 'grey' }} />
+      <ExclamationCircleFilled style={{ color: 'purple' }} />
     </i>
   );
 }

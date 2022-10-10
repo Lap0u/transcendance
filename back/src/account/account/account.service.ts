@@ -121,8 +121,9 @@ export class AccountService {
     const user = await this.usersRepository.findOneBy({
       account_id,
     });
-    if (user.socketsConnection.length > 0) return 1;
-    return 0;
+    if (user.socketsConnection.length === 0) return 0;
+    if (user.currentGames > 0) return 2;
+    return 1;
   }
 
   async addUsertoOnlineList(socket_id: any, account_id: string) {

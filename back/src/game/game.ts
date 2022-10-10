@@ -1,5 +1,7 @@
 import { matchesDto } from 'src/matchmaking/matches.dto';
 import { matchmakingDto } from 'src/matchmaking/matchmaking.dto';
+import { Repository } from 'typeorm';
+import { Accounts } from '../account/entities/accounts.entity';
 import { handleBallMove } from './ball.utils';
 import { handleWallBounce } from './bounce.utils';
 import { FRAME_RATE, RECONNECTION_DELAY } from './constants';
@@ -14,16 +16,19 @@ import {
 import { handlePowerUp } from './powerUp';
 import { ScoresService } from './Scores/scores.service';
 
-export function launchGame(
+export async function launchGame(
   playerOne: matchmakingDto,
   playerTwo: matchmakingDto,
   socket: any,
   game: any,
   allGames: matchesDto[],
   scoreService: ScoresService,
+  userRepo: Repository<Accounts>,
 ) {
+  await setCurrentGames(playerOne.login, userRepo, true);
+  await setCurrentGames(playerTwo.login, userRepo, true);
   const state = createGameState(game.settings);
-  startGameInterval(
+  await startGameInterval(
     playerOne.socket,
     playerTwo.socket,
     state,
@@ -31,10 +36,11 @@ export function launchGame(
     game,
     allGames,
     scoreService,
+    userRepo,
   );
 }
 
-function startGameInterval(
+async function startGameInterval(
   playerOne: string,
   playerTwo: string,
   state: any,
@@ -42,9 +48,10 @@ function startGameInterval(
   curGame: any,
   allGames: matchesDto[],
   scoreService: ScoresService,
+  userRepo: Repository<Accounts>,
 ) {
   let pongCounter: number = FRAME_RATE;
-  const intervalId = setInterval(() => {
+  const intervalId = setInterval(async () => {
     //check connection with client every second
     pongCounter = handlePing(pongCounter, socket, playerOne, playerTwo);
     //
@@ -52,6 +59,8 @@ function startGameInterval(
     if (status === 1) {
       socket.emit(curGame.gameId, state);
     } else {
+      await setCurrentGames(curGame.playerOne.login, userRepo, false);
+      await setCurrentGames(curGame.playerTwo, userRepo, false);
       handleEndGame(status, socket, state, curGame, scoreService);
       clearGame(curGame.gameId, allGames); //enleve la game de la liste, pose des problemes avec le front pour l'instant
       clearInterval(intervalId);
@@ -85,4 +94,25 @@ function gameLoop(state: any, curGames: any): number {
   handlePowerUp(ball, state.powerup, state.settings);
   state.ball = checkGoal(ball, state);
   return checkGameEnd(state);
+}
+
+async function setCurrentGames(
+  account_id: string,
+  userRepo: Repository<Accounts>,
+  increment: boolean,
+) {
+  const user = await userRepo.findOneBy({ account_id });
+  if (increment) {
+    const currentGames: number = +user.currentGames + +1;
+    await userRepo.save({
+      ...user,
+      currentGames,
+    });
+  } else {
+    const currentGames: number = +user.currentGames - +1;
+    await userRepo.save({
+      ...user,
+      currentGames,
+    });
+  }
 }
