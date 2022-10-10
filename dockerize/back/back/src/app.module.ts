@@ -36,7 +36,7 @@ import { SocketGatewayModule } from './socket.gateway.module';
     // Connect to db
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'db',
       port: Number.parseInt(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,

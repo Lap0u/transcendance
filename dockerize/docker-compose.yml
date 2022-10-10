@@ -30,7 +30,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: ft_transcendence
-    container_name: postgresql
+    container_name: db
     networks:
       - transcendance_network
     restart: unless-stopped
