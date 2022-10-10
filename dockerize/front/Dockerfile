@@ -6,10 +6,8 @@ COPY ./game .
 
 RUN npm ci 
 
-RUN npm run build
+CMD [ "npm", "run", "start" ]
 
-ENV NODE_ENV production
+# ENV NODE_ENV production
 
 EXPOSE 3000
-
-CMD [ "npx", "serve", "build" ]
