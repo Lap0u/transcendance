@@ -16,7 +16,7 @@ import {
 import { handlePowerUp } from './powerUp';
 import { ScoresService } from './Scores/scores.service';
 
-export async function launchGame(
+export function launchGame(
   playerOne: matchmakingDto,
   playerTwo: matchmakingDto,
   socket: any,
@@ -25,10 +25,10 @@ export async function launchGame(
   scoreService: ScoresService,
   userRepo: Repository<Accounts>,
 ) {
-  await setCurrentGames(playerOne.login, userRepo, true);
-  await setCurrentGames(playerTwo.login, userRepo, true);
+  setCurrentGames(playerOne.login, userRepo, true);
+  setCurrentGames(playerTwo.login, userRepo, true);
   const state = createGameState(game.settings);
-  await startGameInterval(
+  startGameInterval(
     playerOne.socket,
     playerTwo.socket,
     state,
@@ -40,7 +40,7 @@ export async function launchGame(
   );
 }
 
-async function startGameInterval(
+function startGameInterval(
   playerOne: string,
   playerTwo: string,
   state: any,
@@ -59,8 +59,8 @@ async function startGameInterval(
     if (status === 1) {
       socket.emit(curGame.gameId, state);
     } else {
-      await setCurrentGames(curGame.playerOne.login, userRepo, false);
-      await setCurrentGames(curGame.playerTwo, userRepo, false);
+      setCurrentGames(curGame.playerOne.login, userRepo, false);
+      setCurrentGames(curGame.playerTwo.login, userRepo, false);
       handleEndGame(status, socket, state, curGame, scoreService);
       clearGame(curGame.gameId, allGames); //enleve la game de la liste, pose des problemes avec le front pour l'instant
       clearInterval(intervalId);

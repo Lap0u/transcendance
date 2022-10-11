@@ -139,7 +139,7 @@ export class MatchmakingService {
       settings,
     );
 
-    await launchGame(
+    launchGame(
       playerOne,
       playerTwo,
       this.socketService.socket,
