@@ -26,6 +26,7 @@
   font-size: 0.7em;
   position: absolute;
   z-index: 3;
+  text-align: center;
   top: calc(40% + 3em);
   left: 50%;
   transform: translate(-50%, -50%);
@@ -90,7 +91,7 @@
   }
 
   .nav-barre .user-nav{
-	height: 5vw;
+	  height: 5vw;
 	font-size: max(1.5vw, 7px);
 	  position: relative;
 	  background-color: var(--text-2);

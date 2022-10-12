@@ -26,9 +26,9 @@ export function Stats(props: any){
 		<i>Game lost: {stats.gameLost}</i>
 	</div>
 		:
-	<i className='stats' >
+	<div className='stats' >
 		<i>{stats.gameWon} game won</i><br/>
 		<i>{stats.gameLost} game lost</i>
-	</i>
+	</div>
 	)
 }
