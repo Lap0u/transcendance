@@ -2,12 +2,12 @@ FROM node:18-alpine3.15
 
 WORKDIR /app
 
-COPY ./game .
+COPY ./setup.sh .
 
-RUN npm ci 
-
-CMD [ "npm", "run", "start" ]
-
-# ENV NODE_ENV production
+RUN chmod +x ./setup.sh
 
 EXPOSE 3000
+
+# CMD ["tail", "-f", "/dev/null" ]
+
+ENTRYPOINT [ "/app/setup.sh" ]

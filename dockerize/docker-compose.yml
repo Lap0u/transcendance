@@ -10,6 +10,8 @@ services:
     networks:
       - transcendance_network
     restart: unless-stopped
+    volumes:
+      - front:/app/tmp
 
   back:
     build: ./back
@@ -20,12 +22,11 @@ services:
     networks:
       - transcendance_network
     restart: unless-stopped
+    volumes:
+      - back:/app/tmp
   
   db:
     image: postgres
-    restart: always
-    ports:
-      - '5432'
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -52,3 +53,16 @@ networks:
 volumes:
   db:
     driver: local
+  back:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '$PWD/back/back'
+  front:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '$PWD/front/front'
+
