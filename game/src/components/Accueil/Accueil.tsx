@@ -127,7 +127,7 @@ export function NavigationBarre({
 	const menuItems = [
     {
         key: 'home',
-		style:{width:'15vw'},
+		style:{width:'13vw'},
         icon: <HomeOutlined className="home-button" shape="circle"onClick={() => nav('/')}/>,
     },
     {
@@ -148,7 +148,8 @@ export function NavigationBarre({
 	{
 		key:"user-info",
 		icon: <NavAvatar user={user}/>,
-		label: user.accountUsername,
+		className: 'user-nav',
+		label: "   " + user.accountUsername,
 		children:subMenu,
 	}
 ];
@@ -157,14 +158,10 @@ export function NavigationBarre({
   if (!user) return null;
   return (
       isLoginActive ? (
-		<Menu  items={menuItems} style={{ width:'100vw', flex: "auto",border:'none', position:'relative'}} mode="horizontal" className='nav-barre'>
+		<Menu  items={menuItems} style={{ width:'100vw',border:'none', position:'relative'}} mode="horizontal" className='nav-barre'>
 		  </Menu>
       ) : null
   );
-}
-
-function userItems({user} :{user : typeof UserDto}){
-	return
 }
 
 function NavAvatar({user}: {user: typeof UserDto}){

@@ -42,7 +42,6 @@
   line-height: 5vw;
   justify-content: space-evenly;
   background-color: var(--mid-backgroud);
-
   display: flex;
 }
 
@@ -63,6 +62,7 @@
 	padding: 0;
   font-size: max(1.7vw, 9px);
   white-space: nowrap;
+  position: fixed;
 }
 
 .nav-barre .onglet-nav:hover {
@@ -70,7 +70,6 @@
 }
 
 .nav-barre-avatar {
-  bottom: 0.8vw;
   width: max(4vw, 20px);
   height: max(4vw, 20px);
 }
@@ -85,13 +84,22 @@
 	border-radius: 50px;
 	margin: 0;
 	position: relative;
-	right: 50;
+	right: 20px;
+	bottom: 2px;
 
+  }
+
+  .nav-barre .user-nav{
+	height: 5vw;
+	font-size: max(1.5vw, 7px);
+	  position: relative;
+	  background-color: var(--text-2);
+	  left: 15px;
   }
 .sub-info{
 	padding:0px!important;
 	margin: 0px!important;
-	height: 15vw!important;
+	height: 13vw!important;
 	  position: fixed!important;
 	  width: 15vw!important;
 	  right: 0px!important;
@@ -100,19 +108,30 @@
 	  top: 5vw
 }
 .info{
-	padding: 10px;
 	text-align: center;
 }
 
+.info > .stats{
+	width: 100%;
+	padding: 0.5vw;
+	border-bottom: 0.5px solid var(--light);
+	line-height: 2vw!important;
+	margin: 0px!important;
+}
+
 .info .onglet-nav{
+	position: absolute;
 	color: var(--text-1);
 	font-size: max(1.5vw, 7px);
+	line-height: 3vw ;
+	right: 5vw;
+	top: 9.5vw;
 }
 .info p{
-	font-size: max(1.3vw, 8px);
+	font-size: max(1.3vw, 7px);
 	position: relative;
 	margin: 0px!important;
 	line-height: 2vw!important;
-	color: white;
+	color: var(--light);
 
 }

@@ -79,7 +79,7 @@ export function ScoreTab(props: any) {
 		{score.idWinner !== currentUser.account_id ?
 		<UserPopover currentUser={currentUser} user={score.winner} avatarOrUsername={'username'}/>
 		:
-		<i style={{color: 'orange'}}>{currentUser.accountUsername}</i>
+		<i style={{color: '#610b43'}}>{currentUser.accountUsername}</i>
 		}
 		<br/><i style={{color:'green', fontSize:10, position:'absolute',transform: 'translate(-50%, -50%)'}}>+{score.PointsWon} points</i>
 		</i>
@@ -91,7 +91,7 @@ export function ScoreTab(props: any) {
 		{score.idLoser !== currentUser.account_id ?
 		<UserPopover currentUser={currentUser} user={score.loser} avatarOrUsername={'username'}/>
 		:
-		<i style={{color: 'orange'}}> {currentUser.accountUsername}</i>
+		<i style={{color: '#610b43'}}> {currentUser.accountUsername}</i>
 		}
 		<br/><i style={{color:'red', fontSize:10, position:'absolute',transform: 'translate(-50%, -50%)'}}>-{score.PointsLost} points</i>
 		</i>
@@ -118,6 +118,6 @@ export function ScoreTab(props: any) {
 	</ul>
 	</div>
 		: 
-	<div >No score yet</div>
+	<div style={{color:'#5700DE'}}>No scores yet</div>
 	)
 }
