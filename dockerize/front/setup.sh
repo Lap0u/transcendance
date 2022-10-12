@@ -1,3 +1,6 @@
 #bin/sh
-npm ci
+
+cd front
+
+npm i
 npm run start

@@ -11,7 +11,7 @@ services:
       - transcendance_network
     restart: unless-stopped
     volumes:
-      - front:/app/tmp
+      - front:/app/front
 
   back:
     build: ./back
@@ -23,7 +23,7 @@ services:
       - transcendance_network
     restart: unless-stopped
     volumes:
-      - back:/app/tmp
+      - back:/app/back
   
   db:
     image: postgres
