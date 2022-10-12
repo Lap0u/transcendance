@@ -91,7 +91,7 @@
 .sub-info{
 	padding:0px!important;
 	margin: 0px!important;
-	height: 100px!important;
+	height: 15vw!important;
 	  position: fixed!important;
 	  width: 15vw!important;
 	  right: 0px!important;
@@ -99,19 +99,20 @@
 	  margin-left: 85vw!important;
 	  top: 5vw
 }
-
-.info .stats{
-	background-color: var(--light-grey);
+.info{
+	padding: 10px;
+	text-align: center;
 }
 
 .info .onglet-nav{
 	color: var(--text-1);
+	font-size: max(1.5vw, 7px);
 }
 .info p{
+	font-size: max(1.3vw, 8px);
 	position: relative;
-	padding:5px!important;
 	margin: 0px!important;
-	line-height: 15px!important;
+	line-height: 2vw!important;
 	color: white;
 
 }
