@@ -1,4 +1,4 @@
-FROM node:18-alpine3.15
+FROM node:16.17-buster
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ EXPOSE 3000
 
 # CMD ["tail", "-f", "/dev/null" ]
 
-ENTRYPOINT [ "/app/setup.sh" ]
+ENTRYPOINT [ "sh", "/app/setup.sh" ]
