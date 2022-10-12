@@ -56,7 +56,7 @@ export function ClassementTab(props: any) {
 		{classement.account_id !== currentUser.account_id ?
 		<UserPopover currentUser={currentUser} user={classement} avatarOrUsername={'username'}/>
 		:
-		<i style={{color: 'orange'}}>{currentUser.accountUsername}</i>
+		<i style={{color: '#610b43'}}>{currentUser.accountUsername}</i>
 		}
 		</i>
 	  ))}

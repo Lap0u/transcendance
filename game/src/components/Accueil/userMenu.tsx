@@ -16,7 +16,7 @@ function UserMenu({user} : {user : typeof UserDto}){
 		<Popover
 		className='user-popover'
 		  onVisibleChange={(isVisible) => setIsVisible(isVisible)}
-		  visible={isVisible}
+		  visible={true}
 		  placement="right"
 		  content={content}
 		  title={<ProfileTitle user={user}/>}

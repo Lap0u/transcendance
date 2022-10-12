@@ -1,20 +1,9 @@
 @import '../../colors.css';
 
 .AccueilPage {
-  text-align: center;
   font-size: 3vw;
 }
 
-.home-button {
-  position: relative;
-  float: left;
-  vertical-align: center;
-  font-size: max(1.5vw, 7px);
-  background-color: white;
-  padding: 0.6vw;
-  border-radius: 50px;
-  margin: 8px;
-}
 
 .welcome {
   color: white;
@@ -37,6 +26,7 @@
   font-size: 0.7em;
   position: absolute;
   z-index: 3;
+  text-align: center;
   top: calc(40% + 3em);
   left: 50%;
   transform: translate(-50%, -50%);
@@ -48,57 +38,101 @@
 
 .nav-barre {
   color: var(--text-1);
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
   width: 100vw;
   height: 5vw;
   line-height: 5vw;
+  justify-content: space-evenly;
   background-color: var(--mid-backgroud);
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+  display: flex;
 }
+
+.ant-menu-horizontal .ant-menu-submenu::after,
+.ant-menu-horizontal .ant-menu-item::after{
+  border: 0px!important;
+}
+
+
+
 
 .nav-barre .onglet-nav {
+	text-align: left;
+	color:var(--text-1)!important;
   display: inline;
-  text-align: center;
-  padding: 6vw;
   text-decoration: none;
-  margin-left: auto;
-  margin-right: auto;
+	margin: 0;
+	padding: 0;
   font-size: max(1.7vw, 9px);
   white-space: nowrap;
+  position: fixed;
 }
 
-.nav-barre a:hover {
-  color: var(--background);
+.nav-barre .onglet-nav:hover {
+  color: var(--background)!important;
 }
 
 .nav-barre-avatar {
-  bottom: 0.8vw;
   width: max(4vw, 20px);
   height: max(4vw, 20px);
-  text-align: center;
 }
 
-.avatar-username {
-  position: relative;
-  padding: 9;
-  bottom: 0.8vw;
+
+
+
+.nav-barre .home-button {
+	font-size: max(1.5vw, 7px);
+	background-color: white;
+	padding: 0.6vw;
+	border-radius: 50px;
+	margin: 0;
+	position: relative;
+	right: 20px;
+	bottom: 2px;
+
+  }
+
+  .nav-barre .user-nav{
+	  height: 5vw;
+	font-size: max(1.5vw, 7px);
+	  position: relative;
+	  background-color: var(--text-2);
+	  left: 15px;
+  }
+.sub-info{
+	padding:0px!important;
+	margin: 0px!important;
+	height: 13vw!important;
+	  position: fixed!important;
+	  width: 15vw!important;
+	  right: 0px!important;
+	  background-color: var(--mid-backgroud);
+	  margin-left: 85vw!important;
+	  top: 5vw
+}
+.info{
+	text-align: center;
 }
 
-.nav-barre .nav-barre-user-info {
-  height: 5vw;
-  float: right;
-  display: inline;
-  white-space: nowrap;
-  position: relative;
-  text-align: center;
-  justify-content: center;
-  line-height: 5vw;
-  font-size: max(1.5vw, 7px);
-  padding: 0.6vw;
-  background-color: var(--small-background);
-  width: 15vw;
+.info > .stats{
+	width: 100%;
+	padding: 0.5vw;
+	border-bottom: 0.5px solid var(--light);
+	line-height: 2vw!important;
+	margin: 0px!important;
+}
+
+.info .onglet-nav{
+	position: absolute;
+	color: var(--text-1);
+	font-size: max(1.5vw, 7px);
+	line-height: 3vw ;
+	right: 5vw;
+	top: 9.5vw;
+}
+.info p{
+	font-size: max(1.3vw, 7px);
+	position: relative;
+	margin: 0px!important;
+	line-height: 2vw!important;
+	color: var(--light);
+
 }
