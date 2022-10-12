@@ -10,6 +10,12 @@ import handleErrors from '../RequestErrors/handleErrors';
 import { HomeOutlined } from '@ant-design/icons';
 import Avatar from 'antd/lib/avatar/avatar';
 import UserDto from '../utils/UserDto';
+import UserMenu from './userMenu';
+import { Menu } from 'antd';
+import { Tabs } from 'antd';
+import { Stats } from '../Scores/Stats';
+import Grid from 'antd/lib/card/Grid';
+import { MenuItem } from '@mui/material';
 const socket = io('http://localhost:3000');
 socket.on('init', handleInit);
 
@@ -67,42 +73,110 @@ export function NavigationBarre({
   user: typeof UserDto;
   isLoginActive: any;
 }) {
+
+
+	const itemGroup=[
+		{
+			label: 
+			<div>
+				<i>{user.points} points</i>
+				<i><Stats id={user.account_id} tabFormat={0} /></i>
+				<i>rank: {user.rank}</i>
+			</div>
+		}
+	]
+	const subMenuItem = [
+		{
+			style:{width:'18px'},
+			title:"Stats",
+			className:"info",
+			key:"points",
+			label:
+			<div>
+				<div>
+				<i>{user.points} points</i>
+				<Stats id={user.account_id} tabFormat={0} />
+				<i>rank: {user.rank}</i>
+				</div>
+				<Link className="onglet-nav" to="/logout">
+					Logout
+				</Link> 
+
+			</div>
+		}
+	]
+	const subMenu=[
+		{
+			style:{width:'18px', height: '300px'},
+			title:"Stats",
+			className:"sub-info",
+			key:"points",
+			label:
+			<div className='info'>
+				<div className='stats'>
+				<p>{user.points} points</p>
+				<p><Stats id={user.account_id} tabFormat={0} /></p>
+				<p>rank: {user.rank}</p>
+				</div>
+				<Link className="onglet-nav" to="/logout">
+					Logout
+				</Link> 
+			</div>
+		}
+	]
+	const menuItems = [
+    {
+        key: 'home',
+		style:{width:'15vw'},
+        icon: <HomeOutlined className="home-button" shape="circle"onClick={() => nav('/')}/>,
+    },
+    {
+		style:{width:'22vw'},
+        key: 'profil',
+        label: <Link  className="onglet-nav"  to="/account">Profil</Link>
+    },
+    {
+		style:{width:'22vw'},
+        key: 'chat',
+        label:  <Link className="onglet-nav" to="/chat">Chat </Link>
+    },
+	{
+		style:{width:'22vw'},
+        key: 'scores',
+        label: <Link className="onglet-nav" to={`/scores/${user.account_id}`}>Scores</Link>
+    },
+	{
+		key:"user-info",
+		icon: <NavAvatar user={user}/>,
+		label: user.accountUsername,
+		children:subMenu,
+	}
+];
+
   const nav = useNavigate();
   if (!user) return null;
   return (
-    <div>
-      {isLoginActive ? (
-        <ul className="nav-barre">
-          <HomeOutlined
-            className="home-button"
-            shape="circle"
-            onClick={() => nav('/')}
-          />
-          <div className="nav-barre-user-info">
-            <Avatar
-              className="nav-barre-avatar"
-              src={BACK_URL + '/account/avatar/' + user.avatar}
-              alt="avatar"
-            />
-            <i className="avatar-username">{user.accountUsername}</i>
-          </div>
-          <Link className="onglet-nav" to="/account">
-            Profil
-          </Link>
-          <Link className="onglet-nav" to="/chat">
-            Chat
-          </Link>
-          <Link className="onglet-nav" to={`/scores/${user.account_id}`}>
-            Scores
-          </Link>
-          <Link className="onglet-nav" to="/logout">
-            Logout
-          </Link>
-        </ul>
-      ) : null}
-    </div>
+      isLoginActive ? (
+		<Menu  items={menuItems} style={{ width:'100vw', flex: "auto",border:'none', position:'relative'}} mode="horizontal" className='nav-barre'>
+		  </Menu>
+      ) : null
   );
 }
+
+function userItems({user} :{user : typeof UserDto}){
+	return
+}
+
+function NavAvatar({user}: {user: typeof UserDto}){
+	return(
+		<Avatar
+		className="nav-barre-avatar"
+		src={BACK_URL + '/account/avatar/' + user.avatar}
+   		alt="avatar"
+		/>
+	)
+}
+
 function LoginPlayButton(props: any) {
   const nav = useNavigate();
   return (
