@@ -17,38 +17,23 @@ const GameMenu = (props: any) => {
   const [gameBackground, setGameBackground] = useState('#555555');
   const [inMatchmaking, setMatchmaking] = useState(false);
   const [gamesList, setGamesList] = useState<game[]>([]);
-  const socket = props.socket;
-  const currentUser = props.currentUser;
-  // const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
-  const [user, setUser] = useState({ account_id: '' });
+  const socket = props.socket;
+  const currentUser = props.currentUser;
 
   useEffect(() => {
     axios
-      .get(`${BACK_URL}/auth/status`, { withCredentials: true })
-      .then((res) => {
-        setOk(true);
-        axios
-          .get(`${BACK_URL}/2fa/status`, {
-            withCredentials: true,
-          })
-          .then((res) => {
-            setUser(res.data);
-          })
-          .catch((error) => {
-            handleErrors(error);
-          });
-        setIsLogin(true);
+      .get(`${BACK_URL}/account/status`, { withCredentials: true })
+      .then(() => {
+        if (currentUser.accountUsername !== '') setOk(true);
       })
       .catch((error) => {
-        if (error.response.status === 403) setIsLogin(false);
-        else handleErrors(error);
-        setOk(true);
+        handleErrors(error);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentUser]);
 
   const customGameValues: any = {
     myColor: ownPaddleColor,
@@ -61,12 +46,13 @@ const GameMenu = (props: any) => {
     setMatchmaking(!inMatchmaking);
   };
   const quitMatchmakingList = async (userId: string) => {
+    if (userId === '') return;
     try {
       await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {
         withCredentials: true,
       });
     } catch (e) {
-      handleErrors(e);
+      // handleErrors(e);
     }
   };
 
@@ -86,15 +72,17 @@ const GameMenu = (props: any) => {
     }
   };
   const getMatchesList = async () => {
-    try {
-      const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
-        withCredentials: true,
-      });
-      setGamesList(res.data);
-    } catch (e) {
-      console.log(e);
+    if (ok) {
+      try {
+        const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
+          withCredentials: true,
+        });
+        setGamesList(res.data);
+      } catch (e) {
+        console.log(e);
 
-      handleErrors(e);
+        handleErrors(e);
+      }
     }
   };
   useEffect(() => {
@@ -128,9 +116,9 @@ const GameMenu = (props: any) => {
   var matchmakingButton = inMatchmaking
     ? 'Exit Matchmaking'
     : 'Join Matchmaking';
-  return (
+  return ok ? (
     <div>
-      <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
+      <NavigationBarre user={currentUser} isLoginActive={1} />
       <Space>
         <Button onClick={joinMatchmaking} type="primary">
           {matchmakingButton}
@@ -157,7 +145,7 @@ const GameMenu = (props: any) => {
         />
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default GameMenu;

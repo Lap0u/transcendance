@@ -28,32 +28,18 @@ const CustomMenu = (props: any) => {
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
-  const [user, setUser] = useState({ account_id: '' });
 
   useEffect(() => {
     axios
-      .get(`${BACK_URL}/auth/status`, { withCredentials: true })
-      .then((res) => {
-        setOk(true);
-        axios
-          .get(`${BACK_URL}/2fa/status`, {
-            withCredentials: true,
-          })
-          .then((res) => {
-            setUser(res.data);
-          })
-          .catch((error) => {
-            handleErrors(error);
-          });
-        setIsLogin(true);
+      .get(`${BACK_URL}/account/status`, { withCredentials: true })
+      .then(() => {
+        if (currentUser.accountUsername !== '') setOk(true);
       })
       .catch((error) => {
-        if (error.response.status === 403) setIsLogin(false);
-        else handleErrors(error);
-        setOk(true);
+        handleErrors(error);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentUser]);
 
   const customGameValues: any = {
     myColor: ownPaddleColor,
@@ -81,8 +67,8 @@ const CustomMenu = (props: any) => {
         setSecondSocket(res.data.playerSocket);
       }
     }
-    if (gameReady !== 'ready') joinCustom();
-  });
+    if (ok && gameReady !== 'ready') joinCustom();
+  }, [ok]);
 
   async function startCustom(
     currentUser: any,
@@ -125,9 +111,9 @@ const CustomMenu = (props: any) => {
   });
 
   let isReady = secondPlayer === null ? 'Loading' : 'Start game';
-  return (
+  return ok ? (
     <div className="global-div">
-      <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
+      <NavigationBarre user={currentUser} isLoginActive={1} />
       <Space>
         <Button
           disabled={isReady === 'Loading'}
@@ -158,7 +144,7 @@ const CustomMenu = (props: any) => {
         />
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default CustomMenu;
