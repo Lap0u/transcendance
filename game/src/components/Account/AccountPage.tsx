@@ -256,6 +256,7 @@ const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUse
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
 			.then(()=>{
+				console.log("accpunt",user);
 				if (user)
 					setOk(true);
 			})
@@ -263,7 +264,7 @@ const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUse
 				handleErrors(error)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
+	}, []);
 	return (
 		ok?
 		<div className='account-page'>

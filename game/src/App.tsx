@@ -46,15 +46,12 @@ function App() {
       })
       .then((res) => {
         setCurrentUser(res.data);
+		console.log('aaaaaaaa');
 		if (userChanged === 0)
 			socket.emit('clientConnected', { ...res.data });
       })
       .catch(async (error) => {
-        if (error.response.status === 401 || error.response.status === 403) {
-          message.error("Vous n'etes pas connecté");
-        } else {
           return <InternalError />;
-        }
       });
   }, [userChanged]);
 
@@ -137,7 +134,7 @@ function App() {
         <Route path="/wrongGameId" element={<WrongGameId />} />
         <Route path="/login" element={<LoginSuccess />} />
         <Route path="/emailverify" element={<EmailConfirm />} />
-        <Route path="/2fa" element={<TwoAuthAutenticatePage />} />
+        <Route path="/2fa" element={<TwoAuthAutenticatePage changeUser={changeUser} userChanged={userChanged} />} />
         <Route
           path="/scores/:id"
           element={<ScoresPage currentUser={currentUser} />}
