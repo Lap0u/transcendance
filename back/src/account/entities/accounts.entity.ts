@@ -60,4 +60,7 @@ export class Accounts {
 
   @Column({ nullable: true, default: 0 })
   public currentGames?: number;
+
+  @Column('text', { array: true, default: [] })
+  public friendList?: Array<Accounts>;
 }

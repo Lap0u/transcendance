@@ -26,6 +26,7 @@ import UserDto from './components/utils/UserDto';
 import handleErrors from './components/RequestErrors/handleErrors';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
 import { handleDisconected, setConnect, setDisconnect } from './components/utils/connect';
+import BadRequest from './components/ErrorPage/BadRequest';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -130,7 +131,9 @@ function App() {
           element={<SingleGame socket={socket} />}
         />
         <Route path="/error403" element={<Disconnected />} />
+		<Route path="/error404" element={<Page404 />} />
         <Route path="/error500" element={<InternalError />} />
+		<Route path="/error400" element={<BadRequest />} />
         <Route path="/wrongGameId" element={<WrongGameId />} />
         <Route path="/login" element={<LoginSuccess />} />
         <Route path="/emailverify" element={<EmailConfirm />} />

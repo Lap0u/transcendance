@@ -28,6 +28,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
 			.then((response) => {
+				console.log("scoooores", response)
 				getUser(response.data);
 				setOk(true);
 			})

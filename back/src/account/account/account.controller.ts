@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Req,
@@ -49,8 +50,17 @@ export class AccountController {
   @Get('/id/:id')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
-  async getAccountInfoById(@Param() param) {
-    return await this.usersService.findUserById(param.id);
+  async getAccountInfoById(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.findUserById(id);
+    if (user === null) {
+      res.sendStatus(404);
+      return;
+    }
+    res.send(user);
+    return user;
   }
 
   @Get('/userId/:id') //user.id
@@ -163,5 +173,17 @@ export class AccountController {
   @UseGuards(JwtTwoFactorGuard)
   async statusById(@Param() params) {
     return await this.usersService.getStatusById(params.id);
+  }
+
+  @Post('add-friend')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async addFriend(
+    @Req() req: Request,
+    @Body('friend_id', ParseUUIDPipe) friend_id: string,
+  ) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    return this.usersService.addUserToFriendList(id, friend_id);
   }
 }

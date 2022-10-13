@@ -33,11 +33,14 @@ export const UserPopover = ({
     if (!currentUser.blacklist) return false;
     return currentUser.blacklist.includes(user.id);
   }, [currentUser.blacklist, user.id]);
+  const inFriendList = useMemo(() => {
+    if (!currentUser.frienList) return false;
+    return currentUser.friendList.includes(user.id);
+  }, [currentUser.frienList, currentUser.friendList, user.id]);
 
   const nav = useNavigate();
 
   const [isVisible, setIsVisible] = useState(false);
-
   const blacklist = async () => {
     const newBlacklist = [...currentUser.blacklist, user.id];
     try {
@@ -76,7 +79,23 @@ export const UserPopover = ({
 
   const handleScoresClick = (nav: any) => {
     console.log(`/scores/${user.account_id}`);
+	setIsVisible(false);
     nav(`/scores/${user.account_id}`);
+  };
+
+  const handleAddFriend = async () => {
+    console.log('Profile');
+    axios.post(`${BACK_URL}/account/add-friend`, {friend_id : user.account_id},
+    {
+          withCredentials: true,
+    })
+    .then(()=>{
+		message.success('Success to add to friend list');
+		setIsVisible(false);
+	})
+    .catch((error) => {
+     // handleErrors(error);
+    })
   };
 
   const handleInviteClick = async () => {
@@ -104,6 +123,11 @@ export const UserPopover = ({
       style={{ display: 'flex', flexDirection: 'column' }}>
       <Button style={stylePopoverButton} onClick={() => handleScoresClick(nav)}>
         Scores
+      </Button>
+	  <Button
+        style={{ margin: '5px 0', ...stylePopoverButton }}
+        onClick={handleAddFriend}>
+        {inFriendList ? 'Remove Friend' : 'Add to friends'}
       </Button>
       <Button
         style={{ margin: '5px 0', ...stylePopoverButton }}

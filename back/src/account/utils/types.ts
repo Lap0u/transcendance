@@ -14,8 +14,20 @@ export type IntraUserDetails = {
   points: number;
   rank?: number;
   socketsConnection?: string[];
+  frienList?: [];
   currentGames?: number;
 };
+
+export type PublicInfoUserDto = {
+	id: string;
+	username: string;
+	name: string;
+	accountUsername: string;
+	avatar: string;
+	points: number;
+	rank?: number;
+	currentGames?: number;
+}
 
 export type DatabaseFile = {
   id: string;

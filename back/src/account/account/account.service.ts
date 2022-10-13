@@ -149,10 +149,26 @@ export class AccountService {
           await this.usersRepository.save({
             ...user,
             usesrOnline: newListSocket,
+            currentGames: 0,
           });
         }
       }
     }
     return users;
+  }
+
+  async addUserToFriendList(currentId: string, friendId: string) {
+    const user = await this.usersRepository.findOneBy({
+      id: currentId,
+    });
+    const friend = await this.usersRepository.findOneBy({
+      account_id: friendId,
+    });
+    const friendList = user.friendList;
+    friendList.push(friend);
+    this.usersRepository.save({
+      ...user,
+      friendList,
+    });
   }
 }

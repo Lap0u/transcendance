@@ -1,3 +1,22 @@
+
+  export type TypeUserDto = {
+	id: string;
+	username: string;
+	name: string;
+	accountUsername: string;
+	isTwoFactorAuthenticationEnabled: boolean;
+	authConfirmToken?: string;
+	isVerified?: boolean;
+	twoFactorAuthenticationSecret?: string;
+	email: string;
+	avatar: string;
+	points: number;
+	rank?: number;
+	socketsConnection?: string[];
+	frienList?: TypeUserDto[];
+	currentGames?: number;
+  };
+
 const UserDto = {
 	account_id:"",
 	id: "",
@@ -15,6 +34,8 @@ const UserDto = {
 	status: undefined,
 	usesrOnline: [],
 	currentGames: 0,
+	frienList: [],
   };
 
+  
   export default UserDto;
