@@ -27,7 +27,6 @@ import { ScoresModule } from './game/Scores/scores.module';
 import { Scores } from './game/Scores/entities/scores.entities';
 import { ScoresController } from './game/Scores/scores.controller';
 import { AccountService } from './account/account/account.service';
-import { SocketGatewayModule } from './socket.gateway.module';
 
 @Module({
   imports: [
