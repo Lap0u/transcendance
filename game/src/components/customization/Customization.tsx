@@ -3,6 +3,7 @@ import PaddleCustom from './PaddleCustom';
 import './Customization.css';
 import BackgroundCustom from './BackgroundCustom';
 import { useState } from 'react';
+import { Col, Row } from 'antd';
 
 const Customization = ({
   ownPaddleColor,
@@ -20,6 +21,9 @@ const Customization = ({
   const [backgroundPicker, setBackgroundPicker] = useState(false);
   return (
     <div className="customization-grid">
+      <Row className="custom-row">
+        <Col span={24}>Personnal Visual Settings</Col>
+      </Row>
       <PaddleCustom
         others={!opponentPicker && !ballPicker && !backgroundPicker}
         compPicker={ownPicker}

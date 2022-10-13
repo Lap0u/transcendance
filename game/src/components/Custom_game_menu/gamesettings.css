@@ -1,10 +1,11 @@
 .settings-table {
-  width: 30vw;
+  width: 25vw;
 }
 
 .settings-raw {
   text-align: center;
-  background-color: white;
+  color: whitesmoke;
+  margin-bottom: 1vh;
 }
 
 .powerup-button {

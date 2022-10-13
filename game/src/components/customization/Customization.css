@@ -1,5 +1,9 @@
 .customization-grid {
-	background-color: aqua;
-	width: 30vw;
-	margin-top: 3vh;
+  width: 25vw;
+  margin-top: 3vh;
+}
+.custom-row {
+  color: white;
+  text-align: center;
+  margin-bottom: 2vh;
 }

@@ -15,7 +15,7 @@ const CustomMenu = (props: any) => {
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
   const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
   const [ballColor, setBallColor] = useState('#ffffff');
-  const [gameBackground, setGameBackground] = useState('#000000');
+  const [gameBackground, setGameBackground] = useState('#555555');
   const [secondPlayer, setSecondPlayer] = useState(null);
   const [secondSocket, setSecondSocket] = useState('');
   const [settings, setSettings] = useState({
