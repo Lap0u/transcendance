@@ -19,6 +19,8 @@ services:
     depends_on:
       - 'db'
     container_name: back
+    ports:
+      - '4000:4000'
     networks:
       - transcendance_network
     restart: unless-stopped

@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
 	allowedHeaders: ['Content-Type'],
-  	origin: 'http://front:3000',
+  	origin: 'http://localhost:3000',
   	credentials: true,
   })
   const config: ConfigService = app.get(ConfigService);

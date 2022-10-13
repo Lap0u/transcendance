@@ -31,9 +31,9 @@ import {
   setDisconnect,
 } from './components/utils/connect';
 
-const BACK_URL = 'http://back:4000';
+const BACK_URL = 'http://localhost:4000';
 
-const socket = io(BACK_URL, { withCredentials: true }).connect();
+const socket = io(BACK_URL).connect();
 function App() {
   const [currentUser, setCurrentUser] = useState({ ...UserDto });
   const [isInviteGameModalOpen, setIsInviteGameModalOpen] = useState(false);

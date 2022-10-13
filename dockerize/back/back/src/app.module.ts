@@ -56,10 +56,9 @@ import { SocketGatewayModule } from './socket.gateway.module';
     DatabaseFileModule,
     PassportModule.register({ session: true }),
     HttpModule,
-    SocketGatewayModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SocketGateway],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}
