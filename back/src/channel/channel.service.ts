@@ -9,12 +9,15 @@ import {
   UpdateChannelUserDto,
 } from './channel.dto';
 import { Channel, ChannelType, MuteOrBanUser } from './channel.entity';
+import { Chat } from 'src/chat/chat.entity';
 
 @Injectable()
 export class ChannelService {
   constructor(
     @InjectRepository(Channel)
     private channelsRepository: Repository<Channel>,
+    @InjectRepository(Chat)
+    private chatRepository: Repository<Chat>,
     private socketService: SocketService,
   ) {}
 
@@ -135,6 +138,7 @@ export class ChannelService {
 
     if (channel.usersId.length === 0) {
       this.channelsRepository.remove(channel);
+      this.chatRepository.delete({ receiverId: channelId });
       this.socketService.socket.emit('deleteChannel', channelId);
       return 'ok';
     }
@@ -163,6 +167,7 @@ export class ChannelService {
     }
 
     this.channelsRepository.remove(channel);
+    this.chatRepository.delete({ receiverId: channelId });
 
     this.socketService.socket.emit('deleteChannel', channelId);
 
