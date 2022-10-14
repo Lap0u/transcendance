@@ -1,6 +1,24 @@
+@import '../../colors.css';
+
 .preview-box {
-	color: rgb(241, 35, 241);
-	margin-left: 15vw;
-	margin-right: auto;
-	font-size: 16px;
+  color: white;
+  font-size: 16px;
+}
+.layout {
+  background-color: var(--background);
+}
+.layout-2 {
+  flex-direction: row;
+  background-color: burlywood;
+}
+
+.sider-1 {
+  background-color: aqua;
+}
+.content-1 {
+  background-color: brown;
+}
+
+.sider-2 {
+  background-color: blue;
 }

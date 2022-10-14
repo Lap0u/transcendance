@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Space, version } from 'antd';
+import { Button, Layout, Space, version } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GameList, game } from './GameList';
@@ -9,6 +9,8 @@ import Customization from '../customization/Customization';
 import GamePreview from './GamePreview';
 import './Game_menu.css';
 import { NavigationBarre } from '../Accueil/Accueil';
+import Sider from 'antd/lib/layout/Sider';
+import { Content } from 'antd/lib/layout/layout';
 
 const GameMenu = (props: any) => {
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
@@ -118,34 +120,43 @@ const GameMenu = (props: any) => {
     ? 'Exit Matchmaking'
     : 'Join Matchmaking';
   return ok ? (
-    <div>
+    <Layout className="layout">
       <NavigationBarre user={currentUser} isLoginActive={1} />
       <Space>
         <Button onClick={joinMatchmaking} type="primary">
           {matchmakingButton}
         </Button>
       </Space>
-      <Customization
-        ownPaddleColor={ownPaddleColor}
-        setOwnPaddleColor={setOwnPaddleColor}
-        opponentPaddleColor={opponentPaddleColor}
-        setOpponentPaddleColor={setOpponentPaddleColor}
-        ballColor={ballColor}
-        setBallColor={setBallColor}
-        gameBackground={gameBackground}
-        setGameBackground={setGameBackground}
-      />
-      <GameList games={gamesList} customGameValues={customGameValues} />
-      <div className="preview-box">
-        <div>Live game preview</div>
-        <GamePreview
-          ownColor={ownPaddleColor}
-          opponentColor={opponentPaddleColor}
-          ballColor={ballColor}
-          backgroundColor={gameBackground}
-        />
-      </div>
-    </div>
+      <Layout className="layout-2">
+        {/* <Sider>Test</Sider>
+        <Content>Test2</Content>
+        <Sider>Test3</Sider> */}
+        <Sider className="sider-1">
+          <Customization
+            ownPaddleColor={ownPaddleColor}
+            setOwnPaddleColor={setOwnPaddleColor}
+            opponentPaddleColor={opponentPaddleColor}
+            setOpponentPaddleColor={setOpponentPaddleColor}
+            ballColor={ballColor}
+            setBallColor={setBallColor}
+            gameBackground={gameBackground}
+            setGameBackground={setGameBackground}
+          />
+        </Sider>
+        <Content className="content-1">
+          <div className="preview-box">Live game preview</div>
+          <GamePreview
+            ownColor={ownPaddleColor}
+            opponentColor={opponentPaddleColor}
+            ballColor={ballColor}
+            backgroundColor={gameBackground}
+          />
+        </Content>
+        <Sider className="sider-2">
+          <GameList games={gamesList} customGameValues={customGameValues} />
+        </Sider>
+      </Layout>
+    </Layout>
   ) : null;
 };
 

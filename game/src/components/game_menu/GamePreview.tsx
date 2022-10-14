@@ -16,7 +16,6 @@ const GamePreview = ({
   function updateGame(gameState: any) {
     const canvas: any = canvasRef.current;
     if (canvas === null) {
-      console.log('nulldude');
       return;
     }
     canvas.width = window.innerWidth;
