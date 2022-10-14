@@ -28,6 +28,7 @@ const GameMenu = (props: any) => {
       .get(`${BACK_URL}/account/status`, { withCredentials: true })
       .then(() => {
         if (currentUser.accountUsername !== '') setOk(true);
+        setIsLogin(true);
       })
       .catch((error) => {
         handleErrors(error);
@@ -52,7 +53,7 @@ const GameMenu = (props: any) => {
         withCredentials: true,
       });
     } catch (e) {
-      // handleErrors(e);
+      handleErrors(e);
     }
   };
 
