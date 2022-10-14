@@ -9,6 +9,11 @@ export const CHANNEL_TYPE = {
   private: 'private',
 };
 
+export type MuteOrBanUser = {
+  userId: string;
+  until: string;
+};
+
 export type ChannelType = {
   id: string;
   type: string;
@@ -17,6 +22,7 @@ export type ChannelType = {
   administratorsId: string[];
   usersId: string[];
   channelName: string;
+  muteList: MuteOrBanUser[];
 };
 
 export type MessageType = {

@@ -12,6 +12,11 @@ export enum ChannelType {
   PROTECTED = 'protected',
 }
 
+export class MuteOrBanUser {
+  userId: string;
+  until: string;
+}
+
 @Entity()
 export class Channel {
   @PrimaryGeneratedColumn('uuid')
@@ -38,6 +43,9 @@ export class Channel {
 
   @Column('text', { array: true })
   usersId!: string[];
+
+  @Column('json', { default: [] })
+  muteList!: MuteOrBanUser[];
 
   /*
    * Create and Update Date Columns

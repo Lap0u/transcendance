@@ -2,12 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SocketService } from 'src/socket/socket.service';
 import { Repository, ArrayContains } from 'typeorm';
+import * as moment from 'moment';
 import {
   CreateChannelDto,
   UpdateChannelDto,
   UpdateChannelUserDto,
 } from './channel.dto';
-import { Channel, ChannelType } from './channel.entity';
+import { Channel, ChannelType, MuteOrBanUser } from './channel.entity';
 
 @Injectable()
 export class ChannelService {
@@ -172,13 +173,35 @@ export class ChannelService {
     channelId: string,
     userId: string,
     type: string,
-    banTime: number,
+    duration: number,
   ): Promise<Channel> {
     const channel: Channel = await this.channelsRepository.findOneBy({
       id: channelId,
     });
 
-    console.log(channel.channelName, userId, type, banTime);
-    return channel;
+    const until = moment()
+      .add(duration, 'minutes')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+    if (type === 'mute') {
+      const index = channel.muteList.findIndex(
+        (muteUser: MuteOrBanUser) => muteUser.userId === userId,
+      );
+      if (index !== -1) {
+        channel.muteList[index].until = until;
+      } else {
+        const muteOrBanUser: MuteOrBanUser = {
+          userId,
+          until,
+        };
+        channel.muteList.push(muteOrBanUser);
+      }
+    }
+
+    const saveChannel = this.channelsRepository.save(channel);
+
+    this.socketService.socket.emit('updateChannel', channel);
+
+    return saveChannel;
   }
 }
