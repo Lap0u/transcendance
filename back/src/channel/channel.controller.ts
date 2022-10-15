@@ -85,8 +85,8 @@ export class ChannelController {
   banOrMute(
     @Param('channelId') channelId: string,
     @Param('userId') userId: string,
-    @Body() body: { type: string; banTime: number },
+    @Body() body: { type: string; duration: number },
   ): Promise<Channel> {
-    return this.service.banOrMute(channelId, userId, body.type, body.banTime);
+    return this.service.banOrMute(channelId, userId, body.type, body.duration);
   }
 }

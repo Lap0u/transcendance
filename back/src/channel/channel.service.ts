@@ -2,18 +2,22 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SocketService } from 'src/socket/socket.service';
 import { Repository, ArrayContains } from 'typeorm';
+import * as moment from 'moment';
 import {
   CreateChannelDto,
   UpdateChannelDto,
   UpdateChannelUserDto,
 } from './channel.dto';
-import { Channel, ChannelType } from './channel.entity';
+import { Channel, ChannelType, MuteOrBanUser } from './channel.entity';
+import { Chat } from 'src/chat/chat.entity';
 
 @Injectable()
 export class ChannelService {
   constructor(
     @InjectRepository(Channel)
     private channelsRepository: Repository<Channel>,
+    @InjectRepository(Chat)
+    private chatRepository: Repository<Chat>,
     private socketService: SocketService,
   ) {}
 
@@ -134,6 +138,7 @@ export class ChannelService {
 
     if (channel.usersId.length === 0) {
       this.channelsRepository.remove(channel);
+      this.chatRepository.delete({ receiverId: channelId });
       this.socketService.socket.emit('deleteChannel', channelId);
       return 'ok';
     }
@@ -162,6 +167,7 @@ export class ChannelService {
     }
 
     this.channelsRepository.remove(channel);
+    this.chatRepository.delete({ receiverId: channelId });
 
     this.socketService.socket.emit('deleteChannel', channelId);
 
@@ -172,13 +178,35 @@ export class ChannelService {
     channelId: string,
     userId: string,
     type: string,
-    banTime: number,
+    duration: number,
   ): Promise<Channel> {
     const channel: Channel = await this.channelsRepository.findOneBy({
       id: channelId,
     });
 
-    console.log(channel.channelName, userId, type, banTime);
-    return channel;
+    const until = moment()
+      .add(duration, 'minutes')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+    const listName = type === 'mute' ? 'muteList' : 'banList';
+
+    const index = channel[listName].findIndex(
+      (user: MuteOrBanUser) => user.userId === userId,
+    );
+    if (index !== -1) {
+      channel[listName][index].until = until;
+    } else {
+      const muteOrBanUser: MuteOrBanUser = {
+        userId,
+        until,
+      };
+      channel[listName].push(muteOrBanUser);
+    }
+
+    const saveChannel = this.channelsRepository.save(channel);
+
+    this.socketService.socket.emit('updateChannel', channel);
+
+    return saveChannel;
   }
 }
