@@ -23,6 +23,7 @@ export type ChannelType = {
   usersId: string[];
   channelName: string;
   muteList: MuteOrBanUser[];
+  banList: MuteOrBanUser[];
 };
 
 export type MessageType = {

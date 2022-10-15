@@ -6,13 +6,14 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 import { Button, Input, Modal, message } from 'antd';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ChannelFormModal from './ChannelFormModal';
-import { ChannelType, CHAT_TYPE, CHANNEL_TYPE } from './const';
+import { ChannelType, CHAT_TYPE, CHANNEL_TYPE, MuteOrBanUser } from './const';
 import ChannelManageUserModal from './ChannelManageUserModal';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
 import UserPopover from '../utils/UserPopover';
+import checkMuteOrBan from '../utils/checkMuteOrBan';
 
 const { confirm } = Modal;
 
@@ -64,6 +65,18 @@ const ChannelListItem = ({
   };
 
   const findUser = channel.usersId.find((user) => user === currentUser.id);
+
+  const userBanned = useMemo(
+    () =>
+      channel.banList.find(
+        (banUser: MuteOrBanUser) => banUser.userId === currentUser.id
+      ),
+    [channel, currentUser]
+  );
+
+  if (checkMuteOrBan(userBanned)) {
+    return null;
+  }
 
   const textToJoin = 'Are you sure to join this channel?';
 

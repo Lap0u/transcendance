@@ -47,6 +47,9 @@ export class Channel {
   @Column('json', { default: [] })
   muteList!: MuteOrBanUser[];
 
+  @Column('json', { default: [] })
+  banList!: MuteOrBanUser[];
+
   /*
    * Create and Update Date Columns
    */

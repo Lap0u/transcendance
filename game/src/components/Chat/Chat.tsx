@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { BACK_URL } from '../../global';
 import { NavigationBarre } from '../Accueil/Accueil';
 import handleErrors from '../RequestErrors/handleErrors';
+import checkMuteOrBan from '../utils/checkMuteOrBan';
 import ChatContentWindow from './ChatContentWindow';
 import ChatSiderButton from './ChatSiderButton';
 import ChatSiderList from './ChatSiderList';
-import { ChannelType, CHANNEL_TYPE, CHAT_TYPE } from './const';
+import { ChannelType, CHANNEL_TYPE, CHAT_TYPE, MuteOrBanUser } from './const';
 
 const { Sider, Content } = Layout;
 
@@ -89,7 +90,13 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
         });
         setSelectedChannel((oldSelectedChannel: ChannelType | null) => {
           if (oldSelectedChannel?.id === updateChannel.id) {
-            if (!updateChannel.usersId.includes(currentUser.id)) {
+            const userBanned = updateChannel.banList.find(
+              (banUser: MuteOrBanUser) => banUser.userId === currentUser.id
+            );
+            if (
+              !updateChannel.usersId.includes(currentUser.id) ||
+              checkMuteOrBan(userBanned)
+            ) {
               return null;
             }
             return updateChannel;
@@ -150,7 +157,14 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
         <Sider
           style={{ backgroundColor: '#1c1c1c', textAlign: 'center' }}
           width={75}>
-          <ChatSiderButton chatType={chatType} setChatType={setChatType} />
+          <ChatSiderButton
+            chatType={chatType}
+            setChatType={(type: string) => {
+              setChatType(type);
+              setSelectUser(null);
+              setSelectedChannel(null);
+            }}
+          />
         </Sider>
         <Sider style={{ backgroundColor: '#c9c9c9' }} width={200}>
           <ChatSiderList

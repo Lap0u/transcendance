@@ -125,6 +125,8 @@ const ChannelListUserModal = ({
     );
   }, [users, selectedChannel]);
 
+  const isAdmin = selectedChannel?.administratorsId.includes(currentUser.id);
+
   const handleCancel = () => {
     setIsListUserModalOpen(false);
   };
@@ -133,7 +135,7 @@ const ChannelListUserModal = ({
     <Modal
       title="User List"
       visible={isListUserModalOpen}
-      width={800}
+      width={isAdmin ? 800 : 400}
       onCancel={handleCancel}
       footer={[
         <Button key="close" onClick={handleCancel}>
@@ -164,55 +166,74 @@ const ChannelListUserModal = ({
             </>
           )}
         />
-        <Column
-          title={
-            <div>
-              <span style={{ marginRight: 2 }}>Mute</span>
-              <Tooltip title="Select mute hours and minutes">
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </div>
-          }
-          key="mute"
-          render={(user: any) => {
-            if (!selectedChannel) return null;
-            const userMuted = selectedChannel.muteList.find(
-              (muteUser: MuteOrBanUser) => muteUser.userId === user.id
-            );
-            const mutedUntil =
-              checkMuteOrBan(userMuted) && userMuted ? userMuted.until : '';
-            return (
-              <SelectTime
-                channelId={selectedChannel.id}
-                userId={user.id}
-                type={'mute'}
-                untilTime={mutedUntil}
-              />
-            );
-          }}
-        />
-        <Column
-          title={
-            <div>
-              <span style={{ marginRight: 2 }}>Ban</span>
-              <Tooltip title="Select ban hours and minutes">
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </div>
-          }
-          key="ban"
-          render={(user: any) => {
-            if (!selectedChannel) return null;
-            return (
-              <SelectTime
-                channelId={selectedChannel.id}
-                userId={user.id}
-                type={'ban'}
-                untilTime={''}
-              />
-            );
-          }}
-        />
+        {isAdmin && (
+          <>
+            <Column
+              title={
+                <div>
+                  <span style={{ marginRight: 2 }}>Mute</span>
+                  <Tooltip title="Select mute hours and minutes">
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </div>
+              }
+              key="mute"
+              render={(user: any) => {
+                if (
+                  !selectedChannel ||
+                  selectedChannel.administratorsId.includes(user.id)
+                )
+                  return null;
+                const userMuted = selectedChannel.muteList.find(
+                  (muteUser: MuteOrBanUser) => muteUser.userId === user.id
+                );
+                const mutedUntil =
+                  checkMuteOrBan(userMuted) && userMuted ? userMuted.until : '';
+                return (
+                  <SelectTime
+                    channelId={selectedChannel.id}
+                    userId={user.id}
+                    type={'mute'}
+                    untilTime={mutedUntil}
+                  />
+                );
+              }}
+            />
+            <Column
+              title={
+                <div>
+                  <span style={{ marginRight: 2 }}>Ban</span>
+                  <Tooltip title="Select ban hours and minutes">
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </div>
+              }
+              key="ban"
+              render={(user: any) => {
+                if (
+                  !selectedChannel ||
+                  selectedChannel.administratorsId.includes(user.id)
+                )
+                  return null;
+                const userBanned = selectedChannel.banList.find(
+                  (muteUser: MuteOrBanUser) => muteUser.userId === user.id
+                );
+                const bannedUntil =
+                  checkMuteOrBan(userBanned) && userBanned
+                    ? userBanned.until
+                    : '';
+                return (
+                  <SelectTime
+                    channelId={selectedChannel.id}
+                    userId={user.id}
+                    type={'ban'}
+                    untilTime={bannedUntil}
+                  />
+                );
+              }}
+            />
+          </>
+        )}
       </Table>
     </Modal>
   );

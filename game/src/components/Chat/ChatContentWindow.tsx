@@ -58,6 +58,7 @@ const ChatContentWindow = ({
   const [history, setHistory] = useState<any>([]);
   const [isListUserModalOpen, setIsListUserModalOpen] = useState(false);
   const [userMutedUntil, setUserMutedUntil] = useState('');
+  const [userIsBanned, setUserIsBanned] = useState<boolean>(false);
   const historyEndRef: any = useRef(null);
   const isUser: boolean = !!selectUser;
 
@@ -120,8 +121,18 @@ const ChatContentWindow = ({
       } else {
         setUserMutedUntil('');
       }
+
+      const userBanned = selectedChannel.banList.find(
+        (banUser: MuteOrBanUser) => banUser.userId === currentUser.id
+      );
+      if (checkMuteOrBan(userBanned) && userBanned) {
+        setUserIsBanned(true);
+      } else {
+        setUserIsBanned(false);
+      }
     } else {
       setUserMutedUntil('');
+      setUserIsBanned(false);
     }
   }, [currentUser, selectedChannel]);
 
@@ -214,6 +225,8 @@ const ChatContentWindow = ({
   if (selectedChannel && !selectedChannel.usersId.includes(currentUser.id)) {
     return null;
   }
+
+  if (userIsBanned) return null;
 
   return (
     <div className="chat-window-wrapper">

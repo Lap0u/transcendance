@@ -188,19 +188,19 @@ export class ChannelService {
       .add(duration, 'minutes')
       .format('YYYY-MM-DD HH:mm:ss');
 
-    if (type === 'mute') {
-      const index = channel.muteList.findIndex(
-        (muteUser: MuteOrBanUser) => muteUser.userId === userId,
-      );
-      if (index !== -1) {
-        channel.muteList[index].until = until;
-      } else {
-        const muteOrBanUser: MuteOrBanUser = {
-          userId,
-          until,
-        };
-        channel.muteList.push(muteOrBanUser);
-      }
+    const listName = type === 'mute' ? 'muteList' : 'banList';
+
+    const index = channel[listName].findIndex(
+      (user: MuteOrBanUser) => user.userId === userId,
+    );
+    if (index !== -1) {
+      channel[listName][index].until = until;
+    } else {
+      const muteOrBanUser: MuteOrBanUser = {
+        userId,
+        until,
+      };
+      channel[listName].push(muteOrBanUser);
     }
 
     const saveChannel = this.channelsRepository.save(channel);
