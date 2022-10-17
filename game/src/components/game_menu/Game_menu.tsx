@@ -16,7 +16,7 @@ const GameMenu = (props: any) => {
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
   const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
   const [ballColor, setBallColor] = useState('#ffffff');
-  const [gameBackground, setGameBackground] = useState('#555555');
+  const [gameBackground, setGameBackground] = useState('#000000');
   const [inMatchmaking, setMatchmaking] = useState(false);
   const [gamesList, setGamesList] = useState<game[]>([]);
   const navigate = useNavigate();
@@ -143,7 +143,6 @@ const GameMenu = (props: any) => {
           />
         </Sider>
         <Content className="content-1">
-          {/* <div className="preview-box">Live game preview</div> */}
           <GamePreview
             ownColor={ownPaddleColor}
             opponentColor={opponentPaddleColor}

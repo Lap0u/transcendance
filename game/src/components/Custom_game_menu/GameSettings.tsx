@@ -31,7 +31,9 @@ const GameSettings = (props: any) => {
   return (
     <div className="settings-table">
       <Row className="settings-raw">
-        <Col span={24}>Global game settings</Col>
+        <Col className="settings-title" span={24}>
+          Global game settings
+        </Col>
       </Row>
       <Row className="settings-raw">
         <Col span={12}>Powerups</Col>

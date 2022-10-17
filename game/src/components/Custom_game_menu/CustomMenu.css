@@ -1,1 +1,17 @@
+@import '../../colors.css';
 
+.layout {
+  background-color: var(--background);
+}
+
+.layout-2 {
+  flex-direction: row;
+}
+
+.sider {
+  background-color: inherit;
+}
+
+.content-1 {
+  background-color: inherit;
+}

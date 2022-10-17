@@ -2,6 +2,14 @@
   width: 25vw;
 }
 
+.settings-title {
+  color: white;
+  font-weight: bold;
+  font-size: 1vw;
+  padding: 3vh 20%;
+  margin-bottom: 2vh;
+}
+
 .settings-raw {
   text-align: center;
   color: whitesmoke;

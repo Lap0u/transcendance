@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Space } from 'antd';
+import { Button, Layout, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACK_URL } from '../constants';
@@ -9,13 +9,15 @@ import './CustomMenu.css';
 import GamePreview from '../game_menu/GamePreview';
 import { NavigationBarre } from '../Accueil/Accueil';
 import GameSettings from './GameSettings';
+import Sider from 'antd/lib/layout/Sider';
+import { Content } from 'antd/lib/layout/layout';
 
 const CustomMenu = (props: any) => {
   const [gameReady, setGameReady] = useState('wait');
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');
   const [opponentPaddleColor, setOpponentPaddleColor] = useState('#ffffff');
   const [ballColor, setBallColor] = useState('#ffffff');
-  const [gameBackground, setGameBackground] = useState('#555555');
+  const [gameBackground, setGameBackground] = useState('#000000');
   const [secondPlayer, setSecondPlayer] = useState(null);
   const [secondSocket, setSecondSocket] = useState('');
   const [settings, setSettings] = useState({
@@ -112,7 +114,7 @@ const CustomMenu = (props: any) => {
 
   let isReady = secondPlayer === null ? 'Loading' : 'Start game';
   return ok ? (
-    <div className="global-div">
+    <Layout className="layout">
       <NavigationBarre user={currentUser} isLoginActive={1} />
       <Space>
         <Button
@@ -122,28 +124,30 @@ const CustomMenu = (props: any) => {
           {isReady}
         </Button>
       </Space>
-
-      <Customization
-        ownPaddleColor={ownPaddleColor}
-        setOwnPaddleColor={setOwnPaddleColor}
-        opponentPaddleColor={opponentPaddleColor}
-        setOpponentPaddleColor={setOpponentPaddleColor}
-        ballColor={ballColor}
-        setBallColor={setBallColor}
-        gameBackground={gameBackground}
-        setGameBackground={setGameBackground}
-      />
-      <GameSettings settings={settings} setSettings={setSettings} />
-      <div className="preview-box">
-        <div>Live game preview</div>
-        <GamePreview
-          ownColor={ownPaddleColor}
-          opponentColor={opponentPaddleColor}
-          ballColor={ballColor}
-          backgroundColor={gameBackground}
-        />
-      </div>
-    </div>
+      <Layout className="layout-2">
+        <Sider width={450} className="sider">
+          <Customization
+            ownPaddleColor={ownPaddleColor}
+            setOwnPaddleColor={setOwnPaddleColor}
+            opponentPaddleColor={opponentPaddleColor}
+            setOpponentPaddleColor={setOpponentPaddleColor}
+            ballColor={ballColor}
+            setBallColor={setBallColor}
+            gameBackground={gameBackground}
+            setGameBackground={setGameBackground}
+          />
+          <GameSettings settings={settings} setSettings={setSettings} />
+        </Sider>
+        <Content className="content-1">
+          <GamePreview
+            ownColor={ownPaddleColor}
+            opponentColor={opponentPaddleColor}
+            ballColor={ballColor}
+            backgroundColor={gameBackground}
+          />
+        </Content>
+      </Layout>
+    </Layout>
   ) : null;
 };
 
