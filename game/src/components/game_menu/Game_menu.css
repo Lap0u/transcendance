@@ -11,19 +11,25 @@
 }
 .layout-2 {
   flex-direction: row;
+  position: relative;
   padding-top: 10vh;
   background-color: inherit;
 }
 
 .sider-1 {
   background-color: inherit;
+  background-color: blue;
   margin-top: 11vh;
+  padding-right: 3vh;
 }
 .content-1 {
   background-color: inherit;
+  background-color: white;
 }
 
 .sider-2 {
   background-color: inherit;
+  background-color: red;
+  padding-left: 3vh;
   margin-top: 11vh;
 }

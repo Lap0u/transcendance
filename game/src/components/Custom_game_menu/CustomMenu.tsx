@@ -125,7 +125,7 @@ const CustomMenu = (props: any) => {
         </Button>
       </Space>
       <Layout className="layout-2">
-        <Sider width={450} className="sider">
+        <Sider width={'25%'} className="sider">
           <Customization
             ownPaddleColor={ownPaddleColor}
             setOwnPaddleColor={setOwnPaddleColor}
