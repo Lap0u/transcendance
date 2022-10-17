@@ -1,24 +1,29 @@
 @import '../../colors.css';
 
 .preview-box {
-  color: white;
-  font-size: 16px;
+  color: red;
+  font-weight: bold;
+  font-size: 1vw;
+  padding: 3vh 42%;
 }
 .layout {
   background-color: var(--background);
 }
 .layout-2 {
   flex-direction: row;
-  background-color: burlywood;
+  padding-top: 10vh;
+  background-color: inherit;
 }
 
 .sider-1 {
-  background-color: aqua;
+  background-color: inherit;
+  margin-top: 11vh;
 }
 .content-1 {
-  background-color: brown;
+  background-color: inherit;
 }
 
 .sider-2 {
-  background-color: blue;
+  background-color: inherit;
+  margin-top: 11vh;
 }

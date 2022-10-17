@@ -80,6 +80,8 @@ const GameMenu = (props: any) => {
         const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
           withCredentials: true,
         });
+        console.log('res', res.data);
+
         setGamesList(res.data);
       } catch (e) {
         console.log(e);
@@ -93,7 +95,7 @@ const GameMenu = (props: any) => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [ok]);
 
   useEffect(() => {
     socket.on(`matchFound:`, (gameId: string) => {
@@ -128,10 +130,7 @@ const GameMenu = (props: any) => {
         </Button>
       </Space>
       <Layout className="layout-2">
-        {/* <Sider>Test</Sider>
-        <Content>Test2</Content>
-        <Sider>Test3</Sider> */}
-        <Sider className="sider-1">
+        <Sider width={450} className="sider-1">
           <Customization
             ownPaddleColor={ownPaddleColor}
             setOwnPaddleColor={setOwnPaddleColor}
@@ -144,7 +143,7 @@ const GameMenu = (props: any) => {
           />
         </Sider>
         <Content className="content-1">
-          <div className="preview-box">Live game preview</div>
+          {/* <div className="preview-box">Live game preview</div> */}
           <GamePreview
             ownColor={ownPaddleColor}
             opponentColor={opponentPaddleColor}
@@ -152,7 +151,7 @@ const GameMenu = (props: any) => {
             backgroundColor={gameBackground}
           />
         </Content>
-        <Sider className="sider-2">
+        <Sider width={400} className="sider-2">
           <GameList games={gamesList} customGameValues={customGameValues} />
         </Sider>
       </Layout>

@@ -1,9 +1,10 @@
 .customization-grid {
   width: 25vw;
-  margin-top: 3vh;
 }
 .custom-row {
   color: white;
-  text-align: center;
-  margin-bottom: 2vh;
+  font-weight: bold;
+  font-size: 1vw;
+  padding: 3vh 20%;
+  margin-bottom: 3vh;
 }
