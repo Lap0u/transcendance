@@ -8,7 +8,7 @@ import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
 import GamePreview from './GamePreview';
 import './Game_menu.css';
-import { NavigationBarre } from '../Accueil/Accueil';
+import NavigationBarre from '../Accueil/NavBarre';
 
 const GameMenu = (props: any) => {
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');

@@ -6,6 +6,7 @@ import { ScoresService } from '../../game/Scores/scores.service';
 import { Accounts } from '../entities/accounts.entity';
 import { TypeOrmSession } from '../entities/session.entity';
 import { DatabaseFilesService } from '../files/databaseFile.service';
+import { PublicInfoUserDto } from '../utils/types';
 
 @Injectable()
 export class AccountService {
@@ -142,7 +143,6 @@ export class AccountService {
       for (const socket of user.socketsConnection) {
         if (socket === socket_id) {
           const index = user.socketsConnection.indexOf(socket);
-          console.log('indexxx', index);
           if (index === -1) return;
           const newListSocket = user.socketsConnection;
           newListSocket.splice(index, 1);
@@ -157,18 +157,31 @@ export class AccountService {
     return users;
   }
 
-  async addUserToFriendList(currentId: string, friendId: string) {
-    const user = await this.usersRepository.findOneBy({
-      id: currentId,
+  async updateFriendList(userId: string, newFriendList: string[]) {
+    const account = await this.usersRepository.findOneBy({
+      id: userId,
     });
-    const friend = await this.usersRepository.findOneBy({
-      account_id: friendId,
+    if (!account) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+    account.friendList = newFriendList;
+    const saveAccount = await this.usersRepository.save(account);
+    this.socketService.socket.emit(`userUpdate:${account.id}`, account);
+    return saveAccount;
+  }
+
+  async getFriendList(userId: string) {
+    const account = await this.usersRepository.findOneBy({
+      id: userId,
     });
-    const friendList = user.friendList;
-    friendList.push(friend);
-    this.usersRepository.save({
-      ...user,
-      friendList,
-    });
+    if (!account) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+    const friendList: Array<Accounts> = [];
+    for (const friends of account.friendList) {
+      const friend = await this.usersRepository.findOneBy({ id: friends });
+      friendList.push(friend);
+    }
+    return friendList;
   }
 }

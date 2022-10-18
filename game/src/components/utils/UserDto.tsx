@@ -1,5 +1,6 @@
 
   export type TypeUserDto = {
+	account_id : string,
 	id: string;
 	username: string;
 	name: string;
@@ -25,13 +26,13 @@ const UserDto = {
 	accountUsername: "",
 	isTwoFactorAuthenticationEnabled: false,
 	authConfirmToken: "",
-	isVerified: "",
+	isVerified: undefined,
 	twoFactorAuthenticationSecret: "",
 	email: "",
 	avatar: "",
-	points: "",
-	rank: undefined,
-	status: undefined,
+	points: 0,
+	rank: 0,
+	status: 0,
 	usesrOnline: [],
 	currentGames: 0,
 	frienList: [],

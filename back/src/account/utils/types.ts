@@ -19,15 +19,15 @@ export type IntraUserDetails = {
 };
 
 export type PublicInfoUserDto = {
-	id: string;
-	username: string;
-	name: string;
-	accountUsername: string;
-	avatar: string;
-	points: number;
-	rank?: number;
-	currentGames?: number;
-}
+  account_id: string;
+  id: string;
+  username: string;
+  name: string;
+  accountUsername: string;
+  avatar?: string;
+  points?: number;
+  rank?: number;
+};
 
 export type DatabaseFile = {
   id: string;

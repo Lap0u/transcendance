@@ -150,7 +150,7 @@ export class AccountController {
     const session_info = req.session['passport'];
     const { id } = session_info.user;
     const { newBlacklist } = data;
-    return this.usersService.updateBlacklist(id, newBlacklist);
+    return await this.usersService.updateBlacklist(id, newBlacklist);
   }
 
   @Get('/all/users')
@@ -175,15 +175,23 @@ export class AccountController {
     return await this.usersService.getStatusById(params.id);
   }
 
-  @Post('add-friend')
+  @Put('friendList')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
-  async addFriend(
-    @Req() req: Request,
-    @Body('friend_id', ParseUUIDPipe) friend_id: string,
-  ) {
+  async updateFriendList(@Req() req: Request, @Body() data: any) {
     const session_info = req.session['passport'];
     const { id } = session_info.user;
-    return this.usersService.addUserToFriendList(id, friend_id);
+    const { newFriendList } = data;
+	console.log('new', newFriendList);
+    return await this.usersService.updateFriendList(id, newFriendList);
+  }
+
+  @Get('friendList')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async getFriendList(@Req() req: Request) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    return await this.usersService.getFriendList(id);
   }
 }

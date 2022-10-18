@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
+import { PublicInfoUserDto } from '../utils/types';
 import DatabaseFile from './files.entity';
 
 @Entity({ name: 'Accounts' })
@@ -62,5 +63,5 @@ export class Accounts {
   public currentGames?: number;
 
   @Column('text', { array: true, default: [] })
-  public friendList?: Array<Accounts>;
+  public friendList?: Array<string>;
 }

@@ -6,7 +6,7 @@ import './TwoFactorAuth.css'
 const BACK_URL = "http://localhost:4000";
 
 
-export function EmailConfirm() {
+export function EmailConfirm(props:any) {
 
 	const clearInput = useRef("");
 	const [code, changeCode] = useState("");

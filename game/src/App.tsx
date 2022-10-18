@@ -47,7 +47,6 @@ function App() {
       })
       .then((res) => {
         setCurrentUser(res.data);
-		console.log('aaaaaaaa');
 		if (userChanged === 0)
 			socket.emit('clientConnected', { ...res.data });
       })
