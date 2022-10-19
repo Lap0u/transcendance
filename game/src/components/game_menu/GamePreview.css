@@ -1,4 +1,11 @@
+.prev-canvas-div {
+  background-color: pink;
+}
+
 .prev-canvas {
   border: 3px solid red;
+  margin: auto;
   margin-top: 4vh;
+  padding: 0;
+  display: block;
 }

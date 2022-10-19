@@ -130,7 +130,7 @@ const GameMenu = (props: any) => {
         </Button>
       </Space>
       <Layout className="layout-2">
-        <Sider width={'25%'} className="sider-1">
+        <Sider width={'25vw'} className="sider-1">
           <Customization
             ownPaddleColor={ownPaddleColor}
             setOwnPaddleColor={setOwnPaddleColor}

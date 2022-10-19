@@ -1,16 +1,17 @@
 .game-list-container {
-  margin-right: 25%;
+  /* margin-right: 15%; */
   /* margin-right: 6vw; */
   display: flex;
   align-items: flex-end;
   flex-direction: column;
+  width: 20vw;
 }
 
 h1 {
   color: white;
   font-weight: bold;
   font-size: 1vw;
-  padding: 3vh 20%;
+  padding: 3vh 25%;
 }
 .item-list {
   display: flex;

@@ -1,12 +1,13 @@
 .settings-table {
   width: 25vw;
+  font-size: 0.7vw;
 }
 
 .settings-title {
   color: white;
   font-weight: bold;
-  font-size: 1vw;
   padding: 3vh 20%;
+  font-size: 1vw;
   margin-bottom: 2vh;
 }
 

@@ -21,11 +21,11 @@ const GamePreview = ({
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     if (window.innerHeight * 2 > window.innerWidth) {
-      canvas.style.width = '50vw';
-      canvas.style.height = '25vw';
+      canvas.style.width = '45vw';
+      canvas.style.height = '22.5vw';
     } else {
-      canvas.style.width = '100vh';
-      canvas.style.height = '50vh';
+      canvas.style.width = '90vh';
+      canvas.style.height = '45vh';
     }
     const context: any = canvas.getContext('2d');
     drawBackground(context, backgroundColor);
