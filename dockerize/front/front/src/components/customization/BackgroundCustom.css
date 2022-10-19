@@ -1,0 +1,28 @@
+.background-row {
+  font-size: 0.7vw;
+  margin-bottom: 1vh;
+}
+
+.background {
+  color: white;
+  text-align: center;
+  height: 2.5vh;
+}
+
+.my-background {
+  width: 40%;
+  height: 80%;
+  border: 1px solid white;
+  border-radius: 2px;
+  margin-top: 0.2vh;
+}
+
+.picker-div {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 170px;
+}

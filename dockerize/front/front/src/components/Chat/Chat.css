@@ -1,0 +1,60 @@
+.chat-window-wrapper {
+  position: relative;
+  flex-grow: 1;
+  height: 95%;
+  margin: 20px;
+  padding: 20px;
+  border: 3px solid var(--light);
+  border-radius: 10px;
+}
+
+.chat-window-content {
+  height: 90%;
+  overflow: scroll;
+}
+
+.chat-window-mymessage-wrapper {
+  text-align: right;
+  margin-bottom: 5px;
+}
+
+.chat-window-othermessage-wrapper {
+  margin-bottom: 5px;
+}
+
+.chat-window-input {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  bottom: 10px;
+  width: 95%;
+  border-color: var(--light);
+  background-color: var(--light);
+}
+
+.chat-window-input > input {
+  background-color: var(--light);
+  color: #fff;
+}
+
+.chat-window-send-button {
+  margin-left: 5px;
+  height: 35px;
+}
+
+.chat-window-header {
+  font-size: 1.5em;
+}
+
+.chat-button-style {
+  background-color: var(--light);
+  color: #fff;
+  border: none;
+}
+
+/* Hide antd timepicker footer */
+.ant-picker-footer {
+  display: none;
+}
