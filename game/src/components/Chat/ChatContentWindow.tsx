@@ -5,10 +5,11 @@ import { SendOutlined, TeamOutlined } from '@ant-design/icons';
 import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { ChannelType, MessageType } from './const';
+import { ChannelType, MessageType, MuteOrBanUser } from './const';
 import './ProfilPlayer.css';
 import UserPopover from '../utils/UserPopover';
 import ChannelListUserModal from './ChannelListUserModal';
+import checkMuteOrBan from '../utils/checkMuteOrBan';
 
 const MessageContent = ({
   item,
@@ -56,6 +57,8 @@ const ChatContentWindow = ({
   const [message, setMessage] = useState<string>('');
   const [history, setHistory] = useState<any>([]);
   const [isListUserModalOpen, setIsListUserModalOpen] = useState(false);
+  const [userMutedUntil, setUserMutedUntil] = useState('');
+  const [userIsBanned, setUserIsBanned] = useState<boolean>(false);
   const historyEndRef: any = useRef(null);
   const isUser: boolean = !!selectUser;
 
@@ -80,6 +83,7 @@ const ChatContentWindow = ({
 
     if (selectUser || selectedChannel) {
       getHistory();
+      setMessage('');
     } else {
       setHistory([]);
     }
@@ -106,6 +110,31 @@ const ChatContentWindow = ({
       socket.off(socketMessage);
     };
   }, [currentUser, selectUser, selectedChannel]);
+
+  useEffect(() => {
+    if (currentUser && selectedChannel) {
+      const userMuted = selectedChannel.muteList.find(
+        (muteUser: MuteOrBanUser) => muteUser.userId === currentUser.id
+      );
+      if (checkMuteOrBan(userMuted) && userMuted) {
+        setUserMutedUntil(userMuted.until);
+      } else {
+        setUserMutedUntil('');
+      }
+
+      const userBanned = selectedChannel.banList.find(
+        (banUser: MuteOrBanUser) => banUser.userId === currentUser.id
+      );
+      if (checkMuteOrBan(userBanned) && userBanned) {
+        setUserIsBanned(true);
+      } else {
+        setUserIsBanned(false);
+      }
+    } else {
+      setUserMutedUntil('');
+      setUserIsBanned(false);
+    }
+  }, [currentUser, selectedChannel]);
 
   const sendMessage = async () => {
     if (message.trim() === '') {
@@ -154,7 +183,11 @@ const ChatContentWindow = ({
       return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>{selectedChannel?.channelName}</span>
-          <Button icon={<TeamOutlined />} onClick={showListUserModal} />
+          <Button
+            icon={<TeamOutlined />}
+            onClick={showListUserModal}
+            className="chat-button-style"
+          />
           <ChannelListUserModal
             isListUserModalOpen={isListUserModalOpen}
             setIsListUserModalOpen={setIsListUserModalOpen}
@@ -167,6 +200,28 @@ const ChatContentWindow = ({
     }
   };
 
+  const chatWindowInput = () => {
+    const isMuted = userMutedUntil !== '';
+
+    return (
+      <Input
+        className="chat-window-input"
+        onChange={(e) => setMessage(e.target.value)}
+        value={isMuted ? `You are muted until ${userMutedUntil}` : message}
+        disabled={isMuted}
+        onPressEnter={sendMessage}
+        suffix={
+          <Button
+            type="link"
+            icon={<SendOutlined />}
+            onClick={sendMessage}
+            disabled={isMuted}
+          />
+        }
+      />
+    );
+  };
+
   if (!selectUser && !selectedChannel) {
     return null;
   }
@@ -175,11 +230,15 @@ const ChatContentWindow = ({
     return null;
   }
 
+  if (userIsBanned) return null;
+
   return (
     <div className="chat-window-wrapper">
       <div className="chat-window-header">
         {chatWindowName()}
-        <hr />
+        <hr
+          style={{ height: 2, backgroundColor: 'var(--light)', border: 'none' }}
+        />
       </div>
       <div className="chat-window-content">
         {history.map((item: MessageType, index: number) => (
@@ -192,17 +251,7 @@ const ChatContentWindow = ({
         ))}
         <div ref={historyEndRef} />
       </div>
-      <div>
-        <Input
-          className="chat-window-input"
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-          onPressEnter={sendMessage}
-          suffix={
-            <Button type="link" icon={<SendOutlined />} onClick={sendMessage} />
-          }
-        />
-      </div>
+      <div>{chatWindowInput()}</div>
     </div>
   );
 };

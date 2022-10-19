@@ -34,8 +34,11 @@ export default async function handleErrors(error : any)
 		});
 
 	}
-	else{
-		console.log("errror", error);
+	else if (error.response.status=== 400)
+		window.location.href = 'http://localhost:3000/error400'
+	else if (error.response.status=== 404)
+		window.location.href = 'http://localhost:3000/error404'
+	else {
 		window.location.href = 'http://localhost:3000/error500'
 	}
 }

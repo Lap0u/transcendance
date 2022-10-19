@@ -8,9 +8,9 @@ import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
 import GamePreview from './GamePreview';
 import './Game_menu.css';
-import { NavigationBarre } from '../Accueil/Accueil';
 import Sider from 'antd/lib/layout/Sider';
 import { Content } from 'antd/lib/layout/layout';
+import NavigationBarre from '../Accueil/NavBarre';
 
 const GameMenu = (props: any) => {
   const [ownPaddleColor, setOwnPaddleColor] = useState('#ffffff');

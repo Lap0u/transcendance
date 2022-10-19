@@ -1,9 +1,7 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import { useNavigate, useParams } from "react-router-dom";
+
+import { useParams } from "react-router-dom";
 import { ClassementTab } from "./Classement";
 import { ScoreTab } from "./ScoresHistory";
-import { Stats } from "./Stats";
 import { Tabs, Tab, Box } from '@mui/material';
 import { useEffect, useState } from "react";
 import React from 'react';
@@ -12,14 +10,19 @@ import axios from "axios";
 import { BACK_URL } from "../../global";
 import handleErrors from "../RequestErrors/handleErrors";
 import UserDto from "../utils/UserDto";
-import { NavigationBarre } from "../Accueil/Accueil";
+import NavigationBarre  from "../Accueil/NavBarre";
 
 export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	const params = useParams();
-	const id= params.id;
-	const nav = useNavigate();
+	const id = params.id;
 	const [tabIndex, setTabIndex] = useState(0);
 	const [ok, setOk] = useState(false);
+	const [re, refresh] = useState(id);
+	if (id !== re){
+		setOk(false);
+		refresh(id);
+	}
+
 	const handleTabChange = (event :any, newTabIndex: any) => {
 	  setTabIndex(newTabIndex);
 	};
@@ -28,6 +31,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
 			.then((response) => {
+				setOk(false);
 				getUser(response.data);
 				setOk(true);
 			})
@@ -35,7 +39,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 				handleErrors(error)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [id]);
+	}, [re]);
 
 	return (
 		ok?

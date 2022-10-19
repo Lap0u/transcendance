@@ -15,6 +15,9 @@ export class Auth42Guard extends  AuthGuard('42'){
 export class AuthenticatedGuard implements CanActivate{
 	async canActivate(context : ExecutionContext) : Promise<boolean>{
 		const req = context.switchToHttp().getRequest();
+		const cookies  = JSON.stringify(req.cookies);
+		if (cookies.indexOf("connect.sid") === -1 || cookies.indexOf("Authentication") === -1)
+			return false;
 		return req.isAuthenticated();
 }
 }

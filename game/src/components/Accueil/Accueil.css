@@ -41,9 +41,9 @@
   width: 100vw;
   height: 5vw;
   line-height: 5vw;
-  justify-content: space-evenly;
   background-color: var(--mid-backgroud);
   display: flex;
+overflow: hidden;
 }
 
 .ant-menu-horizontal .ant-menu-submenu::after,
@@ -52,21 +52,18 @@
 }
 
 
-
-
-.nav-barre .onglet-nav {
-	text-align: left;
+.nav-barre  .onglet-nav {
+	position: relative;
 	color:var(--text-1)!important;
-  display: inline;
   text-decoration: none;
 	margin: 0;
 	padding: 0;
   font-size: max(1.7vw, 9px);
-  white-space: nowrap;
   position: fixed;
+  text-align: center;
 }
 
-.nav-barre .onglet-nav:hover {
+.onglet-nav:hover {
   color: var(--background)!important;
 }
 
@@ -85,7 +82,7 @@
 	border-radius: 50px;
 	margin: 0;
 	position: relative;
-	right: 20px;
+	right: 15px;
 	bottom: 2px;
 
   }
@@ -100,39 +97,58 @@
 .sub-info{
 	padding:0px!important;
 	margin: 0px!important;
-	height: 13vw!important;
-	  position: fixed!important;
-	  width: 15vw!important;
-	  right: 0px!important;
-	  background-color: var(--mid-backgroud);
-	  margin-left: 85vw!important;
-	  top: 5vw
+	height: 19vw!important;
+	top: 5vw;
+	 position: fixed!important;
+	width: 18vw!important;
+	right: 0px!important;
+	background-color: var(--mid-backgroud)!important;
+	margin-left: 82vw!important;
 }
 .info{
 	text-align: center;
+	position: relative;
 }
 
-.info > .stats{
+.info > .stats *{
 	width: 100%;
 	padding: 0.5vw;
-	border-bottom: 0.5px solid var(--light);
 	line-height: 2vw!important;
 	margin: 0px!important;
+	padding: 0px;
 }
 
 .info .onglet-nav{
-	position: absolute;
-	color: var(--text-1);
+	border-top: 0.5px solid var(--light);
 	font-size: max(1.5vw, 7px);
-	line-height: 3vw ;
-	right: 5vw;
-	top: 9.5vw;
+	margin: 0px;
+	padding: 1vw;
+	line-height: 3vw;
+	border-top: 0.5px solid var(--light);
+	color: var(--text-1);
+	position: relative;
 }
-.info p{
+
+.info > div{
 	font-size: max(1.3vw, 7px);
 	position: relative;
 	margin: 0px!important;
-	line-height: 2vw!important;
 	color: var(--light);
 
+}
+.info .onglet-nav *{
+	color: var(--text-1);
+
+}
+
+.friend-list-popover .friends{
+	font-size: max(1vw, 7px);
+	text-align: center!important;
+}
+
+.friend-list-popover{
+	width: 50px;
+	text-align: center!important;
+	margin: 0!important;
+	padding: 0;
 }

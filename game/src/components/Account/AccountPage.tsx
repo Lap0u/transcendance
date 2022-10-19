@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NavigationBarre } from '../Accueil/Accueil';
+import NavigationBarre from '../Accueil/NavBarre';
 import handleErrors from '../RequestErrors/handleErrors';
 import { ActivateTwoAuth } from '../TwoFactorAuth/TwoAuthActivate';
 import UserDto from '../utils/UserDto';
@@ -144,6 +144,7 @@ function TwoAuth(props: any){
 		axios.get(`${BACK_URL}/2fa/turnoff`,  {withCredentials:true })
 		.then((response) => {
 			props.turnTwoAuth(false)
+			props.changeUser(props.userChanged + 1);
 		})
 		.catch((error) => {
 			handleErrors(error)
@@ -162,7 +163,7 @@ function TwoAuth(props: any){
 			:
 			<div>
 			<button className='button-activate-two-auth' onClick={() => display(displayForm === "none"? "block" : "none")}>Activate</button>
-			<div className='two-auth-form' style={{display:displayForm}}><ActivateTwoAuth display={display}/></div>
+			<div className='two-auth-form' style={{display:displayForm}}><ActivateTwoAuth userChanged={props.userChanged} changeUser={props.changeUser} display={display}/></div>
 			</div>
 			}
 		</ul>
@@ -224,7 +225,7 @@ const AccountInfo = ({user, changeUser, cur}: {user: typeof UserDto, changeUser:
 				<i className='info-type'>Login </i>
 				<i className='info'>{user.username} </i>
 			</ul>
-			<TwoAuth isActivate={twoAuth} turnTwoAuth={turnTwoAuth} email={user.email}/>
+			<TwoAuth userChanged={cur} changeUser={changeUser} isActivate={twoAuth} turnTwoAuth={turnTwoAuth} email={user.email}/>
 		</li>
 		</div>
 		:null
@@ -256,6 +257,7 @@ const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUse
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
 			.then(()=>{
+				console.log("accpunt",user);
 				if (user)
 					setOk(true);
 			})
@@ -263,7 +265,7 @@ const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUse
 				handleErrors(error)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
+	}, []);
 	return (
 		ok?
 		<div className='account-page'>

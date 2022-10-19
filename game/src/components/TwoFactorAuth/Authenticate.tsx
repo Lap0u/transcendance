@@ -5,7 +5,7 @@ import handleErrors from "../RequestErrors/handleErrors";
 
 const BACK_URL = "http://localhost:4000";
 
-export function TwoAuthAutenticatePage(){
+export function TwoAuthAutenticatePage({userChanged, changeUser}: {userChanged: number, changeUser:any}){
 	const nav = useNavigate(); 
 	const clearInput = useRef("");
 	const [code, changeCode] = useState("");
@@ -23,7 +23,7 @@ export function TwoAuthAutenticatePage(){
 		clearInput.current = e.target.value;
 	}
 
-	async function codeForm(e : any) {
+	async function codeForm(e : any, changeUser: any, userChanged: any) {
 
 		e.preventDefault();
 
@@ -37,6 +37,7 @@ export function TwoAuthAutenticatePage(){
 					 alert(res.data.message)
 				} else {
 					alert( "Your account has been verified, proceed to the signin page");
+					changeUser(userChanged + 1);
 					nav("/");
 			   }
 		   })
@@ -50,13 +51,13 @@ export function TwoAuthAutenticatePage(){
 		  
 	}
 
-	async function resend()
+	async function resend(changeUser : any, userChanged :any)
 	{
 		await axios.get(`${BACK_URL}/2fa/generate`, {
 			withCredentials:true ,
 		})
 		.then(res => {
-			console.log(res);
+			changeUser(userChanged + 1);
 			alert( "Your account has been verified, proceed to the signin page");
 		 })
 		.catch((error) => {
@@ -71,7 +72,7 @@ export function TwoAuthAutenticatePage(){
 		<div className='two-auth'>
             <h2 className="two-auth-title">Your have to validate your authentification</h2>
                <div className="card-body">
-                   <form  onSubmit={(e) => codeForm(e)} id="form">
+                   <form  onSubmit={(e) => codeForm(e, changeUser, userChanged)} id="form">
                            <div className="two-auth-info">Please provide the code your reseived on your email adress.
                                <br/><input className="two-fa-input-email" type="text" id="code" onChange={(e) => newCode(e)} 
 							    value={clearInput.current}/>
@@ -80,7 +81,7 @@ export function TwoAuthAutenticatePage(){
                    </form>
 			   <div className='resend'>
 				   <i >If you did not receive any code click here to resend mail (this might take few minuts to receive the mail, don't forget to check your spam)   </i>
-                   <button className="btn btn--radius-2 btn--blue-2" type="submit" onClick={() => resend()} >Resend</button>
+                   <button className="btn btn--radius-2 btn--blue-2" type="submit" onClick={() => resend(changeUser, userChanged)} >Resend</button>
                </div>
            </div>
        </div>
