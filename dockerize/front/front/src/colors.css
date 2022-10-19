@@ -1,0 +1,11 @@
+:root {
+	--background: linear-gradient(to left top,  #2B051E, #0F0B23 70%,#280B56);
+	--mid-backgroud:  #130E2D;
+	--small-background: #1D1640;
+	--button: #1A1340;
+	--text-1: #5700DE;
+	--text-2: #2b051eb0;
+	--transparent : #11ffee00;
+	--light-grey :  #210A33;
+	--light: #3b4168;
+  }
