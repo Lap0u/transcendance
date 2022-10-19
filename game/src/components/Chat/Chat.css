@@ -10,7 +10,21 @@
 
 .chat-window-content {
   height: 90%;
-  overflow: scroll;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: auto;
+}
+
+@media (max-height: 900px) {
+  .chat-window-content {
+    height: 88%;
+  }
+}
+
+@media (max-height: 750px) {
+  .chat-window-content {
+    height: 86%;
+  }
 }
 
 .chat-window-mymessage-wrapper {
