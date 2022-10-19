@@ -186,6 +186,7 @@ export class ChannelService {
 
     const until = moment()
       .add(duration, 'minutes')
+      .utcOffset(2)
       .format('YYYY-MM-DD HH:mm:ss');
 
     const listName = type === 'mute' ? 'muteList' : 'banList';
