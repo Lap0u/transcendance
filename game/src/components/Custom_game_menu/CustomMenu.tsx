@@ -7,7 +7,7 @@ import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
 import './CustomMenu.css';
 import GamePreview from '../game_menu/GamePreview';
-import { NavigationBarre } from '../Accueil/Accueil';
+import NavigationBarre from '../Accueil/NavBarre';
 import GameSettings from './GameSettings';
 
 const CustomMenu = (props: any) => {

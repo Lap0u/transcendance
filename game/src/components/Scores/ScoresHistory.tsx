@@ -4,25 +4,9 @@ import { UserPopover }  from "../utils/UserPopover";
 import handleErrors from "../RequestErrors/handleErrors";
 import './ScoresHistory.css';
 import { BACK_URL } from "../../global";
+import UserDto from "../utils/UserDto";
 
 
-
-const UserDto = {
-	account_id:"",
-	id: "",
-	username: "",
-	name: "",
-	accountUsername: "",
-	isTwoFactorAuthenticationEnabled: "",
-	authConfirmToken: "",
-	isVerified: "",
-	twoFactorAuthenticationSecret: "",
-	email: "",
-	avatar: "",
-	points: "",
-	rank: undefined,
-	status: undefined,
-  };
 
 
 const ScoresDto = [

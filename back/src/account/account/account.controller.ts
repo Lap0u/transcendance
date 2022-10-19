@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Req,
@@ -49,8 +50,17 @@ export class AccountController {
   @Get('/id/:id')
   @UseGuards(AuthenticatedGuard)
   @UseGuards(JwtTwoFactorGuard)
-  async getAccountInfoById(@Param() param) {
-    return await this.usersService.findUserById(param.id);
+  async getAccountInfoById(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.findUserById(id);
+    if (user === null) {
+      res.sendStatus(404);
+      return;
+    }
+    res.send(user);
+    return user;
   }
 
   @Get('/userId/:id') //user.id
@@ -140,7 +150,7 @@ export class AccountController {
     const session_info = req.session['passport'];
     const { id } = session_info.user;
     const { newBlacklist } = data;
-    return this.usersService.updateBlacklist(id, newBlacklist);
+    return await this.usersService.updateBlacklist(id, newBlacklist);
   }
 
   @Get('/all/users')
@@ -163,5 +173,25 @@ export class AccountController {
   @UseGuards(JwtTwoFactorGuard)
   async statusById(@Param() params) {
     return await this.usersService.getStatusById(params.id);
+  }
+
+  @Put('friendList')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async updateFriendList(@Req() req: Request, @Body() data: any) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    const { newFriendList } = data;
+	console.log('new', newFriendList);
+    return await this.usersService.updateFriendList(id, newFriendList);
+  }
+
+  @Get('friendList')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtTwoFactorGuard)
+  async getFriendList(@Req() req: Request) {
+    const session_info = req.session['passport'];
+    const { id } = session_info.user;
+    return await this.usersService.getFriendList(id);
   }
 }

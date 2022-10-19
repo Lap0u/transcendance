@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BACK_URL } from '../../global';
-import { NavigationBarre } from '../Accueil/Accueil';
+import NavigationBarre from '../Accueil/NavBarre';
 import handleErrors from '../RequestErrors/handleErrors';
 import checkMuteOrBan from '../utils/checkMuteOrBan';
 import ChatContentWindow from './ChatContentWindow';

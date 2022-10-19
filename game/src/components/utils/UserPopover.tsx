@@ -6,8 +6,8 @@ import {
 import { Avatar, Button, message, Popover, Typography } from 'antd';
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useNavigationType } from 'react-router-dom';
-import { BACK_URL, FRONT_URL } from '../../global';
+import { useNavigate } from 'react-router-dom';
+import { BACK_URL } from '../../global';
 import '../Account/PublicAccount.css';
 import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from '../Scores/Stats';
@@ -33,11 +33,14 @@ export const UserPopover = ({
     if (!currentUser.blacklist) return false;
     return currentUser.blacklist.includes(user.id);
   }, [currentUser.blacklist, user.id]);
+  const inFriendList = useMemo(() => {
+    if (!currentUser.friendList) return false;
+    return currentUser.friendList.includes(user.id);
+  }, [currentUser.friendList, user.id]);
 
   const nav = useNavigate();
 
   const [isVisible, setIsVisible] = useState(false);
-
   const blacklist = async () => {
     const newBlacklist = [...currentUser.blacklist, user.id];
     try {
@@ -75,8 +78,44 @@ export const UserPopover = ({
   };
 
   const handleScoresClick = (nav: any) => {
-    console.log(`/scores/${user.account_id}`);
+	setIsVisible(false);
     nav(`/scores/${user.account_id}`);
+  };
+
+  const addFriend = async () => {
+    const newFriendList = [...currentUser.friendList, user.id];
+    try {
+      await axios.put(
+        `${BACK_URL}/account/friendList`,
+        { newFriendList },
+        {
+          withCredentials: true,
+        }
+      );
+      message.success('Success to add friend');
+    } catch (e) {
+      message.error('Fail to add friend');
+    }
+    setIsVisible(false);
+  };
+
+  const removeFriend = async () => {
+    const newFriendList = currentUser.friendList.filter(
+      (userId: string) => userId !== user.id
+    );
+    try {
+      await axios.put(
+        `${BACK_URL}/account/friendList`,
+        { newFriendList },
+        {
+          withCredentials: true,
+        }
+      );
+      message.success('Success to remove friend');
+    } catch (e) {
+      message.error('Fail to remove friend');
+    }
+    setIsVisible(false);
   };
 
   const handleInviteClick = async () => {
@@ -104,6 +143,11 @@ export const UserPopover = ({
       style={{ display: 'flex', flexDirection: 'column' }}>
       <Button style={stylePopoverButton} onClick={() => handleScoresClick(nav)}>
         Scores
+      </Button>
+	  <Button
+        style={stylePopoverButton}
+        onClick={inFriendList? removeFriend : addFriend}>
+        {inFriendList ? 'Remove friend' : 'add friend'}
       </Button>
       <Button
         style={{ margin: '5px 0', ...stylePopoverButton }}
