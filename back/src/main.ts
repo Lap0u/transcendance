@@ -12,29 +12,30 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
-	allowedHeaders: ['Content-Type'],
-  	origin: 'http://localhost:3000',
-  	credentials: true,
-  })
+    allowedHeaders: ['Content-Type'],
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
   const config: ConfigService = app.get(ConfigService);
   const port: number = config.get<number>('PORT');
   const sessionRepository = app
-  .get(AppModule)
-  .getDataSource()
-  .getRepository(TypeOrmSession);
-  app.use(session({
-	cookie: {
-		maxAge : 86400000,
-	},
-	secret : 'edsdsjdhsjksknzsnddjskdnsjkslqlz',
-	resave : false,
-	saveUninitialized : false,
-	store: new TypeormStore({
+    .get(AppModule)
+    .getDataSource()
+    .getRepository(TypeOrmSession);
+  app.use(
+    session({
+      cookie: {
+        maxAge: 86400000,
+      },
+      secret: 'edsdsjdhsjksknzsnddjskdnsjkslqlz',
+      resave: false,
+      saveUninitialized: false,
+      store: new TypeormStore({
         cleanupLimit: 2,
         limitSubquery: false,
         ttl: 86400,
-	}).connect(sessionRepository)
-  }),
+      }).connect(sessionRepository),
+    }),
   );
   app.use(passport.initialize());
   app.use(passport.session());

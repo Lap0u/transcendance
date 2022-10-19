@@ -151,6 +151,9 @@ export class MatchmakingService {
   }
 
   async joinCustomGame(userId: string, socket: string): Promise<any> {
+    console.log('userid', userId);
+    console.log('sock', socket);
+
     for (const game of this.customMatchesList) {
       if (userId === game.playerOne && game.oneReady === false) {
         game.oneSocket = socket;

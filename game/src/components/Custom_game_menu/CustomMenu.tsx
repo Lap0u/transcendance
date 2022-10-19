@@ -52,12 +52,17 @@ const CustomMenu = (props: any) => {
 
   useEffect(() => {
     async function joinCustom() {
+      if (gameReady === 'ready') return;
       const res = await axios.post(
         `${BACK_URL}/matchmaking/joinCustom`,
         { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
+      console.log('tt', res.data);
+
       if (res.data.playerId !== 'wait') {
+        console.log('went in', res.data);
+
         setGameReady('ready');
         const sec = await axios.get(
           `${BACK_URL}/account/userId/${res.data.playerId}`,
@@ -65,12 +70,14 @@ const CustomMenu = (props: any) => {
             withCredentials: true,
           }
         );
+        console.log('sec', sec.data);
+
         setSecondPlayer(sec.data);
         setSecondSocket(res.data.playerSocket);
       }
     }
     if (ok && gameReady !== 'ready') joinCustom();
-  }, [ok]);
+  }, [ok, gameReady]);
 
   async function startCustom(
     currentUser: any,
