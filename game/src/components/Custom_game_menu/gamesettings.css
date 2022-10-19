@@ -17,6 +17,26 @@
   margin-bottom: 1vh;
 }
 
+.select-1 {
+  width: 25%;
+  height: 3vh;
+  font-size: 0.7vw;
+}
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 3vh;
+}
+
+.select-2 {
+  width: 34%;
+  height: 30%;
+  font-size: 0.7vw;
+}
+
+.select-2 span {
+  height: 3vh;
+}
+
 .powerup-button {
   width: 2vh;
   height: 2vh;

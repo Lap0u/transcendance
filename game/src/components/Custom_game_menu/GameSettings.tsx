@@ -44,7 +44,10 @@ const GameSettings = (props: any) => {
       <Row className="settings-raw">
         <Col span={12}>Point limit</Col>
         <Col span={12}>
-          <Select onChange={handleLimit} defaultValue={'20'}>
+          <Select
+            className="select-1"
+            onChange={handleLimit}
+            defaultValue={'20'}>
             <Option value="1">1</Option>
             <Option value="10">10</Option>
             <Option value="20">20</Option>
@@ -56,7 +59,10 @@ const GameSettings = (props: any) => {
       <Row className="settings-raw">
         <Col span={12}>Ball speed</Col>
         <Col span={12}>
-          <Select onChange={handleSpeed} defaultValue={'100'}>
+          <Select
+            className="select-2"
+            onChange={handleSpeed}
+            defaultValue={'100'}>
             <Option value="50">50 %</Option>
             <Option value="75">75 %</Option>
             <Option value="100">100 %</Option>
