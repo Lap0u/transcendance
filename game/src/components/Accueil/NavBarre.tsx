@@ -4,13 +4,14 @@ import { BACK_URL } from '../../global';
 import axios from 'axios';
 import { useEffect } from 'react';
 import handleErrors from '../RequestErrors/handleErrors';
-import { HomeOutlined } from '@ant-design/icons';
+import { FontColorsOutlined, HomeOutlined } from '@ant-design/icons';
 import UserDto, { TypeUserDto } from '../utils/UserDto';
 import { Menu } from 'antd';
 import { Stats } from '../Scores/Stats';
 import { useState } from "react";
 import { UseAutocompleteProps } from "@mui/material";
 import UserPopover from "../utils/UserPopover";
+import zIndex from "@mui/material/styles/zIndex";
 
 function NavigationBarre({
 	user,
@@ -23,7 +24,7 @@ function NavigationBarre({
 	const [isVisible, setIsVisible] = useState(false);
 	  const subMenu = [
 		{
-			style:{width:'21vw', height: '300px'},
+			style:{ height: '300px'},
 			title:"Stats",
 			className:"sub-info",
 			key:"points",
@@ -113,25 +114,29 @@ function FriendList({currentUser}: {currentUser: TypeUserDto}){
 
 	return (
 		ok?
-		<li className='raw' >
+		<ul className='friends' >
 		{friendList.map((friend) => (
-		<UserPopover currentUser={currentUser} user={friend} avatarOrUsername={'username'}/>
+		<i><UserPopover key={friend.account_id}  currentUser={currentUser} user={friend} avatarOrUsername={'username'}/><br/></i>
 		))}
-		</li>
+		</ul>
 		: null
 	)
 }
 function FriendListPopover({currentUser, isVisible, setIsVisible}: {currentUser: TypeUserDto, isVisible: boolean, setIsVisible: any}){
 	return (
 		<Popover
-      className="friend-list-popover"
+      className="friend-list"
+	  overlayClassName='friend-list-popover'
       onVisibleChange={(isVisible) => setIsVisible(isVisible)}
       visible={isVisible}
       placement="left"
       content={<FriendList currentUser={currentUser}/>}
       title="Friends"
       trigger="hover"
-      overlayStyle={{ width: '20vw', textAlign: 'center' }}>
+	  zIndex ={3}
+	  color= '#3b4168'
+	  overlayInnerStyle={{margin: 0,padding: 0, textAlign:'center', fontSize: 'max(1vw, 7px)'}}
+      overlayStyle={{}}>
 		<div className="onglet-nav">
 			Friend List
 		</div>

@@ -41,9 +41,9 @@
   width: 100vw;
   height: 5vw;
   line-height: 5vw;
-  justify-content: space-evenly;
   background-color: var(--mid-backgroud);
   display: flex;
+overflow: hidden;
 }
 
 .ant-menu-horizontal .ant-menu-submenu::after,
@@ -100,10 +100,10 @@
 	height: 19vw!important;
 	top: 5vw;
 	 position: fixed!important;
-	width: 21vw!important;
+	width: 18vw!important;
 	right: 0px!important;
 	background-color: var(--mid-backgroud)!important;
-	margin-left: 80vw!important;
+	margin-left: 82vw!important;
 }
 .info{
 	text-align: center;
@@ -141,6 +141,14 @@
 
 }
 
-.friend-list-popover{
+.friend-list-popover .friends{
 	font-size: max(1vw, 7px);
+	text-align: center!important;
+}
+
+.friend-list-popover{
+	width: 50px;
+	text-align: center!important;
+	margin: 0!important;
+	padding: 0;
 }
