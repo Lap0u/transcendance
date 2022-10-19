@@ -184,11 +184,13 @@ const ChannelListItem = ({
         {channel.ownerId === currentUser.id && (
           <>
             <Button
+              className="chat-button-style"
               style={{ marginRight: 5 }}
               icon={<EditOutlined />}
               onClick={editClick}
             />
             <Button
+              className="chat-button-style"
               style={{ marginRight: 5 }}
               icon={<SettingOutlined />}
               onClick={settingClick}
@@ -197,11 +199,19 @@ const ChannelListItem = ({
         )}
 
         {!findUser && (
-          <Button icon={<PlusSquareOutlined />} onClick={showConfirm} />
+          <Button
+            className="chat-button-style"
+            icon={<PlusSquareOutlined />}
+            onClick={showConfirm}
+          />
         )}
 
         {findUser && (
-          <Button icon={<MinusSquareOutlined />} onClick={quitChannel} />
+          <Button
+            className="chat-button-style"
+            icon={<MinusSquareOutlined />}
+            onClick={quitChannel}
+          />
         )}
       </div>
     </div>
@@ -276,7 +286,13 @@ const ChatSiderList = ({
                 setSelectedChannel(false);
                 setIsChannelModalVisible(true);
               }}
-              icon={<PlusSquareOutlined />}>
+              icon={<PlusSquareOutlined />}
+              className="chat-button-style"
+              style={{
+                width: '90%',
+                marginLeft: '5%',
+                marginTop: 5,
+              }}>
               Create channel
             </Button>
           </div>

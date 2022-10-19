@@ -151,11 +151,26 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
   }
 
   return (
-    <Layout style={{ width: '100%', height: '100%' }}>
+    <Layout
+      style={{
+        width: '100%',
+        height: '100%',
+        color: 'var(--text-1)',
+        background: 'var(--background)',
+      }}>
       <NavigationBarre user={currentUser} isLoginActive={true} />
-      <Layout style={{ width: '100%' }}>
+      <Layout
+        style={{
+          width: '100%',
+          background: 'transparent',
+        }}>
         <Sider
-          style={{ backgroundColor: '#1c1c1c', textAlign: 'center' }}
+          style={{
+            backgroundColor: 'transparent',
+            textAlign: 'center',
+            borderRight: '3px solid var(--light)',
+            paddingTop: 5,
+          }}
           width={75}>
           <ChatSiderButton
             chatType={chatType}
@@ -166,7 +181,13 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
             }}
           />
         </Sider>
-        <Sider style={{ backgroundColor: '#c9c9c9' }} width={200}>
+        <Sider
+          style={{
+            backgroundColor: 'transparent',
+            borderRight: '3px solid var(--light)',
+            paddingTop: 5,
+          }}
+          width={200}>
           <ChatSiderList
             chatType={chatType}
             setSelectUser={(selectUser: any) => {

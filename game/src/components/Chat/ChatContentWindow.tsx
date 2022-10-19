@@ -183,7 +183,11 @@ const ChatContentWindow = ({
       return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>{selectedChannel?.channelName}</span>
-          <Button icon={<TeamOutlined />} onClick={showListUserModal} />
+          <Button
+            icon={<TeamOutlined />}
+            onClick={showListUserModal}
+            className="chat-button-style"
+          />
           <ChannelListUserModal
             isListUserModalOpen={isListUserModalOpen}
             setIsListUserModalOpen={setIsListUserModalOpen}
@@ -232,7 +236,9 @@ const ChatContentWindow = ({
     <div className="chat-window-wrapper">
       <div className="chat-window-header">
         {chatWindowName()}
-        <hr />
+        <hr
+          style={{ height: 2, backgroundColor: 'var(--light)', border: 'none' }}
+        />
       </div>
       <div className="chat-window-content">
         {history.map((item: MessageType, index: number) => (

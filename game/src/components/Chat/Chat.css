@@ -4,13 +4,12 @@
   height: 95%;
   margin: 20px;
   padding: 20px;
-  border: 3px solid white;
+  border: 3px solid var(--light);
   border-radius: 10px;
 }
 
 .chat-window-content {
   height: 90%;
-  /* border: 1px solid white; */
   overflow: scroll;
 }
 
@@ -31,6 +30,13 @@
   height: 35px;
   bottom: 10px;
   width: 95%;
+  border-color: var(--light);
+  background-color: var(--light);
+}
+
+.chat-window-input > input {
+  background-color: var(--light);
+  color: #fff;
 }
 
 .chat-window-send-button {
@@ -40,6 +46,12 @@
 
 .chat-window-header {
   font-size: 1.5em;
+}
+
+.chat-button-style {
+  background-color: var(--light);
+  color: #fff;
+  border: none;
 }
 
 /* Hide antd timepicker footer */
