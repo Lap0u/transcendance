@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Space, version } from 'antd';
+import { Button, Layout, Space, version } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GameList, game } from './GameList';
@@ -8,6 +8,8 @@ import handleErrors from '../RequestErrors/handleErrors';
 import Customization from '../customization/Customization';
 import GamePreview from './GamePreview';
 import './Game_menu.css';
+import Sider from 'antd/lib/layout/Sider';
+import { Content } from 'antd/lib/layout/layout';
 import NavigationBarre from '../Accueil/NavBarre';
 
 const GameMenu = (props: any) => {
@@ -17,38 +19,24 @@ const GameMenu = (props: any) => {
   const [gameBackground, setGameBackground] = useState('#000000');
   const [inMatchmaking, setMatchmaking] = useState(false);
   const [gamesList, setGamesList] = useState<game[]>([]);
-  const socket = props.socket;
-  const currentUser = props.currentUser;
-  // const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
-  const [user, setUser] = useState({ account_id: '' });
+  const socket = props.socket;
+  const currentUser = props.currentUser;
 
   useEffect(() => {
     axios
-      .get(`${BACK_URL}/auth/status`, { withCredentials: true })
-      .then((res) => {
-        setOk(true);
-        axios
-          .get(`${BACK_URL}/2fa/status`, {
-            withCredentials: true,
-          })
-          .then((res) => {
-            setUser(res.data);
-          })
-          .catch((error) => {
-            handleErrors(error);
-          });
+      .get(`${BACK_URL}/account/status`, { withCredentials: true })
+      .then(() => {
+        if (currentUser.accountUsername !== '') setOk(true);
         setIsLogin(true);
       })
       .catch((error) => {
-        if (error.response.status === 403) setIsLogin(false);
-        else handleErrors(error);
-        setOk(true);
+        handleErrors(error);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentUser]);
 
   const customGameValues: any = {
     myColor: ownPaddleColor,
@@ -61,6 +49,7 @@ const GameMenu = (props: any) => {
     setMatchmaking(!inMatchmaking);
   };
   const quitMatchmakingList = async (userId: string) => {
+    if (userId === '') return;
     try {
       await axios.delete(`${BACK_URL}/matchmaking/${userId}`, {
         withCredentials: true,
@@ -86,15 +75,19 @@ const GameMenu = (props: any) => {
     }
   };
   const getMatchesList = async () => {
-    try {
-      const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
-        withCredentials: true,
-      });
-      setGamesList(res.data);
-    } catch (e) {
-      console.log(e);
+    if (ok) {
+      try {
+        const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
+          withCredentials: true,
+        });
+        console.log('res', res.data);
 
-      handleErrors(e);
+        setGamesList(res.data);
+      } catch (e) {
+        console.log(e);
+
+        handleErrors(e);
+      }
     }
   };
   useEffect(() => {
@@ -102,7 +95,7 @@ const GameMenu = (props: any) => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [ok]);
 
   useEffect(() => {
     socket.on(`matchFound:`, (gameId: string) => {
@@ -128,36 +121,41 @@ const GameMenu = (props: any) => {
   var matchmakingButton = inMatchmaking
     ? 'Exit Matchmaking'
     : 'Join Matchmaking';
-  return (
-    <div>
-      <NavigationBarre user={currentUser} isLoginActive={isLoginActive} />
+  return ok ? (
+    <Layout className="layout">
+      <NavigationBarre user={currentUser} isLoginActive={1} />
       <Space>
         <Button onClick={joinMatchmaking} type="primary">
           {matchmakingButton}
         </Button>
       </Space>
-      <Customization
-        ownPaddleColor={ownPaddleColor}
-        setOwnPaddleColor={setOwnPaddleColor}
-        opponentPaddleColor={opponentPaddleColor}
-        setOpponentPaddleColor={setOpponentPaddleColor}
-        ballColor={ballColor}
-        setBallColor={setBallColor}
-        gameBackground={gameBackground}
-        setGameBackground={setGameBackground}
-      />
-      <GameList games={gamesList} customGameValues={customGameValues} />
-      <div className="preview-box">
-        <div>Live game preview</div>
-        <GamePreview
-          ownColor={ownPaddleColor}
-          opponentColor={opponentPaddleColor}
-          ballColor={ballColor}
-          backgroundColor={gameBackground}
-        />
-      </div>
-    </div>
-  );
+      <Layout className="layout-2">
+        <Sider width={'25vw'} className="sider-1">
+          <Customization
+            ownPaddleColor={ownPaddleColor}
+            setOwnPaddleColor={setOwnPaddleColor}
+            opponentPaddleColor={opponentPaddleColor}
+            setOpponentPaddleColor={setOpponentPaddleColor}
+            ballColor={ballColor}
+            setBallColor={setBallColor}
+            gameBackground={gameBackground}
+            setGameBackground={setGameBackground}
+          />
+        </Sider>
+        <Content className="content-1">
+          <GamePreview
+            ownColor={ownPaddleColor}
+            opponentColor={opponentPaddleColor}
+            ballColor={ballColor}
+            backgroundColor={gameBackground}
+          />
+        </Content>
+        <Sider width={'25%'} className="sider-2">
+          <GameList games={gamesList} customGameValues={customGameValues} />
+        </Sider>
+      </Layout>
+    </Layout>
+  ) : null;
 };
 
 export default GameMenu;

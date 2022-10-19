@@ -1,6 +1,18 @@
-.preview-box {
-    color: rgb(241, 35, 241);
-    margin-left: 15vw;
-    margin-right: auto;
-    font-size: 16px;
+@import '../../colors.css';
+
+.layout {
+  background-color: var(--background);
+}
+
+.layout-2 {
+  flex-direction: row;
+}
+
+.sider {
+  padding: 0;
+  background-color: inherit;
+}
+
+.content-1 {
+  background-color: inherit;
 }
