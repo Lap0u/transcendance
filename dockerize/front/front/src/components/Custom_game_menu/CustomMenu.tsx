@@ -60,7 +60,7 @@ const CustomMenu = (props: any) => {
       );
       console.log('tt', res.data);
 
-      if (res.data.playerId !== 'wait') {
+      if (res.data.playerId !== 'wait' && res.data.playerId !== 'ready') {
         console.log('went in', res.data);
 
         setGameReady('ready');
@@ -74,6 +74,11 @@ const CustomMenu = (props: any) => {
 
         setSecondPlayer(sec.data);
         setSecondSocket(res.data.playerSocket);
+      } else if (res.data.playerId !== 'ready') {
+        const timeout = setTimeout(() => {
+          joinCustom();
+        }, 100);
+        return () => clearTimeout(timeout);
       }
     }
     if (ok && gameReady !== 'ready') joinCustom();

@@ -28,7 +28,6 @@ const UserListItem = ({ user, currentUser, setSelectUser }: any) => {
         alignItems: 'center',
         padding: '10px',
         margin: 10,
-        // border: '1px solid red',
       }}
       onClick={() => setSelectUser(user)}>
       <div>
@@ -261,7 +260,7 @@ const ChatSiderList = ({
         handleCancel={closeChannelModal}
       />
       {chatType === CHAT_TYPE.user && (
-        <div style={{ height: '100%', overflow: 'scroll' }}>
+        <div style={{ height: '100%', overflow: 'auto' }}>
           {users.map((user: any) => {
             if (currentUser.id === user.id) {
               return null;
