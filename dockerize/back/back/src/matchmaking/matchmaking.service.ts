@@ -171,6 +171,14 @@ export class MatchmakingService {
         const res = { playerId: game.playerTwo, playerSocket: game.twoSocket };
         return res;
       }
+      if (
+        game.oneReady === true &&
+        game.twoReady === true &&
+        socket === game.twoSocket
+      ) {
+        const res = { playerId: 'ready', playerSocket: 'ready' };
+        return res;
+      }
     }
     return { playerId: 'wait', playerSocket: 'wait' };
   }
