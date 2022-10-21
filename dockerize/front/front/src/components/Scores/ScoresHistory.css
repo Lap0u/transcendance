@@ -3,17 +3,17 @@
 .score-page {
 	text-align: center;
 	font-size: min(3vw, 15px);
-	overflow:auto;
-	height: 100%;
+	height: 100vh;
+	overflow: auto;
+	background-color: chartreuse;
 
 
 }
 
 
 .tab{
-	overflow:auto;
 	white-space: nowrap;
-	position:relative
+	position:relative;
 
 }
 

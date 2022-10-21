@@ -42,8 +42,7 @@
   height: 5vw;
   line-height: 5vw;
   background-color: var(--mid-backgroud);
-  display: flex;
-overflow: hidden;
+  justify-content: flex;
 }
 
 .ant-menu-horizontal .ant-menu-submenu::after,
@@ -91,7 +90,6 @@ overflow: hidden;
 	  height: 5vw;
 	font-size: max(1.5vw, 7px);
 	  position: relative;
-	  background-color: var(--text-2);
 	  left: 15px;
   }
 .sub-info{
@@ -142,12 +140,25 @@ overflow: hidden;
 }
 
 .friend-list-popover .friends{
-	font-size: max(1vw, 7px);
-	text-align: center!important;
+	font-size: 1.3vw;
+	position: relative;
+	right: 32px;
+	align-items: center;
+	width: 15vw;
+	color: white;
 }
 
 .friend-list-popover{
-	text-align: left!important;
+	text-align: center!important;
 	margin: 0!important;
 	padding: 0;
+}
+
+.friend-list-popover .title{
+	font-size: 1.4vw;
+	position: relative;
+	right: 16px;
+	align-items: center;
+	width: 15vw;
+	color: var(--text-1);
 }
