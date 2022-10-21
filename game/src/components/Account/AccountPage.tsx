@@ -26,6 +26,8 @@ function ButtonChangeUsername(props : any) {
 	}
 	async function updateUsername() {
 
+		if (window.confirm("Change your username?") === false)
+			return;
 		await axios.post(`${BACK_URL}/account/username/`, {newUsername :username, oldUsername: props.prevUsername}, {
 			withCredentials:true ,
 			method: "post",
@@ -37,8 +39,6 @@ function ButtonChangeUsername(props : any) {
 				alert(response.data.msg);
 				return;
 			}
-			if (window.confirm("Change your username?") === false)
-				return;
 			props.refresh(username);
 			props.changeUser(+props.cur + 1);
 			clearInput.current = "";
