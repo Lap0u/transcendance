@@ -32,7 +32,7 @@ function NavigationBarre({
 			<div className='info'>
 				<div className='stats'>
 				<p>{user.points} points</p>
-				<p><Stats id={user.account_id} tabFormat={0} /></p>
+				<Stats id={user.account_id} tabFormat={0} />
 				<p>rank: {user.rank}</p>
 				</div>
 					<FriendListPopover currentUser={user} isVisible={isVisible} setIsVisible={setIsVisible}></FriendListPopover>
@@ -120,6 +120,9 @@ function FriendList({currentUser}: {currentUser: TypeUserDto}){
 		<i><UserPopover key={friend.account_id}  currentUser={currentUser} user={friend} avatarOrUsername={'username'}/><br/></i>
 		))}
 		</ul>
+		{friendList.length === 0? 
+		<p>No friends yet</p> :
+		null}
 		</div>
 		: null
 	)
