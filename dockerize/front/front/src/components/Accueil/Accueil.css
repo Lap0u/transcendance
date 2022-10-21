@@ -147,8 +147,7 @@ overflow: hidden;
 }
 
 .friend-list-popover{
-	width: 50px;
-	text-align: center!important;
+	text-align: left!important;
 	margin: 0!important;
 	padding: 0;
 }

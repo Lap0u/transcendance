@@ -116,7 +116,7 @@ function FriendList({currentUser}: {currentUser: TypeUserDto}){
 		ok?
 		<ul className='friends' >
 		{friendList.map((friend) => (
-		<i><UserPopover key={friend.account_id}  currentUser={currentUser} user={friend} avatarOrUsername={'username'}/><br/></i>
+		<p><UserPopover key={friend.account_id}  currentUser={currentUser} user={friend} avatarOrUsername={'username'}/><br/></p>
 		))}
 		</ul>
 		: null
@@ -133,10 +133,9 @@ function FriendListPopover({currentUser, isVisible, setIsVisible}: {currentUser:
       content={<FriendList currentUser={currentUser}/>}
       title="Friends"
       trigger="hover"
-	  zIndex ={3}
 	  color= '#3b4168'
-	  overlayInnerStyle={{margin: 0,padding: 0, textAlign:'center', fontSize: 'max(1vw, 7px)'}}
-      overlayStyle={{}}>
+	  overlayInnerStyle={{ width: '7px', margin: 0,padding: 0, textAlign:'center', fontSize: 'max(1vw, 7px)'}}
+	  overlayStyle={{ width: '7px', textAlign: 'center' }}>
 		<div className="onglet-nav">
 			Friend List
 		</div>
