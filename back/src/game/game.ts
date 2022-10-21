@@ -59,11 +59,13 @@ function startGameInterval(
     if (status === 1) {
       socket.emit(curGame.gameId, state);
     } else {
-      setCurrentGames(curGame.playerOne.login, userRepo, false);
-      setCurrentGames(curGame.playerTwo.login, userRepo, false);
+     
       handleEndGame(status, socket, state, curGame, scoreService);
       clearGame(curGame.gameId, allGames); //enleve la game de la liste, pose des problemes avec le front pour l'instant
       clearInterval(intervalId);
+
+      setCurrentGames(curGame.playerOne.login, userRepo, false);
+      setCurrentGames(curGame.playerTwo.login, userRepo, false);
     }
   }, 1000 / FRAME_RATE);
   return curGame.gameId;
@@ -109,10 +111,13 @@ async function setCurrentGames(
       currentGames,
     });
   } else {
-    const currentGames: number = +user.currentGames - +1;
-    await userRepo.save({
-      ...user,
-      currentGames,
-    });
+    setTimeout(async ()=>{
+      const currentGames: number = +user.currentGames - +1;
+      await userRepo.save({
+        ...user,
+        currentGames,
+      });
+
+    }, 1000)
   }
 }
