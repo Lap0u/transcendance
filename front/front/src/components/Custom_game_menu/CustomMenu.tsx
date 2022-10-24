@@ -30,6 +30,7 @@ const CustomMenu = (props: any) => {
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
+  console.log('rep', currentUser);
 
   useEffect(() => {
     axios
@@ -82,7 +83,7 @@ const CustomMenu = (props: any) => {
       }
     }
     if (ok && gameReady !== 'ready') joinCustom();
-  }, [ok, gameReady]);
+  }, [ok, gameReady, currentUser]);
 
   async function startCustom(
     currentUser: any,
