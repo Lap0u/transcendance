@@ -24,7 +24,8 @@ const GameMenu = (props: any) => {
   const [ok, setOk] = useState(false);
   const socket = props.socket;
   const currentUser = props.currentUser;
-
+	const nav = useNavigate();
+  
   useEffect(() => {
     axios
       .get(`${BACK_URL}/account/status`, { withCredentials: true })
@@ -33,7 +34,7 @@ const GameMenu = (props: any) => {
         setIsLogin(true);
       })
       .catch((error) => {
-        handleErrors(error);
+        handleErrors(error, nav);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
@@ -55,7 +56,7 @@ const GameMenu = (props: any) => {
         withCredentials: true,
       });
     } catch (e) {
-      handleErrors(e);
+      handleErrors(e, nav);
     }
   };
 
@@ -71,7 +72,7 @@ const GameMenu = (props: any) => {
         { withCredentials: true }
       );
     } catch (e) {
-      handleErrors(e);
+      handleErrors(e, nav);
     }
   };
   const getMatchesList = async () => {
@@ -86,7 +87,7 @@ const GameMenu = (props: any) => {
       } catch (e) {
         console.log(e);
 
-        handleErrors(e);
+        handleErrors(e, nav);
       }
     }
   };

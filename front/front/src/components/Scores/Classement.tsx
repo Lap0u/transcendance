@@ -4,6 +4,7 @@ import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from './Stats';
 import './ScoresHistory.css';
 import UserPopover from '../utils/UserPopover';
+import { useNavigate } from 'react-router-dom';
 
 const BACK_URL = 'http://localhost:4000';
 
@@ -32,7 +33,8 @@ export function ClassementTab(props: any) {
   const [ok, setOk] = useState(false);
   const user=props.user;
   const currentUser=props.currentUser;
-
+	const nav = useNavigate();
+	
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/classement`,  {withCredentials:true })
 			.then((response) => {
@@ -41,7 +43,7 @@ export function ClassementTab(props: any) {
 					setOk(true);
 				})
 			.catch((error) => {
-				handleErrors(error)
+				handleErrors(error, nav)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

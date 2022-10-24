@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import handleErrors from '../RequestErrors/handleErrors';
 import { Stats } from '../Scores/Stats';
 import './AccountPage.css'
@@ -25,7 +26,8 @@ const  PublicInfo = (props: any) => {
 
 	const [ok, setOk] = useState(false);
 	const [user, getUser] = useState({account_id:"", name : "", username: "", avatar: "", accountUsername:"", isTwoFactorAuthenticationEnabled: false, email : null});
-
+	const nav = useNavigate();
+	
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/${props.userId}`,  {withCredentials:true })
 			.then((response) => {
@@ -33,7 +35,7 @@ const  PublicInfo = (props: any) => {
 				setOk(true);
 			})
 			.catch((error) => {
-				handleErrors(error)
+				handleErrors(error, nav)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

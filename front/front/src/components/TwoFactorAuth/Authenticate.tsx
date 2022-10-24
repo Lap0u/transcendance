@@ -46,7 +46,7 @@ export function TwoAuthAutenticatePage({userChanged, changeUser}: {userChanged: 
 				alert(error.response.data.message)
 			}
 			console.log('errroooor', error);
-		//	handleErrors(error)
+		//	handleErrors(error, nav)
 		});
 		  
 	}
@@ -61,7 +61,7 @@ export function TwoAuthAutenticatePage({userChanged, changeUser}: {userChanged: 
 			alert( "Your account has been verified, proceed to the signin page");
 		 })
 		.catch((error) => {
-			handleErrors(error)
+			handleErrors(error, nav)
 		});
 	}
 

@@ -5,6 +5,7 @@ import handleErrors from "../RequestErrors/handleErrors";
 import './ScoresHistory.css';
 import { BACK_URL } from "../../global";
 import UserDto from "../utils/UserDto";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -30,7 +31,8 @@ export function ScoreTab(props: any) {
 	const [scoreLen, getScoreLen] = useState(0);
 	const [ok, setOk] = useState(false);
 	const currentUser= props.currentUser;
-
+	const nav = useNavigate();
+	
 	useEffect(() => {
 		axios.get(`${BACK_URL}/scores/history/${props.id}`,  {withCredentials:true })
 		.then((response) => {
@@ -40,7 +42,7 @@ export function ScoreTab(props: any) {
 			setOk(true);
 		})
 		.catch((error) => {
-			handleErrors(error)
+			handleErrors(error, nav)
 		})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

@@ -218,6 +218,7 @@ function ProfileTitle({ user }: { user: any }) {
 
 function Status(props: any) {
   const [status, setStatus] = useState(0);
+  const nav = useNavigate();
   useEffect(() => {
     axios
       .get(`${BACK_URL}/account/status/id/${props.id}`, {
@@ -227,7 +228,7 @@ function Status(props: any) {
         setStatus(response.data);
       })
       .catch((error) => {
-        handleErrors(error);
+        handleErrors(error, nav);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

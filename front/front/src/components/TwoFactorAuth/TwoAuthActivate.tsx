@@ -33,7 +33,7 @@ export function ActivateTwoAuth(props: any){
 			   }
 		   })
 		.catch((error) => {
-			handleErrors(error)
+			handleErrors(error, nav)
 		});
 		  
 	}
