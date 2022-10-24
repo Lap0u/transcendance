@@ -78,7 +78,8 @@ function App() {
       socket.on(acceptInviteGame, (accept: any) => {
         message.success(`${accept.senderUsername} accept to play with you`);
 
-        nav('/custom_game', { replace: true });
+        setCurrentUser({ ...currentUser });
+        nav('/custom_game');
       });
 
       socket.on(refuseInviteGame, (refuse: any) => {
@@ -99,6 +100,7 @@ function App() {
       <InviteGameModal
         isInviteGameModalOpen={isInviteGameModalOpen}
         setIsInviteGameModalOpen={setIsInviteGameModalOpen}
+        setCurrentUser={setCurrentUser}
         currentUser={currentUser}
         invitor={invitor}
       />

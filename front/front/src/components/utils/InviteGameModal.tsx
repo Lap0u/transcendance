@@ -7,6 +7,7 @@ const InviteGameModal = ({
   isInviteGameModalOpen,
   setIsInviteGameModalOpen,
   currentUser,
+  setCurrentUser,
   invitor,
 }: inviteGameModalProps) => {
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ const InviteGameModal = ({
     } catch (error) {
       message.error('Fail!');
     }
-    navigate('/custom_game', { replace: true });
+    setCurrentUser({ ...currentUser });
+    navigate('/custom_game');
     setIsInviteGameModalOpen(false);
   };
 
@@ -65,6 +67,7 @@ type inviteGameModalProps = {
   isInviteGameModalOpen: boolean;
   setIsInviteGameModalOpen: any;
   currentUser: any;
+  setCurrentUser: any;
   invitor: any;
 };
 
