@@ -109,10 +109,13 @@ async function setCurrentGames(
       currentGames,
     });
   } else {
-    const currentGames: number = +user.currentGames - +1;
-    await userRepo.save({
-      ...user,
-      currentGames,
-    });
+    setTimeout(async ()=>{
+      const currentGames: number = +user.currentGames - +1;
+      await userRepo.save({
+        ...user,
+        currentGames,
+      });
+
+    }, 1000)
   }
 }

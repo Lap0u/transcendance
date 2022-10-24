@@ -24,7 +24,7 @@ const InviteGameModal = ({
     } catch (error) {
       message.error('Fail!');
     }
-    navigate('/custom_game', { replace: true });
+    navigate('/custom_game');
     setIsInviteGameModalOpen(false);
   };
 

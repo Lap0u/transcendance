@@ -16,8 +16,8 @@ const ScoresDto = [
     idLoser: '',
     winner: { ...UserDto },
     loser: { ...UserDto },
-    ScorePlayer1: null,
-    ScorePlayer2: null,
+    ScorePlayer1: 0,
+    ScorePlayer2: 0,
 	PointsWon: 0,
 	PointsLost: 0,
 	date: undefined,
@@ -85,9 +85,9 @@ export function ScoreTab(props: any) {
 		{scores.map((score) => (
 		<i key={score.key} className="data">
 		<div className="res-score">
-		<i className="score">{score.ScorePlayer1}</i>
+		<i className="score">{score.ScorePlayer1 > score.ScorePlayer2 ? score.ScorePlayer1 : score.ScorePlayer2}</i>
 		<i className="vl"/>
-		<i className="score">{score.ScorePlayer2}</i>
+		<i className="score">{score.ScorePlayer1 <= score.ScorePlayer2 ? score.ScorePlayer1 : score.ScorePlayer2}</i>
 		</div>
 		</i>
 	  ))}

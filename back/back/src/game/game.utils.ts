@@ -1,10 +1,15 @@
 import { matchesDto } from 'src/matchmaking/matches.dto';
 import { resetBall } from './ball.utils';
 import {
+  BACK_BALL_SIZE,
   BACK_WIN_HEIGHT,
+  POWERUPDELAY,
   BACK_WIN_WIDTH,
+  DEFAULT_BALL_SPEED,
   FRAME_RATE,
   GOAL_DELAY,
+  PADDLE_HEIGHT,
+  PADDLE_WIDTH,
   SCORE_LIMIT,
   STARTINGPOS_LEFT_X,
   STARTINGPOS_RIGHT_X,
