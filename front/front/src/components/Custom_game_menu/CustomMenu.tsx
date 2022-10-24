@@ -83,7 +83,7 @@ const CustomMenu = (props: any) => {
       }
     }
     if (ok && gameReady !== 'ready') joinCustom();
-  }, [ok, gameReady]);
+  }, [ok, gameReady, currentUser]);
 
   async function startCustom(
     currentUser: any,
