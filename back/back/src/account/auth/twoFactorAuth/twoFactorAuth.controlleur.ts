@@ -113,4 +113,13 @@ export class TwoFactorAuthenticationController {
       req.session['passport'].user.id,
     );
   }
+
+  @Get('cancel')
+  @UseGuards(AuthenticatedGuard)
+  @UseGuards(NotJwtTwoFactorGuard)
+  async cancel(@Req() req: Request) {
+    return await this.twoFactorAuthenticationService.turnOf(
+      req.session['passport'].user.id,
+    );
+  }
 }

@@ -137,7 +137,7 @@ function App() {
 		<Route path="/error400" element={<BadRequest />} />
         <Route path="/wrongGameId" element={<WrongGameId />} />
         <Route path="/login" element={<LoginSuccess />} />
-        <Route path="/emailverify" element={<EmailConfirm />} />
+        <Route path="/emailverify" element={<EmailConfirm changeUser={changeUser} userChanged={userChanged} />} />
         <Route path="/2fa" element={<TwoAuthAutenticatePage changeUser={changeUser} userChanged={userChanged} />} />
         <Route
           path="/scores/:id"

@@ -44,3 +44,13 @@
 	line-height: 0px;
 
 }
+
+.two-auth .cancel{
+	position: relative;
+	line-height: 0px;
+	height: min(2.5vw, 19px);
+	top: 10px;
+	left:5px;
+
+
+}

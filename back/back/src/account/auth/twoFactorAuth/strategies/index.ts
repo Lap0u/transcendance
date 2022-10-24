@@ -32,6 +32,7 @@ export class JwtTwoFactorStrategy extends PassportStrategy(
     if (!user.isTwoFactorAuthenticationEnabled) {
       return user;
     }
+    
     if (user.isTwoFactorAuthenticationEnabled && !user.isVerified) {
       return;
     }
