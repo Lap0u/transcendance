@@ -42,6 +42,7 @@ const BallCustom = ({
         <div className="picker-div">
           {compPicker && (
             <BlockPicker
+              triangle="hide"
               className="my-picker"
               onChangeComplete={handleColorChange}
               color={color}
