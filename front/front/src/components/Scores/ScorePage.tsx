@@ -46,10 +46,9 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 		<div className='score-page'>
 			<NavigationBarre isLoginActive={true}  user={currentUser}/>
 			<div className='score-page' >
-			<i className='title-scores' style={{fontSize:20, color:'#00000', backgroundColor:'orange', WebkitTextStroke:'0.8px #2d10d3', position:'relative', top: 40}}>SCORE PAGE OF USER {user.accountUsername} </i>
+			<i className='title-scores' style={{fontSize:20, color:'#00000', WebkitTextStroke:'0.8px #2d10d3', position:'relative', top: 40}}>SCORE PAGE OF USER {user.accountUsername} </i>
 			<Tabs className="box-tab" value={tabIndex} onChange={handleTabChange} centered 
 					  sx={{
-						backgroundColor:'red',
 						position:'relative', top:50,
 						'& .MuiTabs-indicator': { backgroundColor: '#5700DE' },
 						'& .MuiTab-root': { color: '#5700DE', fontSize:' min(3vw, 15px)'},
@@ -57,7 +56,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 				<Tab label="Historique" />
         	  	<Tab label="Leaderboard" />
 			</Tabs>
-			<Box sx={{ padding: 2,position:'relative', top:50, height:'80vh', backgroundColor:'pink'}}>
+			<Box sx={{ padding: 2,position:'relative', height:'80vh',paddingTop:10 }}>
         	{tabIndex === 0 && (
         	  <Box >
         	    <ScoreTab user={user} id={id} currentUser={currentUser}/>
