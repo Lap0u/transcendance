@@ -151,9 +151,14 @@ export class MatchmakingService {
   }
 
   async joinCustomGame(userId: string, socket: string): Promise<any> {
+    console.log('userid', userId);
+    console.log('sock', socket);
     let found = false;
+    console.log('list', this.customMatchesList);
+
     for (const game of this.customMatchesList) {
       if (userId === game.playerOne || userId === game.playerTwo) {
+        console.log('game', game);
         found = true;
       } else continue;
       if (userId === game.playerOne && game.oneReady === false) {
@@ -170,6 +175,7 @@ export class MatchmakingService {
         socket === game.oneSocket
       ) {
         const res = { playerId: game.playerTwo, playerSocket: game.twoSocket };
+        this.removeCustom(socket);
         return res;
       }
       if (
@@ -181,6 +187,7 @@ export class MatchmakingService {
         return res;
       }
     }
+    if (found === false) return { playerId: 'none', playerSocket: 'none' };
     return { playerId: 'wait', playerSocket: 'wait' };
   }
 
