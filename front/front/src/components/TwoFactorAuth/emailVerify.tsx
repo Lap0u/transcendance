@@ -48,7 +48,16 @@ export function EmailConfirm(props:any) {
 		  
 	}
 
-
+	async function cancel() {
+		axios.get(`${BACK_URL}/2fa/cancel`,  {withCredentials:true })
+		.then(()=> {
+			props.changeUser(props.userChanged + 1)
+			nav('/account')
+		})
+		.catch((error) => {
+			handleErrors(error, nav)
+		})
+	}
 	return (
 		<div className='two-auth'>
             <h3 className="two-auth-title">Your have to confirm your Email to validate your account</h3>
@@ -58,6 +67,7 @@ export function EmailConfirm(props:any) {
 						   <br/><input className="two-fa-input-email" type='text' id="code" onChange={(e) => newCode(e)} 
 							    value={clearInput.current}/>
 								   <button className="confirm-button" type="submit" >Confirm</button>
+									 <button  className="cancel" type="button" onClick={cancel} >Cancel</button>
                            </div>
                    </form>
            </div>
