@@ -162,7 +162,7 @@ input[type=file]::file-selector-button{
 	background-color:var(--small-background);
 	text-align: center;
 	color:white;
-	width:300px;
+	width: min(45vw, 350px);
 	height: 130px;
 	border: 2px solid white;
 }
@@ -191,7 +191,7 @@ input[type=file]::file-selector-button{
 	color: black;
 	line-height: 2.5vh;
 	border: 0.5px solid white ;
-	color: white;
+	color: white; 
 
 }
 

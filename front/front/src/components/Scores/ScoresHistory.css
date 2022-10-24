@@ -3,9 +3,7 @@
 .score-page {
 	text-align: center;
 	font-size: min(3vw, 15px);
-	height: 100vh;
 	overflow: auto;
-	background-color: chartreuse;
 
 
 }
