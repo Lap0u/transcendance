@@ -61,11 +61,7 @@ const CustomMenu = (props: any) => {
       );
       console.log('tt', res.data);
 
-      if (
-        res.data.playerId !== 'wait' &&
-        res.data.playerId !== 'ready' &&
-        res.data.playerId !== 'none'
-      ) {
+      if (res.data.playerId !== 'wait' && res.data.playerId !== 'ready') {
         console.log('went in', res.data);
 
         setGameReady('ready');
@@ -79,10 +75,10 @@ const CustomMenu = (props: any) => {
 
         setSecondPlayer(sec.data);
         setSecondSocket(res.data.playerSocket);
-      } else if (res.data.playerId !== 'ready' && res.data.playerId != 'none') {
+      } else if (res.data.playerId !== 'ready') {
         const timeout = setTimeout(() => {
           joinCustom();
-        }, 500);
+        }, 100);
         return () => clearTimeout(timeout);
       }
     }

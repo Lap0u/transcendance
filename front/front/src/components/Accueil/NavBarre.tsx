@@ -32,7 +32,7 @@ function NavigationBarre({
 			<div className='info'>
 				<div className='stats'>
 				<p>{user.points} points</p>
-				<p><Stats id={user.account_id} tabFormat={0} /></p>
+				<Stats id={user.account_id} tabFormat={0} />
 				<p>rank: {user.rank}</p>
 				</div>
 					<FriendListPopover currentUser={user} isVisible={isVisible} setIsVisible={setIsVisible}></FriendListPopover>
@@ -66,7 +66,7 @@ function NavigationBarre({
 	  },
 	  {
 		  key:"user-info",
-		  style:{width:'21vw'},
+		  style:{},
 		  icon: <NavAvatar user={user}/>,
 		  className: 'user-nav',
 		  label: "   " + user.accountUsername,
@@ -114,11 +114,16 @@ function FriendList({currentUser}: {currentUser: TypeUserDto}){
 
 	return (
 		ok?
-		<ul className='friends' >
+		<div  className='friends'>
+		<ul >
 		{friendList.map((friend) => (
-		<i><UserPopover key={friend.account_id}  currentUser={currentUser} user={friend} avatarOrUsername={'username'}/><br/></i>
+		<i key={friend.account_id}><UserPopover key={friend.account_id}  currentUser={currentUser} user={friend} avatarOrUsername={'username'}/><br/></i>
 		))}
 		</ul>
+		{friendList.length === 0? 
+		<p>No friends yet</p> :
+		null}
+		</div>
 		: null
 	)
 }
@@ -131,12 +136,12 @@ function FriendListPopover({currentUser, isVisible, setIsVisible}: {currentUser:
       visible={isVisible}
       placement="left"
       content={<FriendList currentUser={currentUser}/>}
-      title="Friends"
+      title={<div className='title'> Friends</div>}
       trigger="hover"
 	  zIndex ={3}
-	  color= '#3b4168'
-	  overlayInnerStyle={{margin: 0,padding: 0, textAlign:'center', fontSize: 'max(1vw, 7px)'}}
-      overlayStyle={{}}>
+	  color= '#1D1640'
+	  overlayInnerStyle={{border:'none', width: '15vw', margin: 0,padding: 0}}
+      overlayStyle={{border:'none'}}>
 		<div className="onglet-nav">
 			Friend List
 		</div>
