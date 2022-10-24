@@ -14,11 +14,10 @@ import './AccountPage.css'
 const BACK_URL = "http://localhost:4000";
 const FRONT_URL = "http://localhost:3000";
 
-
 function ButtonChangeUsername(props : any) {
 	const clearInput = useRef("");
 	const [username, changeUsername] = useState("");
-
+	const nav = useNavigate();
 
 	async function newUsername(e : any) {
 		changeUsername(e.target.value);
@@ -45,7 +44,7 @@ function ButtonChangeUsername(props : any) {
 		})
 		.catch((error) => {
 		  clearInput.current = "";
-			handleErrors(error)
+			handleErrors(error, nav)
 		});
 		  
 	}
@@ -65,6 +64,7 @@ function ButtonChangeAvatar(props : any) {
 	const [displayElem, clickButton] = useState('none');
 	const [selectedFile, setSelectedFile] = useState("");
 	const [isFilePicked, setIsFilePicked] = useState(false);
+	const nav = useNavigate();
 
 	const changeHandler = (event : any) => {
 		setSelectedFile(event.target.files[0]);
@@ -96,7 +96,7 @@ function ButtonChangeAvatar(props : any) {
 		  e.target.value= null;
 		})
 		.catch((error) => {
-			handleErrors(error)
+			handleErrors(error, nav)
 		});
 	}
 	  
@@ -137,6 +137,7 @@ const UserName = (props : any) => {
 
 function TwoAuth(props: any){
 	const [displayForm, display] = useState("none");
+	const nav = useNavigate();
 
 	function turnOffTwoAth(){
 		if (window.confirm("Desactivate the two factor authentification?") === false)
@@ -147,7 +148,7 @@ function TwoAuth(props: any){
 			props.changeUser(props.userChanged + 1);
 		})
 		.catch((error) => {
-			handleErrors(error)
+			handleErrors(error, nav)
 		})
 	}
 
@@ -234,6 +235,7 @@ const AccountInfo = ({user, changeUser, cur}: {user: typeof UserDto, changeUser:
 
 export const LogoutButton = () =>{
 
+	const nav = useNavigate();
 	async function logout() {
 		await axios.get(`${BACK_URL}/auth/logout`, 
 		{
@@ -245,7 +247,7 @@ export const LogoutButton = () =>{
 		})
 		.catch((error) => {
 			console.log("errooooor esddddd outtttt")
-			handleErrors(error)
+			handleErrors(error, nav)
 		})
 	}
 	return (
@@ -254,6 +256,7 @@ export const LogoutButton = () =>{
 }
 const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUser:any, cur:any}) => {
 	const [ok, setOk] = useState(false);
+	const nav = useNavigate();
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/status`,  {withCredentials:true })
 			.then(()=>{
@@ -262,7 +265,7 @@ const AccountPage = ({user, changeUser, cur} : {user : typeof UserDto, changeUse
 					setOk(true);
 			})
 			.catch((error) => {
-				handleErrors(error)
+				handleErrors(error, nav)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

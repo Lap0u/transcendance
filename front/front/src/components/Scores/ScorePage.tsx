@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClassementTab } from "./Classement";
 import { ScoreTab } from "./ScoresHistory";
 import { Tabs, Tab, Box } from '@mui/material';
@@ -26,6 +26,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 	  setTabIndex(newTabIndex);
 	};
 
+	const nav = useNavigate();
 	const [user, getUser] = useState({...UserDto});
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/id/${id}`,  {withCredentials:true })
@@ -35,7 +36,7 @@ export function ScoresPage({currentUser}:{currentUser : typeof UserDto}){
 				setOk(true);
 			})
 			.catch((error) => {
-				handleErrors(error)
+				handleErrors(error, nav)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [re]);

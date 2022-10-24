@@ -99,6 +99,8 @@ function FriendList({currentUser}: {currentUser: TypeUserDto}){
 	const list : Array<TypeUserDto> = [];
 	const [friendList, getFriendList] = useState(list);
 	const [ok, setOk] = useState(false);
+	const nav = useNavigate();
+	
 	useEffect(() => {
 		axios.get(`${BACK_URL}/account/friendList`,  {withCredentials:true })
 			.then((response) => {
@@ -107,7 +109,7 @@ function FriendList({currentUser}: {currentUser: TypeUserDto}){
 				setOk(true);
 			})
 			.catch((error) => {
-				handleErrors(error)
+				handleErrors(error, nav)
 			})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

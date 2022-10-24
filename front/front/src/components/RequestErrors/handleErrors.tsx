@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async function handleErrors(error : any)
+export default async function handleErrors(error : any, nav: any)
 {
 	const BACK_URL = "http://localhost:4000";
 
@@ -12,33 +12,33 @@ export default async function handleErrors(error : any)
 		})
 		.then(res => {
 			if (res.data.twoFaEnabled && !res.data.emailVerified){
-				window.location.href = 'http://localhost:3000/emailverify'
+				nav('/emailverify');
 				return;
 			}
 			if (res.data.twoFaEnabled && res.data.emailVerified){
-				window.location.href = 'http://localhost:3000/2fa';
+				nav('/2fa');
 				return;
 			}
 			else {
-				window.location.href = 'http://localhost:3000/forbidden';
+				nav('/forbidden');
 				return;
 			}
 		 })
 		.catch((error) => {
 			if (error.response.status === 403){
-				window.location.href = 'http://localhost:3000/error403';
+				nav('/error403');
 				return;
 			}
 			else
-				window.location.href = 'http://localhost:3000/error500'
+			nav('/error500');
 		});
 
 	}
 	else if (error.response.status=== 400)
-		window.location.href = 'http://localhost:3000/error400'
+		nav('/error400');
 	else if (error.response.status=== 404)
-		window.location.href = 'http://localhost:3000/error404'
+		nav('/error404');
 	else {
-		window.location.href = 'http://localhost:3000/error500'
+		nav('/error500');
 	}
 }

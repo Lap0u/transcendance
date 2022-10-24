@@ -30,7 +30,8 @@ const CustomMenu = (props: any) => {
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
-
+	const nav = useNavigate();
+  
   useEffect(() => {
     axios
       .get(`${BACK_URL}/account/status`, { withCredentials: true })
@@ -38,7 +39,7 @@ const CustomMenu = (props: any) => {
         if (currentUser.accountUsername !== '') setOk(true);
       })
       .catch((error) => {
-        handleErrors(error);
+        handleErrors(error, nav);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
@@ -107,7 +108,7 @@ const CustomMenu = (props: any) => {
         { withCredentials: true }
       );
     } catch (e) {
-      handleErrors(e);
+      handleErrors(e, nav);
     }
   }
 

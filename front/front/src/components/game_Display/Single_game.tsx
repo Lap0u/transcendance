@@ -26,6 +26,7 @@ const SingleGame = (props: any) => {
   const gameSocket = path[path.length - 1];
   const navigate = useNavigate();
   const socket = props.socket;
+  const nav = useNavigate();
 
   const powerupSprite = new Image();
   powerupSprite.src = myImg;
@@ -53,7 +54,7 @@ const SingleGame = (props: any) => {
       if (searchId(gameSarray.data) === false) navigate(`/wrongGameId`);
       else setValidId(true);
     } catch (e) {
-      handleErrors(e);
+      handleErrors(e, nav);
     }
   };
   if (isValidId === false) checkValidId();

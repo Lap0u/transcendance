@@ -43,7 +43,7 @@ export function EmailConfirm(props:any) {
 			   }
 		   })
 		.catch((error) => {
-			handleErrors(error)
+			handleErrors(error, nav)
 		});
 		  
 	}

@@ -16,7 +16,8 @@ const { Sider, Content } = Layout;
 
 const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
   const navigate = useNavigate();
-
+	const nav = useNavigate();
+  
   const [chatType, setChatType] = useState(CHAT_TYPE.user);
   const [selectUser, setSelectUser] = useState<any>(null);
   const [users, setUsers] = useState<any>([]);
@@ -32,7 +33,7 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
       });
       setChannels(res.data);
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error, nav);
     }
   };
 
@@ -44,7 +45,7 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
       res.data = res.data.map((data: any) => ({ ...data, key: data.id }));
       setUsers(res.data);
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error, nav);
     }
   };
 

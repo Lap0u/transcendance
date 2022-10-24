@@ -22,6 +22,8 @@ function handleInit(msg: string) {
 function Accueil(props: any) {
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
+  const nav = useNavigate();
+  
   useEffect(() => {
     console.log('useefect');
     axios
@@ -35,7 +37,7 @@ function Accueil(props: any) {
             setOk(true);
           })
           .catch((error) => {
-            handleErrors(error);
+            handleErrors(error, nav);
           });
         setIsLogin(true);
         setOk(true);
@@ -44,7 +46,7 @@ function Accueil(props: any) {
         if (error.response.status === 403) {
           setIsLogin(false);
           setOk(true);
-        } else handleErrors(error);
+        } else handleErrors(error, nav);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
