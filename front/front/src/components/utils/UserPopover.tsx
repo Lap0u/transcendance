@@ -78,7 +78,7 @@ export const UserPopover = ({
   };
 
   const handleScoresClick = (nav: any) => {
-	setIsVisible(false);
+    setIsVisible(false);
     nav(`/scores/${user.account_id}`);
   };
 
@@ -141,12 +141,14 @@ export const UserPopover = ({
     <div
       className="content"
       style={{ display: 'flex', flexDirection: 'column' }}>
-      <Button style={stylePopoverButton} onClick={() => handleScoresClick(nav)}>
+      <Button
+        style={{ marginBottom: '5px', ...stylePopoverButton }}
+        onClick={() => handleScoresClick(nav)}>
         Scores
       </Button>
-	  <Button
+      <Button
         style={stylePopoverButton}
-        onClick={inFriendList? removeFriend : addFriend}>
+        onClick={inFriendList ? removeFriend : addFriend}>
         {inFriendList ? 'Remove friend' : 'add friend'}
       </Button>
       <Button

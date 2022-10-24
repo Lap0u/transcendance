@@ -10,6 +10,7 @@ import {
 } from './channel.dto';
 import { Channel, ChannelType, MuteOrBanUser } from './channel.entity';
 import { Chat } from 'src/chat/chat.entity';
+import bcrypt = require('bcrypt');
 
 @Injectable()
 export class ChannelService {
@@ -39,7 +40,9 @@ export class ChannelService {
 
     newChannel.type = payload.type;
     newChannel.channelName = payload.channelName;
-    newChannel.password = payload.password;
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(payload.password, salt);
+    newChannel.password = hash;
     newChannel.ownerId = userId;
     newChannel.administratorsId = [userId];
     newChannel.usersId = [userId];
@@ -69,7 +72,9 @@ export class ChannelService {
     if (channel.type !== ChannelType.PROTECTED) {
       payload.password = null;
     }
-    channel.password = payload.password;
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(payload.password, salt);
+    channel.password = hash;
     if (payload.administratorsId) {
       channel.administratorsId = payload.administratorsId;
     }
@@ -96,11 +101,9 @@ export class ChannelService {
     if (!channel) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
+    const isMatch = await bcrypt.compare(payload.password, channel.password);
 
-    if (
-      payload.type === ChannelType.PROTECTED &&
-      payload.password !== channel.password
-    ) {
+    if (payload.type === ChannelType.PROTECTED && !isMatch) {
       throw new HttpException('Invalid password', HttpStatus.FORBIDDEN);
     }
 

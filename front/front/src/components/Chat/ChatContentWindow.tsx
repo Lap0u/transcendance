@@ -29,7 +29,9 @@ const MessageContent = ({
       <div className="chat-window-mymessage-wrapper">
         <div className="chat-window-mymessage-username">
           <Avatar src={BACK_URL + '/account/avatar/' + findUser.avatar} />
-          {findUser.accountUsername}:
+          <span className="chat-window-message-username">
+            {findUser.accountUsername}:
+          </span>
         </div>
         <div className="chat-window-mymessage-content">{item.message}</div>
       </div>
@@ -40,7 +42,9 @@ const MessageContent = ({
     <div className="chat-window-othermessage-wrapper">
       <div className="chat-window-othermessage-username">
         <UserPopover currentUser={currentUser} user={findUser} />
-        {findUser.accountUsername}:
+        <span className="chat-window-message-username">
+          {findUser.accountUsername}:
+        </span>
       </div>
       <div className="chat-window-othermessage-content">{item.message}</div>
     </div>

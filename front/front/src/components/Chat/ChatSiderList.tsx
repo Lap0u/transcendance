@@ -86,8 +86,8 @@ const ChannelListItem = ({
       {channel.type === CHANNEL_TYPE.protected && (
         <div>
           <p>Please enter the password</p>
-          <Input
-            placeholder="password"
+          <Input.Password
+            placeholder="input password"
             onChange={(e) => {
               passwordRef.current = e.target.value;
             }}
@@ -98,13 +98,6 @@ const ChannelListItem = ({
   );
 
   const onOkHandler = async () => {
-    if (channel.type === CHANNEL_TYPE.protected) {
-      if (passwordRef.current !== channel.password) {
-        message.error('Password incorrect!');
-        return;
-      }
-    }
-
     const values = { type: channel.type, password: passwordRef.current };
     try {
       await axios.put(
@@ -138,12 +131,10 @@ const ChannelListItem = ({
       icon: <ExclamationCircleOutlined />,
       content: content,
       onOk() {
-        console.log('Ok', passwordRef.current);
         onOkHandler();
         passwordRef.current = '';
       },
       onCancel() {
-        console.log('Cancel');
         passwordRef.current = '';
       },
     });

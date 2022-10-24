@@ -17,7 +17,7 @@ const ChannelFormModal = ({
       form.setFieldsValue({
         type: channel.type,
         channelName: channel.channelName,
-        password: channel.password,
+        password: '',
       });
     } else {
       form.setFieldsValue({
@@ -119,8 +119,10 @@ const ChannelFormModal = ({
           label="Channel Name"
           rules={[
             { required: true, message: 'Please input the Channel Name!' },
+            { min: 4, message: 'Channel name must be minimum 4 characters.' },
+            { max: 11, message: 'Channel name must be maximum 11 characters.' },
           ]}>
-          <Input />
+          <Input maxLength={11} />
         </Form.Item>
         <Form.Item
           noStyle
@@ -134,8 +136,13 @@ const ChannelFormModal = ({
                 label="Password"
                 rules={[
                   { required: true, message: 'Please input the password!' },
+                  { min: 4, message: 'Password must be minimum 4 characters.' },
+                  {
+                    max: 12,
+                    message: 'Password must be maximum 12 characters.',
+                  },
                 ]}>
-                <Input />
+                <Input.Password placeholder="input password" maxLength={12} />
               </Form.Item>
             ) : null
           }

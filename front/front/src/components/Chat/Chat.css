@@ -6,6 +6,7 @@
   padding: 20px;
   border: 3px solid var(--light);
   border-radius: 10px;
+  min-width: 500px;
 }
 
 .chat-window-content {
@@ -30,10 +31,12 @@
 .chat-window-mymessage-wrapper {
   text-align: right;
   margin-bottom: 5px;
+  word-wrap: break-word;
 }
 
 .chat-window-othermessage-wrapper {
   margin-bottom: 5px;
+  word-wrap: break-word;
 }
 
 .chat-window-input {
@@ -71,4 +74,9 @@
 /* Hide antd timepicker footer */
 .ant-picker-footer {
   display: none;
+}
+
+.chat-window-message-username {
+  font-weight: bold;
+  margin-left: 4px;
 }

@@ -16,8 +16,8 @@ const { Sider, Content } = Layout;
 
 const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
   const navigate = useNavigate();
-	const nav = useNavigate();
-  
+  const nav = useNavigate();
+
   const [chatType, setChatType] = useState(CHAT_TYPE.user);
   const [selectUser, setSelectUser] = useState<any>(null);
   const [users, setUsers] = useState<any>([]);
@@ -188,7 +188,7 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
             borderRight: '3px solid var(--light)',
             paddingTop: 5,
           }}
-          width={200}>
+          width={270}>
           <ChatSiderList
             chatType={chatType}
             setSelectUser={(selectUser: any) => {
