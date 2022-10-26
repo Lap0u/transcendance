@@ -59,8 +59,7 @@ export function TwoAuthAutenticatePage({
         if (error.code === 'ERR_BAD_REQUEST') {
           message.error(error.response.data.message);
         }
-        console.log('errroooor', error);
-        //	handleErrors(error, nav)
+        handleErrors(error, nav);
       });
   }
 

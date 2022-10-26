@@ -12,20 +12,17 @@ import Avatar from 'antd/lib/avatar/avatar';
 import UserDto from '../utils/UserDto';
 import { Menu } from 'antd';
 import { Stats } from '../Scores/Stats';
-import NavigationBarre  from './NavBarre';
+import NavigationBarre from './NavBarre';
 const socket = io('http://localhost:3000');
 socket.on('init', handleInit);
 
-function handleInit(msg: string) {
-  console.log(msg);
-}
+function handleInit(msg: string) {}
 function Accueil(props: any) {
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
   const nav = useNavigate();
-  
+
   useEffect(() => {
-    console.log('useefect');
     axios
       .get(`${BACK_URL}/auth/status`, { withCredentials: true })
       .then((res) => {

@@ -36,7 +36,6 @@ export function EmailConfirm(props: any) {
         }
       )
       .then((res) => {
-        console.log('confirm', res);
         if (res.data.status === 401) {
           message.error(res.data.message);
         } else {

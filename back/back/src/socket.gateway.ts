@@ -34,12 +34,10 @@ export class SocketGateway
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
     this.userService.deleteUsertoOnlineList(client.id);
   }
 
   handleConnection(client: Socket) {
-    console.log('Client connected:', client.id);
     const userService = this.userService;
     client.on('clientConnected', async function (data) {
       await userService.addUsertoOnlineList(client.id, data.account_id);

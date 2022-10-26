@@ -73,7 +73,6 @@ const SingleGame = (props: any) => {
       canvas.style.height = '90vh';
     }
     const context: any = canvas.getContext('2d');
-    // console.log('sco', gameState);
 
     drawBackground(context, gameCustomization.background);
     drawScore(context, gameState.score);

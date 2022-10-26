@@ -30,8 +30,8 @@ const CustomMenu = (props: any) => {
   const navigate = useNavigate();
   const [isLoginActive, setIsLogin] = useState(false);
   const [ok, setOk] = useState(false);
-	const nav = useNavigate();
-  
+  const nav = useNavigate();
+
   useEffect(() => {
     axios
       .get(`${BACK_URL}/account/status`, { withCredentials: true })
@@ -59,15 +59,12 @@ const CustomMenu = (props: any) => {
         { id: currentUser.id, socket: socket.id },
         { withCredentials: true }
       );
-      console.log('tt', res.data);
 
       if (
         res.data.playerId !== 'wait' &&
         res.data.playerId !== 'ready' &&
         res.data.playerId !== 'none'
       ) {
-        console.log('went in', res.data);
-
         setGameReady('ready');
         const sec = await axios.get(
           `${BACK_URL}/account/userId/${res.data.playerId}`,
@@ -75,7 +72,6 @@ const CustomMenu = (props: any) => {
             withCredentials: true,
           }
         );
-        console.log('sec', sec.data);
 
         setSecondPlayer(sec.data);
         setSecondSocket(res.data.playerSocket);

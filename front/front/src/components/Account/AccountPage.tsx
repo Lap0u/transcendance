@@ -39,7 +39,6 @@ function ButtonChangeUsername(props: any) {
             }
           )
           .then(function (response) {
-            console.log('change username', response.data);
             if (response.data.ok === false) {
               message.error(response.data.msg);
               return;
@@ -83,7 +82,6 @@ function ButtonChangeAvatar(props: any) {
 
   const changeHandler = (event: any) => {
     setSelectedFile(event.target.files[0]);
-    console.log('eveeent', event.target.value);
     setIsFilePicked(event.target.value !== '' ? true : false);
   };
 
@@ -95,7 +93,6 @@ function ButtonChangeAvatar(props: any) {
         const formData = new FormData();
         formData.append('file', selectedFile);
         formData.append('type', 'avatar');
-        console.log('ooooooooo');
         axios
           .post(`${BACK_URL}/account/avatar`, formData, {
             withCredentials: true,
@@ -103,11 +100,9 @@ function ButtonChangeAvatar(props: any) {
             headers: {},
           })
           .then((response) => {
-            console.log('eeeeeeeee');
             clickButton('none');
             props.refresh(response.data.avatar);
             props.changeUser(props.cur + 1);
-            console.log('refressshh avatar', response.data.avatar);
             e.target.value = null;
           })
           .catch((error) => {
@@ -322,11 +317,9 @@ export const LogoutButton = () => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log('logesddddd outtttt');
         nav('/');
       })
       .catch((error) => {
-        console.log('errooooor esddddd outtttt');
         handleErrors(error, nav);
       });
   }
@@ -347,7 +340,6 @@ const AccountPage = ({
     axios
       .get(`${BACK_URL}/account/status`, { withCredentials: true })
       .then(() => {
-        console.log('accpunt', user);
         if (user) setOk(true);
       })
       .catch((error) => {

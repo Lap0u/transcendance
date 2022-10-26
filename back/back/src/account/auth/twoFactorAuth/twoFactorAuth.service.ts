@@ -163,7 +163,6 @@ export class TwoFactorAuthenticationService {
     res: Response,
   ) {
     if (!user.isVerified) {
-      console.log('tfq');
       res.status(401).send('Please verify your account');
       return;
     }

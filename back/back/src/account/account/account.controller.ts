@@ -44,7 +44,6 @@ export class AccountController {
     } else {
       return new HttpException('Disconected', HttpStatus.BAD_REQUEST);
     }
-    return;
   }
 
   @Get('/id/:id')
@@ -182,7 +181,6 @@ export class AccountController {
     const session_info = req.session['passport'];
     const { id } = session_info.user;
     const { newFriendList } = data;
-	console.log('new', newFriendList);
     return await this.usersService.updateFriendList(id, newFriendList);
   }
 

@@ -77,7 +77,6 @@ export function handleEndGame(
 ) {
   const playerOne = game.playerOne;
   const playerTwo = game.playerTwo;
-  console.log('state', state);
 
   let score: ScoresDto;
   if (gameStatus === -1) {
