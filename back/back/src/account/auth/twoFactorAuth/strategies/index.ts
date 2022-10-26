@@ -28,11 +28,10 @@ export class JwtTwoFactorStrategy extends PassportStrategy(
   async validate(payload: TokenPayload) {
     const user = await this.authService.findUser(payload.id);
     if (!user) return;
-    // console.log('tttttttt', user, 'payuuuadddd', payload);
     if (!user.isTwoFactorAuthenticationEnabled) {
       return user;
     }
-    
+
     if (user.isTwoFactorAuthenticationEnabled && !user.isVerified) {
       return;
     }
@@ -64,7 +63,6 @@ export class NotAuthJwtTwoFactorStrategy extends PassportStrategy(
   async validate(payload: TokenPayload) {
     const user = await this.authService.findUser(payload.id);
     if (!user) return;
-    console.log('uuuxxxii', user, 'payloadddd', payload);
     if (
       (!payload.isSecondFactorAuthenticated || !user.isVerified) &&
       user.isTwoFactorAuthenticationEnabled

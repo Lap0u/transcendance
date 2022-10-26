@@ -30,7 +30,6 @@ export class Strategy42 extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    console.log('accessToken', accessToken, 'refreshToken', refreshToken);
     const { id, username, name } = profile;
     let accountUsername = username;
     while ((await this.usersRepository.findOneBy({ accountUsername })) !== null)

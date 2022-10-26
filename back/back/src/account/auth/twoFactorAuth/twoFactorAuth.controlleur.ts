@@ -80,7 +80,6 @@ export class TwoFactorAuthenticationController {
         user,
       );
     if (!isCodeValid) {
-      console.log('baaaad coooode');
       throw new UnauthorizedException('Wrong authentication code');
     }
 

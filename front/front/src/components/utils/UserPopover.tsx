@@ -120,8 +120,6 @@ export const UserPopover = ({
   };
 
   const handleInviteClick = async () => {
-    console.log('Profile');
-
     try {
       await axios.post(
         `${BACK_URL}/matchmaking/inviteGame/${user.id}`,
@@ -235,7 +233,6 @@ function Status(props: any) {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log('stat', props.status);
   if (status === 0)
     return (
       <i className="status">

@@ -126,7 +126,6 @@ function FriendList({ currentUser }: { currentUser: TypeUserDto }) {
     axios
       .get(`${BACK_URL}/account/friendList`, { withCredentials: true })
       .then((response) => {
-        console.log('scoooores', response);
         getFriendList(response.data);
         setOk(true);
       })

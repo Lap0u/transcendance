@@ -63,10 +63,6 @@ export class AuthController {
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
-    //	console.log('logout reqqqqqq', req.session);
-    //	if (!req.session['passport'])
-    //	return;
-    //	this.accountService.destroySession(req.session['passport'].user.id);
     req.logOut(async function (err) {
       if (err) {
         return next(err);

@@ -24,8 +24,8 @@ const GameMenu = (props: any) => {
   const [ok, setOk] = useState(false);
   const socket = props.socket;
   const currentUser = props.currentUser;
-	const nav = useNavigate();
-  
+  const nav = useNavigate();
+
   useEffect(() => {
     axios
       .get(`${BACK_URL}/account/status`, { withCredentials: true })
@@ -81,12 +81,9 @@ const GameMenu = (props: any) => {
         const res = await axios.get(`${BACK_URL}/matchmaking/games`, {
           withCredentials: true,
         });
-        console.log('res', res.data);
 
         setGamesList(res.data);
       } catch (e) {
-        console.log(e);
-
         handleErrors(e, nav);
       }
     }
