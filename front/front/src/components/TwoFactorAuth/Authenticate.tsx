@@ -21,7 +21,7 @@ export function TwoAuthAutenticatePage({
     axios
       .get(`${BACK_URL}/2fa/access`, { withCredentials: true })
       .catch((error) => {
-        window.location.href = 'http://localhost:3000/forbidden';
+        nav('/forbidden');
         return;
       });
   }, []);

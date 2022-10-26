@@ -93,6 +93,7 @@ export const UserPopover = ({
         }
       );
       message.success('Success to add friend');
+      currentUser = { ...currentUser };
     } catch (e) {
       message.error('Fail to add friend');
     }
