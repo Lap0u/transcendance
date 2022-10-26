@@ -40,9 +40,12 @@ export class ChannelService {
 
     newChannel.type = payload.type;
     newChannel.channelName = payload.channelName;
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(payload.password, salt);
-    newChannel.password = hash;
+    if (newChannel.type === ChannelType.PROTECTED) {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(payload.password, salt);
+      newChannel.password = hash;
+    }
+
     newChannel.ownerId = userId;
     newChannel.administratorsId = [userId];
     newChannel.usersId = [userId];
@@ -70,11 +73,13 @@ export class ChannelService {
     channel.channelName = payload.channelName;
     // Remove password if is not protected type
     if (channel.type !== ChannelType.PROTECTED) {
-      payload.password = null;
+      channel.password = null;
+    } else {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(payload.password, salt);
+      channel.password = hash;
     }
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(payload.password, salt);
-    channel.password = hash;
+
     if (payload.administratorsId) {
       channel.administratorsId = payload.administratorsId;
     }
@@ -101,10 +106,11 @@ export class ChannelService {
     if (!channel) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
-    const isMatch = await bcrypt.compare(payload.password, channel.password);
 
-    if (payload.type === ChannelType.PROTECTED && !isMatch) {
-      throw new HttpException('Invalid password', HttpStatus.FORBIDDEN);
+    if (payload.type === ChannelType.PROTECTED) {
+      const isMatch = await bcrypt.compare(payload.password, channel.password);
+      if (!isMatch)
+        throw new HttpException('Invalid password', HttpStatus.FORBIDDEN);
     }
 
     const findUserId = channel.usersId.find((element) => element === addUserId);
