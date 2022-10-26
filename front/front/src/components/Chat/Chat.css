@@ -32,11 +32,15 @@
   text-align: right;
   margin-bottom: 5px;
   word-wrap: break-word;
+  color: var(--text-2);
+  font-size: 13px;
 }
 
 .chat-window-othermessage-wrapper {
   margin-bottom: 5px;
   word-wrap: break-word;
+  color: var(--text-2);
+  font-size: 13px;
 }
 
 .chat-window-input {
@@ -77,6 +81,13 @@
 }
 
 .chat-window-message-username {
+  font-weight: bold;
+  margin-left: 4px;
+  color: var(--text-1);
+  font-size: 16px;
+}
+
+.chat-window-name {
   font-weight: bold;
   margin-left: 4px;
 }
