@@ -13,7 +13,7 @@ export function EmailConfirm(props: any) {
 
   useEffect(() => {
     axios.get(`${BACK_URL}/2fa/access`, { withCredentials: true }).catch(() => {
-      window.location.href = 'http://localhost:3000/forbidden';
+      nav('/forbidden');
       return;
     });
   }, []);

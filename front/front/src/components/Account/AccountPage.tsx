@@ -323,7 +323,7 @@ export const LogoutButton = () => {
       })
       .then((response) => {
         console.log('logesddddd outtttt');
-        window.location.href = `${FRONT_URL}/`;
+        nav('/');
       })
       .catch((error) => {
         console.log('errooooor esddddd outtttt');
