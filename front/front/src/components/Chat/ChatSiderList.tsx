@@ -28,6 +28,7 @@ const UserListItem = ({ user, currentUser, setSelectUser }: any) => {
         alignItems: 'center',
         padding: '10px',
         margin: 10,
+        // fontWeight: 'bold',
       }}
       onClick={() => setSelectUser(user)}>
       <div>

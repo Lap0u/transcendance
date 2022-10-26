@@ -180,12 +180,14 @@ const ChatContentWindow = ({
       return (
         <>
           <Avatar src={BACK_URL + '/account/avatar/' + selectUser.avatar} />
+          <span className='chat-window-name'>
           {selectUser.accountUsername}
+          </span>
         </>
       );
     } else {
       return (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold' }}>
           <span>{selectedChannel?.channelName}</span>
           <Button
             icon={<TeamOutlined />}
