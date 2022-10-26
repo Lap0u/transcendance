@@ -153,7 +153,7 @@ const ChannelListUserModal = ({
             <>
               <UserPopover currentUser={currentUser} user={user} />
               <span style={{ marginLeft: 10, marginRight: 10 }}>
-                {user.username}
+                {user.accountUsername}
               </span>
               {selectedChannel?.ownerId === user.id && (
                 <Tag style={{ marginRight: 10 }} color="red">

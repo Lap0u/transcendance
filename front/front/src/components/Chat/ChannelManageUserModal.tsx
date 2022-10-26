@@ -88,7 +88,7 @@ const ChannelManageUserModal = ({
           render={(user: any) => (
             <>
               <Avatar src={BACK_URL + '/account/avatar/' + user.avatar} />
-              <span style={{ marginLeft: 10 }}>{user.username}</span>
+              <span style={{ marginLeft: 10 }}>{user.accountUsername}</span>
             </>
           )}
         />
