@@ -54,7 +54,6 @@ export class TwoFactorAuthenticationController {
 
   @Post('/saveemail')
   @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtTwoFactorGuard)
   async saveMail(@Body() body: any, @Req() req: Request) {
     if (!(await this.twoFactorAuthenticationService.ValidateEmail(body.email)))
       return new HttpException(

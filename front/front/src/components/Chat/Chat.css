@@ -6,7 +6,6 @@
   padding: 20px;
   border: 3px solid var(--light);
   border-radius: 10px;
-  min-width: 500px;
 }
 
 .chat-window-content {

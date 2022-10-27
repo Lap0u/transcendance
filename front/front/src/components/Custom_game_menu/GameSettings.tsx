@@ -48,11 +48,21 @@ const GameSettings = (props: any) => {
             className="select-1"
             onChange={handleLimit}
             defaultValue={'20'}>
-            <Option value="1">1</Option>
-            <Option value="10">10</Option>
-            <Option value="20">20</Option>
-            <Option value="50">50</Option>
-            <Option value="100">100</Option>
+            <Option className="option-1" value="1">
+              1
+            </Option>
+            <Option className="option-1" value="10">
+              10
+            </Option>
+            <Option className="option-1" value="20">
+              20
+            </Option>
+            <Option className="option-1" value="50">
+              50
+            </Option>
+            <Option className="option-1" value="100">
+              100
+            </Option>
           </Select>
         </Col>
       </Row>
@@ -63,11 +73,21 @@ const GameSettings = (props: any) => {
             className="select-2"
             onChange={handleSpeed}
             defaultValue={'100'}>
-            <Option value="50">50 %</Option>
-            <Option value="75">75 %</Option>
-            <Option value="100">100 %</Option>
-            <Option value="125">125 %</Option>
-            <Option value="150">150 %</Option>
+            <Option className="option-1" value="50">
+              50 %
+            </Option>
+            <Option className="option-1" value="75">
+              75 %
+            </Option>
+            <Option className="option-1" value="100">
+              100 %
+            </Option>
+            <Option className="option-1" value="125">
+              125 %
+            </Option>
+            <Option className="option-1" value="150">
+              150 %
+            </Option>
           </Select>
         </Col>
       </Row>

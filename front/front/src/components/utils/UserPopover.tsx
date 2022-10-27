@@ -39,7 +39,6 @@ export const UserPopover = ({
   }, [currentUser.friendList, user.id]);
 
   const nav = useNavigate();
-
   const [isVisible, setIsVisible] = useState(false);
   const blacklist = async () => {
     const newBlacklist = [...currentUser.blacklist, user.id];
@@ -188,6 +187,7 @@ UserPopover.defaultProps = {
 };
 
 function ProfileTitle({ user }: { user: any }) {
+  user = {...user}
   return (
     <Typography className="popover-title" style={{ width: '100%' }}>
       <figure>
@@ -200,7 +200,7 @@ function ProfileTitle({ user }: { user: any }) {
         />
         <figcaption>
           <i className="popover-username">
-            <Status id={user.account_id} />
+            <Status id={user.account_id} user={user} />
             {user.accountUsername}
           </i>
           <br />
@@ -232,7 +232,7 @@ function Status(props: any) {
         handleErrors(error, nav);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.user]);
   if (status === 0)
     return (
       <i className="status">

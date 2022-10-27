@@ -101,21 +101,21 @@ async function setCurrentGames(
   userRepo: Repository<Accounts>,
   increment: boolean,
 ) {
-  const user = await userRepo.findOneBy({ account_id });
   if (increment) {
+    const user = await userRepo.findOneBy({ account_id });
     const currentGames: number = +user.currentGames + +1;
     await userRepo.save({
       ...user,
       currentGames,
     });
   } else {
-    setTimeout(async ()=>{
+    setTimeout(async () => {
+      const user = await userRepo.findOneBy({ account_id });
       const currentGames: number = +user.currentGames - +1;
       await userRepo.save({
         ...user,
         currentGames,
       });
-
-    }, 1000)
+    }, 1000);
   }
 }

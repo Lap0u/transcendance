@@ -74,23 +74,19 @@ export class ChannelService {
     // Remove password if is not protected type
     if (channel.type !== ChannelType.PROTECTED) {
       channel.password = null;
-    } else {
+    } else if (payload.password !== channel.password) {
       const salt = await bcrypt.genSalt();
       const hash = await bcrypt.hash(payload.password, salt);
       channel.password = hash;
     }
-
     if (payload.administratorsId) {
       channel.administratorsId = payload.administratorsId;
     }
     if (payload.usersId) {
       channel.usersId = payload.usersId;
     }
-
     const saveChannel = this.channelsRepository.save(channel);
-
     this.socketService.socket.emit('updateChannel', channel);
-
     return saveChannel;
   }
 
@@ -106,18 +102,15 @@ export class ChannelService {
     if (!channel) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
-
     if (payload.type === ChannelType.PROTECTED) {
       const isMatch = await bcrypt.compare(payload.password, channel.password);
       if (!isMatch)
         throw new HttpException('Invalid password', HttpStatus.FORBIDDEN);
     }
-
     const findUserId = channel.usersId.find((element) => element === addUserId);
     if (!findUserId) {
       channel.usersId = [...channel.usersId, addUserId];
     }
-
     const saveChannel = this.channelsRepository.save(channel);
 
     this.socketService.socket.emit('updateChannel', channel);

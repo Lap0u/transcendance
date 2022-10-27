@@ -42,17 +42,21 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(`${BACK_URL}/account`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setCurrentUser(res.data);
-		if (userChanged === 0)
-			socket.emit('clientConnected', { ...res.data });
-      })
-      .catch(async (error) => {
-          return <InternalError />;
-      });
+    .get(`${BACK_URL}/account`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      setCurrentUser(res.data);
+      if (userChanged === 0){
+        axios.get(`${BACK_URL}/auth/status`, { withCredentials: true })
+        .then((res) => {
+          socket.emit('clientConnected', { ...res.data });
+        })
+      }
+    })
+    .catch(async (error) => {
+        return <InternalError />;
+    });
   }, [userChanged]);
 
 

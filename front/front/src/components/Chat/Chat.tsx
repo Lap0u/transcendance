@@ -169,7 +169,7 @@ const Chat = ({ socket, currentUser }: { socket: any; currentUser: any }) => {
   return (
     <Layout
       style={{
-        width: '100%',
+        width: '100vw',
         height: '100%',
         color: 'var(--text-1)',
         background: 'var(--background)',

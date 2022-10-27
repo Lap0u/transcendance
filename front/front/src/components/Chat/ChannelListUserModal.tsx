@@ -181,7 +181,10 @@ const ChannelListUserModal = ({
               render={(user: any) => {
                 if (
                   !selectedChannel ||
-                  selectedChannel.administratorsId.includes(user.id)
+                  selectedChannel.ownerId === user.id ||
+                  (selectedChannel.administratorsId.includes(user.id) &&
+                    selectedChannel.ownerId !== currentUser.id &&
+                    selectedChannel.administratorsId.includes(currentUser.id))
                 )
                   return null;
                 const userMuted = selectedChannel.muteList.find(
@@ -212,7 +215,10 @@ const ChannelListUserModal = ({
               render={(user: any) => {
                 if (
                   !selectedChannel ||
-                  selectedChannel.administratorsId.includes(user.id)
+                  selectedChannel.ownerId === user.id ||
+                  (selectedChannel.administratorsId.includes(user.id) &&
+                    selectedChannel.ownerId !== currentUser.id &&
+                    selectedChannel.administratorsId.includes(currentUser.id))
                 )
                   return null;
                 const userBanned = selectedChannel.banList.find(

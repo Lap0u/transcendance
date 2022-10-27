@@ -83,7 +83,7 @@ export class AccountController {
       file.mimetype != 'image/jpeg' &&
       file.mimetype != 'image/png'
     ) {
-      res.sendStatus(400);
+      res.send('test');
       return;
     }
     const session_info = req.session['passport'];

@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import handleErrors from '../RequestErrors/handleErrors';
 import './TwoFactorAuth.css';
 const BACK_URL = 'http://localhost:4000';
@@ -39,6 +39,7 @@ export function EmailConfirm(props: any) {
         if (res.data.status === 401) {
           message.error(res.data.message);
         } else {
+          props.changeUser(props.userChanged + 1);
           message.success(
             'Your account has been verified, two factor authentification activated'
           );

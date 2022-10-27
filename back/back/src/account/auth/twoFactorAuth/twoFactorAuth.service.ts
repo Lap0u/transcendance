@@ -22,7 +22,7 @@ export class TwoFactorAuthenticationService {
     private readonly configService: ConfigService,
     private mailerService: MailerService,
   ) {
-    this.code = Math.floor(10000 + Math.random() * 90000).toString();
+    this.code = '0';
   }
   async sendConfirmedEmail(user: Accounts) {
     const { email, name } = user;
@@ -101,7 +101,7 @@ export class TwoFactorAuthenticationService {
 
   async saveEmail(email: string, id: string) {
     const user = await this.userRepository.findOneBy({ id });
-    this.hashCode(this.code);
+    this.code = authenticator.generateSecret(5);
     await this.userRepository.save({
       ...user, // existing fields
       email: email,

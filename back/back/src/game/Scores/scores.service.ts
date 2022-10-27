@@ -95,6 +95,7 @@ export class ScoresService {
       ...winner, // existing fields
       points: newPoints,
     });
+
     newPoints = +loser.points - +points;
     await this.userRepo.save({
       ...loser, // existing fields

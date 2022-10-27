@@ -100,6 +100,10 @@ function ButtonChangeAvatar(props: any) {
             headers: {},
           })
           .then((response) => {
+            if (response.data === 'test') {
+              message.error('Wrong format image');
+              return;
+            }
             clickButton('none');
             props.refresh(response.data.avatar);
             props.changeUser(props.cur + 1);
